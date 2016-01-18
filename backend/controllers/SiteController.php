@@ -2,7 +2,8 @@
 namespace backend\controllers;
 
 use app\models\Sdptd01customer;
-use backend\components\Api;
+use backend\components\api;
+use backend\components\utilities;
 use Yii;
 use yii\web\Cookie;
 
@@ -25,9 +26,10 @@ class SiteController extends WsController
 
     public function actionIndex()
     {
+        utilities::deleteCookie('cus_info');//Delete coolkie cus_info
+        \Yii::$app->view->title = 'SSサポートサイトTOP';
         return $this->render('index');
     }
-
 
     /**
      * @inheritdoc
@@ -45,15 +47,15 @@ class SiteController extends WsController
             }
             unset($arr1['member_tel']);
         }
+        if (isset($arr1['license_plates'])) {
+            unset($arr1['license_plates']);
+        }
 
         foreach ($arr1 as $k => $v) {
             if ($arr1[$k] != $arr2[$k]) {
                 return false;
             }
         }
-
-
-
         return true;
     }
 
@@ -71,17 +73,7 @@ class SiteController extends WsController
         }
         return false;
     }
-    /**
-     * @inheritdoc
-     * equal two array
-     * @author: dangbc6591
-     */
-    private function deleteCookie($namecookie)
-    {
-        $cookies = Yii::$app->response->cookies;
-        $cookies->remove($namecookie);
-        unset($cookies[$namecookie]);
-    }
+
     /**
      * @inheritdoc
      * check member usappy info
@@ -89,9 +81,11 @@ class SiteController extends WsController
      */
     public function actionCheckmember()
     {
-        $this->deleteCookie('cus_info');//Delete coolkie cus_info
-        $api = new Api();
+        utilities::deleteCookie('cus_info');//Delete coolkie cus_info
+        $api = new api();
         $flag = false;
+        $flag1 = false;
+        $flag2 = true;
         $array_source = array();
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
@@ -109,26 +103,27 @@ class SiteController extends WsController
         if ($member_kaiinKana != '') {
             $array_source['member_kaiinKana'] = $member_kaiinKana;
         }
-        if ($member_kaiinKana != '') {
-            $array_source['member_kaiinKana'] = $member_kaiinKana;
-        }
         if ($member_tel != '') {
             $array_source['member_tel'] = $member_tel;
+        }
+        if ($license_plates != '') {
+            $array_source['license_plates'] = $license_plates;
         }
         $member_info = $api->getMemberInfo($member_card);
         $member_info['type_redirect'] = $type_redirect;
 
-        if (count($member_info) == 5) {
+        if (! isset($member_info['member_kaiinCd'])) {
             $flag = false;
         } else {
-            $flag = $this->equalArray($array_source, $member_info);
+            $flag1 = $this->equalArray($array_source, $member_info);
             if ($license_plates != '') {
-                $list_info_car = $api->getInfoListCard($member_card);
+                $list_info_car = $api->getInfoListCar($member_card);
                 $car_carNo = $list_info_car['car_carNo'];
-                $flag = $this->equalNocar($license_plates, $car_carNo);
+                $flag2 = $this->equalNocar($license_plates, $car_carNo);
             }
         }
-        if ($flag == true) {
+        if ($flag1 == true && $flag2 == true) {
+            $flag = true;
             $cookie = new Cookie([
                 'name' => 'cus_info',
                 'value' => $member_info
@@ -146,8 +141,7 @@ class SiteController extends WsController
      */
     public function actionCheckcard()
     {
-        $this->deleteCookie('cus_info');//Delete coolkie cus_info
-        $api = new Api();
+        utilities::deleteCookie('cus_info');//Delete coolkie cus_info
         $flag = false;
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
@@ -174,7 +168,7 @@ class SiteController extends WsController
      */
     public function actionCheckother()
     {
-        $this->deleteCookie('cus_info');//Delete coolkie cus_info
+        utilities::deleteCookie('cus_info');//Delete coolkie cus_info
         $member_info = array();
         $url_redirect = Yii::$app->request->post('url_redirect');
         $type_redirect = Yii::$app->request->post('type_redirect');

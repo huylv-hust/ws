@@ -1,13 +1,16 @@
 .tooltip-inner {
+    max-width: none!important;
     background: #F1B7BA none repeat scroll 0% 0%!important;
     color: #9D0D14!important;
-    font-size: 13px!important;
-    padding: 5px 25px;
-    display: inline;
-    font-weight: bold;
+    display: inline-block!important;
+    border-radius: 0!important;
 }
-.tooltip-arrow{
-    border-top-color: #F1B7BA!important;
+.tooltip-arrow {
+    border-top-color: #F1B7BA !important;
+}
 label.error {
     color : red;
+}
+.contents-usappynumberchange .breadcrumb{
+    padding: 0 0;
 }

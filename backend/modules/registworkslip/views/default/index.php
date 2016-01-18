@@ -6,6 +6,7 @@
   <section class="readme">
     <h2 class="titleContent">作業伝票作成</h2>
     <p class="rightside">受付日 2015年11月18日</p>
+	<input type="hidden" name="D03_DEN_NO" id="D03_DEN_NO" value="<?=$d03DenNo?>" />
   </section>
 	<?php
 		use yii\widgets\ActiveForm;
@@ -23,12 +24,12 @@
       <fieldset class="fieldsetRegist">
         <div class="formGroup">
           <div class="formItem">
-            <label class="titleLabel">受付担当者(SDP_TM08_SAGYOSYA)<span class="must">*</span></label>
+            <label class="titleLabel">受付担当者<span class="must">*</span></label>
             <?= \yii\helpers\Html::dropDownList('M08_SS_CD',0,$ssUer,array('class' => 'selectForm', 'id' => 'M08_SS_CD')) ?>
           </div>
           <div class="formItem">
             <label class="titleLabel">SSコード<span class="must">*</span></label>
-            <input type="text" maxlength="6" id="member_ssCode" value="<?=$cus['D01_SS_CD']?>" class="textForm">
+            <input type="text" maxlength="6" id="D01_SS_CD" value="<?=$cus['D01_SS_CD']?>" class="textForm">
           </div>
         </div>
       </fieldset>
@@ -67,15 +68,9 @@
             <label class="titleLabel">今回メンテナンスする車両</label>
             <select class="selectForm" name="D02_CAR_SEQ" id="D02_CAR_SEQ">
               <?php
-				$carOrigin = $car;
-				$selected = 1;
-				if(isset($carOrigin['denpyo']))
-				{
-					unset($carOrigin['denpyo']);
-					$selected = $car['denpyo']['D02_CAR_SEQ'];
-				}
-				$countCar = count($carOrigin);
-				for($i = 1 ; $i < $countCar + 1; ++$i){
+				$denpyo = $car['denpyo'];
+				$selected = (int)$denpyo['D03_CAR_SEQ'];
+				for($i = 1 ; $i < $totalCarOfCus + 1; ++$i){
 					if($i == $selected)
 						echo '<option selected="selected" value="'.($i).'">'.str_pad($i,4,'0',STR_PAD_LEFT).'</option>';
 					else
@@ -84,74 +79,44 @@
 			  ?>
             </select>
 		  </div>
-			<script type="text/javascript">
-				$(function(){
-					var carSeq = $("#D02_CAR_SEQ").val();
-					$(".carDataBasic").removeClass('show').addClass('hide');
-					$(".carDataBasic"+carSeq).removeClass('hidd').addClass('show');
-				})
-				function showSeqCar(){
-					var carSeq = $("#D02_CAR_SEQ").val();
-					$("section").removeClass('accOpen').addClass('accClose');
-					$("#dataCar"+carSeq).removeClass('accClose').addClass('accOpen');
-				}
-				$("#D02_CAR_SEQ").on('change',function(){
-					var carSeq = $("#D02_CAR_SEQ").val();
-					$(".carDataBasic").removeClass('show').addClass('hide');
-					$(".carDataBasic"+carSeq).removeClass('hidd').addClass('show');
-				})
-
-			</script>
 		  <?php
-		  $k=1;
-		  $denpyo['denpyo'] = [];
-		  $carData = $carOrigin;
-		  if(isset($car['denpyo']))
-		  {
-			$carData = [];
-			$denpyo['denpyo']= $car['denpyo'];
-			foreach($carOrigin as $tmp)
+			$k=1;
+			$denpyo = $car['denpyo'];
+			$carOrigin = $car;
+			unset($carOrigin['denpyo']);
+			foreach($carOrigin as $key => $carFirst)
 			{
-				if($car['denpyo']['D02_CAR_SEQ'] != $tmp['D02_CAR_SEQ'])
-				{
-					$carData[] = $tmp;
-				}
-			}
-
-			$carData = array_merge($denpyo,$carData);
-		  }
-		  foreach($carData as $key => $carFirst)
-		  {
-			  ?>
-			    <div class="formItem carDataBasic carDataBasic<?=$k?>" >
-				 <label class="titleLabel">車名</label>
-				 <p class="txtValue"><?=$carFirst['D02_CAR_NAMEN']?></p>
-			   </div>
-			   <div class="formItem carDataBasic carDataBasic<?=$k?>">
-				 <label class="titleLabel">車検満了日</label>
-				 <p class="txtValue"><?php echo substr($carFirst['D02_JIKAI_SHAKEN_YM'],0,4).'年'.substr($carFirst['D02_JIKAI_SHAKEN_YM'],4,2).'月'.substr($carFirst['D02_JIKAI_SHAKEN_YM'],6,2) ?></p>
-			   </div>
-			   <div class="formItem carDataBasic carDataBasic<?=$k?>">
-				 <label class="titleLabel">走行距離</label>
-				 <p class="txtValue"><?=$carFirst['D02_METER_KM']?></p>
-			   </div>
-			   <div class="formItem carDataBasic carDataBasic<?=$k?>">
-				 <label class="titleLabel">運輸支局</label>
-				 <p class="txtValue"><?=$carFirst['D02_RIKUUN_NAMEN']?></p>
-			   </div>
-			   <div class="formItem carDataBasic carDataBasic<?=$k?>">
-				 <label class="titleLabel">分類コード</label>
-				 <p class="txtValue"><?=$carFirst['D02_CAR_ID']?></p>
-			   </div>
-			   <div class="formItem carDataBasic carDataBasic<?=$k?>">
-				 <label class="titleLabel">ひらがな</label>
-				 <p class="txtValue"><?=@$carFirst['D02_HIRA']?></p>
-			   </div>
-			   <div class="formItem carDataBasic carDataBasic<?=$k?>">
-				 <label class="titleLabel">登録番号</label>
-				 <p class="txtValue"><?=$carFirst['D02_CAR_NO']?></p>
-			   </div>
-		  <?php ++$k;}?>
+				if(isset($carFirst['D02_DEN_NO']) && $carFirst['D02_DEN_NO'] == 0) continue; // check denpyo exit
+				?>
+				  <div class="formItem carDataBasic carDataBasic<?=$k?>" >
+				   <label class="titleLabel">車名</label>
+				   <p class="txtValue"><?=$carFirst['D02_CAR_NAMEN']?></p>
+				 </div>
+				 <div class="formItem carDataBasic carDataBasic<?=$k?>">
+				   <label class="titleLabel">車検満了日</label>
+				   <p class="txtValue"><?php echo substr($carFirst['D02_JIKAI_SHAKEN_YM'],0,4).'年'.substr($carFirst['D02_JIKAI_SHAKEN_YM'],4,2).'月'.substr($carFirst['D02_JIKAI_SHAKEN_YM'],6,2) ?></p>
+				 </div>
+				 <div class="formItem carDataBasic carDataBasic<?=$k?>">
+				   <label class="titleLabel">走行距離</label>
+				   <p class="txtValue"><?=$carFirst['D02_METER_KM']?></p>
+				 </div>
+				 <div class="formItem carDataBasic carDataBasic<?=$k?>">
+				   <label class="titleLabel">運輸支局</label>
+				   <p class="txtValue"><?=$carFirst['D02_RIKUUN_NAMEN']?></p>
+				 </div>
+				 <div class="formItem carDataBasic carDataBasic<?=$k?>">
+				   <label class="titleLabel">分類コード</label>
+				   <p class="txtValue"><?=$carFirst['D02_CAR_ID']?></p>
+				 </div>
+				 <div class="formItem carDataBasic carDataBasic<?=$k?>">
+				   <label class="titleLabel">ひらがな</label>
+				   <p class="txtValue"><?=@$carFirst['D02_HIRA']?></p>
+				 </div>
+				 <div class="formItem carDataBasic carDataBasic<?=$k?>">
+				   <label class="titleLabel">登録番号</label>
+				   <p class="txtValue"><?=$carFirst['D02_CAR_NO']?></p>
+				 </div>
+			<?php ++$k;}?>
         </div>
 	  </fieldset>
     </section>
@@ -164,11 +129,11 @@
             <div class="radioGroup">
               <div class="radioItem">
 				  <input type="radio" name="D03_KITYOHIN" value="1" id="valuables1" class="radios">
-                <label class="labelRadios<?php if($denpyo['denpyo']['D02_KITYOHIN'] == 1) echo ' checked'?>" for="valuables1">有り</label>
+                <label class="labelRadios<?php if($denpyo['D03_KITYOHIN'] == 1) echo ' checked'?>" for="valuables1">有り</label>
               </div>
               <div class="radioItem">
 				  <input type="radio" name="D03_KITYOHIN" value="0" id="valuables2" class="radios">
-                <label class="labelRadios<?php if($denpyo['denpyo']['D02_KITYOHIN'] == 0) echo ' checked'?>" for="valuables2">無し</label>
+                <label class="labelRadios<?php if($denpyo['D03_KITYOHIN'] == 0) echo ' checked'?>" for="valuables2">無し</label>
               </div>
             </div>
 
@@ -178,7 +143,7 @@
 				  <label class="titleLabel">お客様確認</label>
 				  <div class="checkGroup">
 					<div class="checkItem">
-					  <input type="checkbox" name="D03_KAKUNIN" value="1" <?php if($denpyo['denpyo']['D02_KAKUNIN'] == 1) echo 'checked="checked"'?> id="agree1" class="checks">
+					  <input type="checkbox" name="D03_KAKUNIN" value="1" <?php if($denpyo['D03_KAKUNIN'] == 1) echo 'checked="checked"'?> id="agree1" class="checks">
 					  <label class="labelSingleCheck" for="agree1">了解済OK</label>
 					</div>
 				  </div>
@@ -188,19 +153,19 @@
 				  <div class="radioGroup">
 					<div class="radioItem">
 					  <input type="radio" value="1" name="D03_SEISAN" id="pays1" class="radios">
-					  <label class="labelRadios <?php if($denpyo['denpyo']['D02_SEISAN'] == 0) echo ' checked' ?>" for="pays1">現金</label>
+					  <label class="labelRadios <?php if($denpyo['D03_SEISAN'] == 0) echo ' checked' ?>" for="pays1">現金</label>
 					</div>
 					<div class="radioItem">
 					  <input type="radio" name="D03_SEISAN" value="2" id="pays2" class="radios">
-					  <label class="labelRadios<?php if($denpyo['denpyo']['D02_SEISAN'] == 1) echo ' checked' ?>" for="pays2">プリカ</label>
+					  <label class="labelRadios<?php if($denpyo['D03_SEISAN'] == 1) echo ' checked' ?>" for="pays2">プリカ</label>
 					</div>
 					<div class="radioItem">
 					  <input type="radio" name="D03_SEISAN"  value="3" id="pays3" class="radios">
-					  <label class="labelRadios<?php if($denpyo['denpyo']['D02_SEISAN'] == 2) echo ' checked' ?>" for="pays3">クレジット</label>
+					  <label class="labelRadios<?php if($denpyo['D03_SEISAN'] == 2) echo ' checked' ?>" for="pays3">クレジット</label>
 					</div>
 					<div class="radioItem">
 					  <input type="radio" name="D03_SEISAN" value="4" id="pays4" class="radios">
-					  <label class="labelRadios<?php if($denpyo['denpyo']['D02_SEISAN'] == 3) echo ' checked' ?>" for="pays4">掛</label>
+					  <label class="labelRadios<?php if($denpyo['D03_SEISAN'] == 3) echo ' checked' ?>" for="pays4">掛</label>
 					</div>
 				  </div>
 				</div>
@@ -214,7 +179,7 @@
         <div class="formGroup">
           <div class="formItem">
             <label class="titleLabel">施行日（予約日）<span class="must">*</span></label>
-            <input type="text" value="<?=$denpyo['denpyo']['D02_SEKOU_YMD']?>" name="D03_SEKOU_YMD" class="textForm">
+            <input type="text" value="<?=$denpyo['D03_SEKOU_YMD']?>" name="D03_SEKOU_YMD" class="textForm">
             <span class="txtExample">例)2013年1月30日→20130130</span> </div>
           <div class="formItem">
             <label class="titleLabel">お預かり時間</label>
@@ -222,7 +187,7 @@
 
               <?php
 			  for($i = 0 ; $i < 24; ++$i){
-				  if($i == (int)$denpyo['denpyo']['D02_AZU_BEGIN_HH']) {
+				  if($i == (int)$denpyo['D03_AZU_BEGIN_HH']) {
 			  ?>
 			  <option selected="selected" value="<?=$i?>"><?php echo str_pad($i,2,'0',STR_PAD_LEFT)?></option>
 				  <?php  } else{?>
@@ -234,7 +199,7 @@
             <select class="selectForm" name="D03_AZU_BEGIN_MI">
                 <?php
 			  for($i = 0 ; $i < 60; $i = $i + 10){
-				  if($i == (int)$denpyo['denpyo']['D02_AZU_BEGIN_MI']) {
+				  if($i == (int)$denpyo['D03_AZU_BEGIN_MI']) {
 			  ?>
 			  <option selected="selected" value="<?=$i?>"><?php echo str_pad($i,2,'0',STR_PAD_LEFT)?></option>
 				  <?php  } else{?>
@@ -245,7 +210,7 @@
             <select class="selectForm" name="D03_AZU_END_HH">
              <?php
 			  for($i = 0 ; $i < 24; ++$i){
-				  if($i == (int)$denpyo['denpyo']['D02_AZU_END_HH']) {
+				  if($i == (int)$denpyo['D03_AZU_END_HH']) {
 			  ?>
 			  <option selected="selected" value="<?=$i?>"><?php echo str_pad($i,2,'0',STR_PAD_LEFT)?></option>
 				  <?php  } else{?>
@@ -256,7 +221,7 @@
             <select class="selectForm" name="D03_AZU_END_MI">
                <?php
 			  for($i = 0 ; $i < 60; $i = $i + 10){
-				  if($i == (int)$denpyo['denpyo']['D02_AZU_END_MI']) {
+				  if($i == (int)$denpyo['D03_AZU_END_MI']) {
 			  ?>
 			  <option selected="selected" value="<?=$i?>"><?php echo str_pad($i,2,'0',STR_PAD_LEFT)?></option>
 				  <?php  } else{?>
@@ -268,7 +233,7 @@
         <div class="formGroup">
           <div class="formItem">
             <label class="titleLabel">予約内容</label>
-			<?= \yii\helpers\Html::dropDownList('D03_YOYAKU_SAGYO_NO',$denpyo['denpyo']['D02_YOYAKU_SAGYO_NO'],  Yii::$app->params['d03YoyakuSagyoNo'],array('class' => 'selectForm', 'id' => 'D03_YOYAKU_SAGYO_NO')) ?>
+			<?= \yii\helpers\Html::dropDownList('D03_YOYAKU_SAGYO_NO',$denpyo['D03_YOYAKU_SAGYO_NO'],  Yii::$app->params['d03YoyakuSagyoNo'],array('class' => 'selectForm', 'id' => 'D03_YOYAKU_SAGYO_NO')) ?>
           </div>
           <div class="formItem">
             <label class="titleLabel">作業者</label>
@@ -299,7 +264,7 @@
         <div class="formGroup">
           <div class="formItem">
             <label class="titleLabel">その他作業内容</label>
-            <textarea class="textarea" name="D03_SAGYO_OTHER"><?=$denpyo['denpyo']['D02_SAGYO_OTHER']?></textarea>
+            <textarea class="textarea" name="D03_SAGYO_OTHER"><?=$denpyo['D03_SAGYO_OTHER']?></textarea>
           </div>
         </div>
       </fieldset>
@@ -347,7 +312,7 @@
         <div class="formGroup lineTop">
           <div class="flexRight">
             <label class="titleLabelTotal">合計金額</label>
-            <p class="txtValue"><strong class="totalPrice" id="totalPrice"><?=$denpyo['denpyo']['D02_SUM_KINGAKU']?></strong><span class="txtUnit">円</span></p>
+            <p class="txtValue"><strong class="totalPrice" id="totalPrice"><?=$denpyo['D03_SUM_KINGAKU']?></strong><span class="txtUnit">円</span></p>
           </div>
         </div>
       </fieldset>
@@ -488,11 +453,11 @@
         <div class="formGroup">
           <div class="formItem">
             <label class="titleLabel">POS伝票番号</label>
-            <textarea class="textarea" nam="D03_POS_DEN_NO"><?=$denpyo['denpyo']['D02_POS_DEN_NO']?></textarea>
+            <textarea class="textarea" nam="D03_POS_DEN_NO"><?=$denpyo['D03_POS_DEN_NO']?></textarea>
           </div>
           <div class="formItem">
             <label class="titleLabel">備考</label>
-            <textarea class="textarea" name="D03_NOTE"><?=$denpyo['denpyo']['D02_NOTE']?></textarea>
+            <textarea class="textarea" name="D03_NOTE"><?=$denpyo['D03_NOTE']?></textarea>
           </div>
         </div>
       </fieldset>
@@ -518,7 +483,6 @@
     <li><a href="menu.html">SSサポートサイトTOP</a></li>
   </ul>
 </div>
-
 <!-- BEGIN InfoCus -->
 <div id="modalEditCustomer" class="modal fade">
   <div class="modal-dialog">
@@ -605,21 +569,38 @@
         <h4 class="modal-title">車両情報登録</h4>
       </div>
       <div class="modal-body">
+		  <div id="updateCarInfo"></div>
         <p class="note">項目を入力してください。<span class="must">*</span>は必須入力項目です。</p>
 		<?php  use backend\components\Api; ?>
 		<?php
 		$k = 1;
+		$carOrigin = $car;
+		unset($carOrigin['denpyo']);
 		foreach($carOrigin as $carFirst) {
-			if($k != 1)
+			if( ! $carFirst['D02_CAR_SEQ'])
+			{
 				$class = 'accordion accClose';
+				$label_delete = '追加';
+			}
 			else
+			{
+				$label_delete = '削除';
 				$class = 'accordion accOpen';
+			}
 		?>
 		<section class="bgContent dataCar<?=$k?> <?=$class?>" id="dataCar<?=$k?>">
+		    <input type="hidden" value="<?=$denpyo['D03_CAR_SEQ']?>" name="D03_CAR_SEQ" id="D03_CAR_SEQ" />
+		   <input type="hidden" value="<?=date('y-M-d')?>" name="D02_UPD_DATE" id="D02_UPD_DATE" />
+		   <input type="hidden" value="1" name="D02_UPD_USER_ID" id="D02_UPD_USER_ID" />
+		   <input type="hidden" value="<?=$carFirst['D02_CUST_NO']?>"  name="D02_CUST_NO" id="D02_CUST_NO" />
+		   <input type="hidden" value="<?=(int)$carFirst['D02_CAR_SEQ']?>" name="D02_CAR_SEQ" id="D02_CAR_SEQ" />
+		   <input type="hidden" value="<?=$carFirst['D02_INP_DATE']?>" name="D02_INP_DATE" id="D02_INP_DATE" />
+		   <input type="hidden" value="<?=$carFirst['D02_INP_USER_ID']?>" name="D02_INP_USER_ID" id="D02_INP_USER_ID" />
+		   <input type="hidden" value="<?=$carFirst['D02_CAR_NAMEN']?>"  name="D02_CAR_NAMEN" id="D02_CAR_NAMEN" />
           <fieldset class="fieldsetRegist">
 			<div class="accordionHead">
 				<legend class="titleLegend"><?=$k?>台目</legend>
-				<a class="toggleAccordion" href="#">削除</a>
+				<a class="toggleAccordion" id="delete<?=$k?>" href="#"><?=$label_delete?></a>
 			</div>
 			<div class="accordionBody">
 				<div class="formGroup">
@@ -638,8 +619,9 @@
 					  }
 
 					  $list_model = ['0' => 'ジープ・ラングラーアンリミテッド'];
-					  if($carFirst['D02_MAKER_CD'])
+					  if((int)$carFirst['D02_MAKER_CD'])
 					  {
+
 						  $model = $api->getListModel($carFirst['D02_MAKER_CD']);
 						  foreach($model as $mod)
 						  {
@@ -673,31 +655,33 @@
 						  }
 					  }
 					  ?>
-					  <?= \yii\helpers\Html::dropDownList('D02_MAKER_CD',$carFirst['D02_MAKER_CD'],$list_maker,array('class' => 'selectForm', 'id' => 'D02_MAKER_CD')) ?>
-					<span class="txtExample">例)トヨタ</span></div>
+					  <?= \yii\helpers\Html::dropDownList('D02_MAKER_CD',$carFirst['D02_MAKER_CD'],$list_maker,array('class' => 'selectForm D02_MAKER_CD', 'id' => 'D02_MAKER_CD','rel' => $k)) ?>
+					<span class="txtExample">例)トヨタ</span>
+				  </div>
 				  <div class="formItem">
 					<label class="titleLabel">車名<span class="must">*</span></label>
-					 <?= \yii\helpers\Html::dropDownList('D02_MODEL_CD',$carFirst['D02_MODEL_CD'],$list_model,array('class' => 'selectForm', 'id' => 'D02_MODEL_CD')) ?>
-					<span class="txtExample">例)プリウス</span></div>
+					 <?= \yii\helpers\Html::dropDownList('D02_MODEL_CD',$carFirst['D02_MODEL_CD'],$list_model,array('class' => 'selectForm D02_MODEL_CD', 'id' => 'D02_MODEL_CD','rel' =>$k)) ?>
+					<span class="txtExample">例)プリウス</span>
+				  </div>
 				</div>
 				<div class="formGroup">
 				  <div class="formItem">
 					<label class="titleLabel">初年度登録年月</label>
-					<input type="text" name="D02_SHONENDO_YM" value="<?=$carFirst['D02_SHONENDO_YM']?>" class="textForm">
+					<input type="text" id="D02_SHONENDO_YM" name="D02_SHONENDO_YM" value="<?=$carFirst['D02_SHONENDO_YM']?>" class="textForm D02_SHONENDO_YM">
 					<span class="txtExample">例)2013年1月→201301</span></div>
 				  <div class="formItem">
 					<label class="titleLabel">型式</label>
-					<?= \yii\helpers\Html::dropDownList('D02_TYPE_CD',$carFirst['D02_TYPE_CD'],$list_type,array('class' => 'selectForm', 'id' => 'D02_TYPE_CD')) ?>
+					<?= \yii\helpers\Html::dropDownList('D02_TYPE_CD',$carFirst['D02_TYPE_CD'],$list_type,array('class' => 'selectForm D02_TYPE_CD', 'id' => 'D02_TYPE_CD','rel' => $k)) ?>
 				  </div>
 				  <div class="formItem">
 					<label class="titleLabel">グレード</label>
-					<?= \yii\helpers\Html::dropDownList('D02_GRADE_CD',$carFirst['D02_GRADE_CD'],$list_grade,array('class' => 'selectForm', 'id' => 'D02_GRADE_CD')) ?>
+					<?= \yii\helpers\Html::dropDownList('D02_GRADE_CD',$carFirst['D02_GRADE_CD'],$list_grade,array('class' => 'selectForm D02_GRADE_CD', 'id' => 'D02_GRADE_CD','rel'=>$k)) ?>
 				  </div>
 				</div>
 				<div class="formGroup">
 				  <div class="formItem">
 					<label class="titleLabel">車検満了日</label>
-					<input type="text" value="20130131" class="textForm">
+					<input type="text" value="<?=$carFirst['D02_JIKAI_SHAKEN_YM']?>" name="D02_JIKAI_SHAKEN_YM" id="D02_JIKAI_SHAKEN_YM" class="textForm">
 					<span class="txtExample">例)2013年1月31日→20130131</span></div>
 				  <div class="formItem">
 					<label class="titleLabel">走行距離<span class="must">*</span></label>
@@ -705,13 +689,13 @@
 					<span class="txtUnit">km</span> </div>
 				  <div class="formItem">
 					<label class="titleLabel">車検サイクル<span class="must">*</span></label>
-					<?= \yii\helpers\Html::dropDownList('D02_SYAKEN_CYCLE',$carFirst['D02_SYAKEN_CYCLE'],  Yii::$app->params['d02SyakenCycle'],array('class' => 'selectForm', 'id' => 'list_grade')) ?>
+					<?= \yii\helpers\Html::dropDownList('D02_SYAKEN_CYCLE',$carFirst['D02_SYAKEN_CYCLE'],  Yii::$app->params['d02SyakenCycle'],array('class' => 'selectForm', 'id' => 'D02_SYAKEN_CYCLE')) ?>
 					<span class="txtUnit">年</span> </div>
 				</div>
 				<div class="formGroup">
 				  <div class="formItem">
 					<label class="titleLabel">運輸支局<span class="must">*</span></label>
-					<input type="text" value="<?=$carFirst['D02_RIKUUN_NAMEN']?>" id="D02_RIKUUN_NAMEN" class="textForm">
+					<input type="text" value="<?=$carFirst['D02_RIKUUN_NAMEN']?>" id="D02_RIKUUN_NAMEN" name="D02_RIKUUN_NAMEN" class="textForm">
 					<span class="txtExample">例)名古屋</span></div>
 				  <div class="formItem">
 					<label class="titleLabel">分類コード<span class="must">*</span></label>
@@ -731,7 +715,7 @@
         </section>
 		<?php ++$k;} ?>
       </div>
-      <div class="modal-footer"> <a class="btnSubmit" href="#">登録する</a> </div>
+		<div class="modal-footer"> <a class="btnSubmit" style="cursor: pointer;"; id="updateCar">登録する</a></div>
     </div>
   </div>
 </div>
@@ -754,30 +738,28 @@
                 <label class="titleLabel">検索対象：</label>
                 <div class="radioGroup itemFlex">
                   <div class="radioItem">
-                    <input type="radio" name="search_M05_COM_CD" checked="checked" id="search_M05_COM_CD" class="radios">
+                    <input type="radio" name="search_M05_COM_CD" checked="checked" id="M05_COM_CD" class="radios">
                     <label class="labelRadios checked" for="valuables1">商品コード</label>
                   </div>
                   <div class="radioItem">
-                    <input type="radio" name="search_M05_NST_CD" id="search_M05_NST_CD" class="radios">
+                    <input type="radio" name="search_M05_NST_CD" id="M05_NST_CD" class="radios">
                     <label class="labelRadios" for="valuables2">荷姿コード</label>
                   </div>
                   <div class="radioItem">
-                    <input type="radio" name="search_M05_COM_NAMEN" id="search_M05_COM_NAMEN" class="radios">
+                    <input type="radio" name="search_M05_COM_NAMEN" id="M05_COM_NAMEN" class="radios">
                     <label class="labelRadios" for="valuables2">品名</label>
                   </div>
                 </div>
                 <div class="itemFlex">
-                  <input type="text" style="width:15em;" value="" class="textForm">
-                  <a class="btnFormTool" href="#">検索する</a></div>
+                  <input id="code_search_value" type="text" style="width:15em;" value="" class="textForm">
+                  <a id="code_search_btn" class="btnFormTool" href="#">検索する</a></div>
               </div>
             </div>
           </section>
         </form>
 		<?php use yii\data\Pagination; ?>
         <nav class="paging">
-          <ul class="ulPaging">
             <?php echo yii\widgets\LinkPager::widget(['pagination' =>$pagination])?>
-          </ul>
         </nav>
 		<input type="hidden" value="" id="searchProduct" />
         <table class="tableList">
@@ -826,8 +808,117 @@
   </div>
 </div>
 <!-- END CodeSearchProduct -->
-
 <?php ActiveForm::end() ?>
+<script type="text/javascript">
+	$(function(){
+		var carSeq = $("#D02_CAR_SEQ").val();
+		$(".carDataBasic").removeClass('show').addClass('hide');
+		$(".carDataBasic"+carSeq).removeClass('hide').addClass('show');
+	})
+	function showSeqCar(){
+		var carSeq = $("#D02_CAR_SEQ").val();
+		var denpyoCarSeq = $("#D03_CAR_SEQ").val();
+		if(denpyoCarSeq)
+		{
+			$("#delete"+denpyoCarSeq).removeClass('toggleAccordion').addClass('hide');
+		}
+
+		$("#delete"+carSeq).removeClass('toggleAccordion').addClass('hide');
+	}
+
+	$("#D02_CAR_SEQ").on('change',function(){
+		var carSeq = $("#D02_CAR_SEQ").val();
+		if(carSeq > 0 )
+		{
+			$(".carDataBasic").removeClass('show').addClass('hide');
+			$(".carDataBasic"+carSeq).removeClass('hidd').addClass('show');
+		}
+	})
+</script>
+<script>
+		$( ".D02_MAKER_CD" ).change(function() {
+		var cur = $(this);
+		if($(this).val()=='0')
+		{
+			/*$("#car_model_code").html('<option value="">モデルを選択して下さい</option>');
+			$("#car_type_code").html('<option value="">型式を選択して下さい</option>');
+			$("#car_grade_code").html('<option value="">グレードを選択して下さい</option>');
+			return;
+			*/
+		}
+		$.post('<?php yii\helpers\BaseUrl::base(true)?>registworkslip/default/maker',
+				{
+					'car_maker_code':$(this).val(),
+					'level':'1'
+				},
+				function(data){
+					var option = '';
+					$.each(data, function(key, value){
+						option += '<option value="' + key + '">' + value + '</option>';
+					});
+					$(cur).parents('section').find('.D02_MODEL_CD').html(option);
+					$(cur).parents('section').find('.D02_TYPE_CD').html('<option value=""></option>');
+					$(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
+					//$(cur).parent('section').find('.D02_TYPE_CD').html('<option value=""></option>');
+				}
+			);
+	});
+	$( ".D02_MODEL_CD" ).change(function() {
+
+		var cur = $(this);
+		console.log($(this).val());
+		if($(this).val() == '0')
+		{
+			$(cur).parents('section').find('.D02_TYPE_CD').html('<option value=""></option>');
+			$(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
+			return;
+		}
+
+		$.post('<?php yii\helpers\BaseUrl::base(true)?>registworkslip/default/maker',
+				{
+					'car_maker_code':$(cur).parents('section').find('.D02_MAKER_CD').val(),
+					'car_model_code':$(this).val(),
+					'car_year':$(cur).parents('section').find('.D02_SHONENDO_YM').val(),
+					'level':'3'
+				},
+				function(data){
+
+					var option = '';
+					$.each(data, function(key, value){
+						option += '<option value="' + key + '">' + value + '</option>';
+					});
+					$(cur).parents('section').find('.D02_TYPE_CD').html(option);
+					$(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
+				}
+			);
+	});
+
+	$( ".D02_TYPE_CD" ).change(function() {
+		var cur = $(this);
+		if($(this).val() =='')
+		{
+			$(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
+			return;
+		}
+		$.post('<?php yii\helpers\BaseUrl::base(true)?>registworkslip/default/maker',
+				{
+					'car_type_code':$(this).val(),
+					'car_year':$(cur).parents('section').find('.D02_SHONENDO_YM').val(),
+					'car_maker_code':$(cur).parents('section').find('.D02_MAKER_CD').val(),
+					'car_model_code':$(cur).parents('section').find('.D02_MODEL_CD').val(),
+					'level':'4'
+				},
+				function(data){
+					//alert(data);
+					var option = '';
+					$.each(data, function(key, value){
+						option += '<option value="' + key + '">' + value + '</option>';
+					});
+					$(cur).parents('section').find('.D02_GRADE_CD').html(option);
+				}
+			);
+	});
+</script>
 <script type="text/javascript">
 function closePop(){
 
@@ -866,8 +957,8 @@ $(function(){
 			);
 		}
 	);
-	$("#member_ssCode").change(function(){
-		var member_ssCode = $("#member_ssCode").val();
+	$("#D01_SS_CD").change(function(){
+		var member_ssCode = $("#D01_SS_CD").val();
 		if(member_ssCode.length != '6') {
 			return;
 		}
@@ -963,6 +1054,61 @@ $(function(){
 			);
 		}
 	})
+	$("#updateCar").click(function(){
+		var arr = [];
+		var string;
+		for(var j = 1;j < 5; ++j)
+		{
+			if($("#dataCar"+j).hasClass('accOpen'))
+			{
+				string = {
+					'D02_CUST_NO':$("#dataCar"+j).find("#D02_CUST_NO").val(),
+					'D02_CAR_SEQ':$("#dataCar"+j).find("#D02_CAR_SEQ").val(),
+					'D02_CAR_NAMEN':$("#dataCar"+j).find("#D02_CAR_NAMEN").val(),
+					'D02_JIKAI_SHAKEN_YM':$("#dataCar"+j).find("#D02_JIKAI_SHAKEN_YM").val(),
+					'D02_METER_KM':$("#dataCar"+j).find("#D02_METER_KM").val(),
+					'D02_SYAKEN_CYCLE':$("#dataCar"+j).find("#D02_SYAKEN_CYCLE").val(),
+					'D02_RIKUUN_NAMEN':$("#dataCar"+j).find("#D02_RIKUUN_NAMEN").val(),
+					'D02_CAR_ID':$("#dataCar"+j).find("#D02_CAR_ID").val(),
+					'D02_HIRA':$("#dataCar"+j).find("#D02_HIRA").val(),
+					'D02_CAR_NO':$("#dataCar"+j).find("#D02_CAR_NO").val(),
+					'D02_INP_DATE':$("#dataCar"+j).find("#D02_INP_DATE").val(),
+					'D02_INP_USER_ID':$("#dataCar"+j).find("#D02_INP_USER_ID").val(),
+					'D02_UPD_DATE':$("#dataCar"+j).find("#D02_UPD_DATE").val(),
+					'D02_UPD_USER_ID':$("#dataCar"+j).find("#D02_UPD_USER_ID").val(),
+					'D02_MAKER_CD':$("#dataCar"+j).find("#D02_MAKER_CD").val(),
+					'D02_MODEL_CD':$("#dataCar"+j).find("#D02_MODEL_CD").val(),
+					'D02_SHONENDO_YM':$("#dataCar"+j).find("#D02_SHONENDO_YM").val(),
+					'D02_TYPE_CD':$("#dataCar"+j).find("#D02_TYPE_CD").val(),
+					'D02_GRADE_CD':$("#dataCar"+j).find("#D02_GRADE_CD").val(),
+				};
+				arr.push(string);
+			}
+		}
+
+		console.log(arr);
+		$.post('<?php yii\helpers\BaseUrl::base(true)?>registworkslip/default/car',
+		{
+			'dataPost':JSON.stringify(arr),
+			'D02_CUST_NO':$("#D02_CUST_NO").val(),
+			'D03_DEN_NO':$("#D03_DEN_NO").val()
+		},
+		function(data){
+			if(data.result == '1')
+			{
+				$("#updateCarInfo").html('<div class="alert alert-success">編集が成功しました。</div>');
+				setTimeout(function(){ $("#modalEditCar").modal('hide'); window.location.reload();},1000);
+
+			}
+			else
+			{
+				$("#updateCarInfo").html('<div class="alert alert-danger">編集が失敗しました。</div>');
+			}
+
+		}
+		);
+	})
 })
 
 </script>
+<script src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/js/module/registwork.js"></script>

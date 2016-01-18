@@ -33,6 +33,7 @@
                                 <input class="borderGreen borderRadius" name="member_birthday" id="form_member_birthday" type="text" style="width:16em;">
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="cell bgGray frmLabel">
                                 <label for="car_no">車番</label>
@@ -60,7 +61,9 @@
 
                     </div>
                 </div>
-                <div class="modal-footer"> <a href="#" class="btnSubmit" id="moveTypeUsappy">次へ</a> </div>
+                <div class="modal-footer">
+                    <a href="#" class="btnSubmit" id="moveTypeUsappy">次へ</a>
+                </div>
             </div>
         </form>
 	</div>

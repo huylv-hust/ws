@@ -199,42 +199,49 @@ class Sdptm05com extends \yii\db\ActiveRecord
         }
         return array('insert' => false, 'error' => $error);
     }
-	private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = array(), $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
-		if(count($filters)) {
 
-			foreach($filters as $field => $val) {
-				if($field != 'offset' && $field != 'limit')
-				{
-					$query->andwhere($field.' = '.$val);
-				}
-			}
-		}
-        //$query->where('status=:status', [':status' => $status]);
-        if(isset($filters['offset']) && $filters['offset'])
+        if (isset($filters['M05_COM_CD']) && $filters['M05_COM_CD'] != '') {
+            $query->andwhere(['like', 'M05_COM_CD', $filters['M05_COM_CD']]);
+        }
+
+        if (isset($filters['M05_COM_NAMEN']) && $filters['M05_COM_NAMEN'] != '') {
+            $query->andwhere(['like', 'M05_COM_NAMEN', $filters['M05_COM_NAMEN']]);
+        }
+
+        if (isset($filters['M05_NST_CD']) && $filters['M05_NST_CD'] != '') {
+            $query->andwhere(['like', 'M05_NST_CD', $filters['M05_NST_CD']]);
+        }
+
+        if (isset($filters['offset']) && $filters['offset']) {
             $query->offset($filters['offset']);
+        }
 
-        if(isset($filters['limit']) && $filters['limit'])
+        if (isset($filters['limit']) && $filters['limit']) {
             $query->limit($filters['limit']);
+        }
 
         return $query;
     }
-	public function saveData()
+
+    public function saveData()
     {
         return $this->obj->save();
     }
 
-	public function getData($filters = array(), $select = '*')
+    public function getData($filters = array(), $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('M05_COM_CD ASC');
         return $query->all();
     }
 
-	public function coutData($filters) {
-		$query = $this->getWhere($filters);
-		return $query->count();
-	}
+    public function coutData($filters)
+    {
+        $query = $this->getWhere($filters);
+        return $query->count();
+    }
 }

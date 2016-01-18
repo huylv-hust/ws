@@ -57,7 +57,6 @@ class Sdptw01deldenpyo extends \yii\db\ActiveRecord
 
     public function setData($data = array(), $id = null)
     {
-
         $login_info = Yii::$app->session->get('login_info');
         $data['W01_KANRI_ID'] = date('YmdHis');
         $data['W01_UPD_DATE'] = date('d-M-y');

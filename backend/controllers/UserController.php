@@ -26,7 +26,7 @@ class UserController extends Controller
             $isLogin = $user->checkLogin(Yii::$app->request->post());
             if ($isLogin['flag']) {
                 $login_info = $isLogin['sql']['0'];
-                $login_info['expired'] = time() + 30 * 60;
+                $login_info['expired'] = time() + Yii::$app->params['timeOutLogin'];
                 Yii::$app->session->set('login_info', $login_info);
                 $this->redirect(BaseUrl::base(true).'/menu.html');
             } else {
@@ -44,6 +44,6 @@ class UserController extends Controller
         $session->remove('login_info');
         unset($session['login_info']);
         Yii::$app->session->setFlash('success_logout', '<span class="noti">ログアウトしました。</span>');
-        $this->redirect(BaseUrl::base().'/login.html');
+        $this->redirect(BaseUrl::base(true).'/login.html');
     }
 }

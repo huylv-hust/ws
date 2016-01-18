@@ -46,8 +46,10 @@
                     foreach($staffs as $staff) {
                 ?>
                 <tr>
-                    <td><?php echo $all_branch[$staff['M08_HAN_CD']];?></td>
-                    <td><?php echo $all_ss[$staff['M08_SS_CD']];?></td>
+                    <td>
+                        <?php echo isset($all_branch[$staff['M08_HAN_CD']]) ? $all_branch[$staff['M08_HAN_CD']] : '';?>
+                    </td>
+                    <td><?php echo isset($all_ss[$staff['M08_SS_CD']]) ? $all_ss[$staff['M08_SS_CD']] : '';?></td>
                     <td><?php echo $staff['M08_ORDER'];?></td>
                     <td><?php echo $staff['M08_JYUG_CD'];?></td>
                     <td>

@@ -58,9 +58,11 @@ return [
                 '/update-commodity.html' => 'maintenance/commodity/index',
                 '/regist-workslip.html' => 'registworkslip/default/index',
                 '/detail-workslip.html' => 'listworkslip/detail/index',
-                '/preview.html' => 'listworkslip/preview/index',
                 '/list-workslip.html' => 'listworkslip/default/index',
                 '/usappy-number-change.html' => 'usappynumberchange/default/index',
+                '/usappy-number-change-confirm.html' => 'usappynumberchange/default/confirm',
+                '/usappy-number-change-complete.html' => 'usappynumberchange/default/complete',
+                '/preview.html' => 'listworkslip/detail/preview'
             ]
         ],
     ],

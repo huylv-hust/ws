@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
                     <label for="ssid">SSID</label>
                 </div>
                 <div class="cell bgGrayTrans">
-                    <?= Html::input('text','ssid',Yii::$app->request->post('ssid'),['class' => 'borderGreen borderRadius']) ?>
+                    <?= Html::input('text', 'ssid', Yii::$app->request->post('ssid'), ['class' => 'borderGreen borderRadius']) ?>
                 </div>
             </div>
 
@@ -42,7 +42,7 @@ use yii\widgets\ActiveForm;
                     <label for="password">バスワード</label>
                 </div>
                 <div class="cell bgGrayTrans">
-                    <?= Html::input('password','password','',['class' => 'borderGreen borderRadius']) ?>
+                    <?= Html::input('password', 'password', '', ['class' => 'borderGreen borderRadius']) ?>
                 </div>
             </div>
 

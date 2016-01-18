@@ -6,14 +6,13 @@
  */
 namespace backend\components;
 use linslin\yii2\curl;
-class Api
+class api
 {
     public static $api = array();
     public  function __construct()
     {
         static::$api = \Yii::$app->params['api'];
     }
-
     /**
      * get sscode
      * @author NamDD
@@ -41,6 +40,7 @@ class Api
 		$res = $curl->$method($url);
 		$res = json_decode($res,true);
 		$status = $curl->responseCode;
+
 		if($status == 200)
 		{
 			\Yii::info('Api result: '.print_r($params,true).print_r($res,true));
@@ -112,7 +112,7 @@ class Api
      * @param type kaiinCd
      * @return array card_infor empty array error 500 else
      */
-    public static function getInfoListCard($kaiinCd)
+    public static function getInfoListCar($kaiinCd)
     {
         $url = static::$api['car']['url_car_info'];
         $params = array(
@@ -123,9 +123,55 @@ class Api
         $res = self::_api($url, $params);
 
         if(count($res) == 0)
-            return -1;
+            return false;
 
         return $res;
+    }
+    /**
+     * get list info card
+     * @param type kaiinCd
+     * @return array card_infor empty array error 500 else
+     */
+    public static function getInfoListCard($kaiinCd)
+    {
+        $url = static::$api['car']['url_card_info'];
+        $params = array(
+            'secret' => static::$api['secret'],
+            'kaiinCd' => $kaiinCd,
+        );
+
+        $res = self::_api($url, $params);
+
+        if(count($res) == 0)
+            return false;
+
+        return $res;
+    }
+    /**
+     * update card number
+     * @param type kaiinCd
+     * @return true if update success, false if update error
+     */
+    public static function updateCardNumber($kaiinCd,$info_card)
+    {
+        $url = static::$api['car']['url_update_member_card'];
+        $params = array(
+            'secret' => static::$api['secret'],
+            'kaiinCd' => $kaiinCd,
+            'cardLength' => $info_card['cardLength'],
+            'card_cardBangou' => $info_card['card_cardBangou'],
+            'cardLength' => $info_card['cardLength'],
+            'card_cardKbn' => $info_card['card_cardKbn'],
+            'card_cardSort' => $info_card['card_cardSort'],
+            'card_upCreFlg' => $info_card['card_upCreFlg'],
+        );
+
+        $res = self::_api($url, $params);
+
+        if(count($res))
+            return true;
+
+        return false;
     }
 	/**
 	 *

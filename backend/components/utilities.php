@@ -1,11 +1,11 @@
 <?php
 namespace backend\components;
 
-class Utilities
+class utilities
 {
     public static function getAllBranch()
     {
-        $api = new Api();
+        $api = new api();
         $ss = $api->getSsName();
         $all_branch = array();
         $all_ss = array();
@@ -49,5 +49,16 @@ class Utilities
         fwrite($fp, $data);
         rewind($fp);
         return $fp;
+    }
+    /**
+     * @inheritdoc
+     * delete cookie
+     * @author: dangbc6591
+     */
+    public static function deleteCookie($namecookie)
+    {
+        $cookies = \Yii::$app->response->cookies;
+        $cookies->remove($namecookie);
+        unset($cookies[$namecookie]);
     }
 }

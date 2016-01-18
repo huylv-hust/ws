@@ -2,7 +2,7 @@
 namespace backend\modules\registworkslip\controllers;
 use Yii;
 use backend\controllers\WsController;
-use backend\components\Api;
+use backend\components\api;
 use app\models\Udenpyo;
 use app\models\Sdptd01custommerseq;
 
@@ -11,31 +11,50 @@ class DefaultController extends WsController
 {
 	public function actionIndex()
     {
-//		$cus = new \app\models\Sdptd01customer();
-//		$cusDb = $cus->getData(['D01_KAIIN_CD' => '277426000167']);
-//		print_r($cusDb);
-//		die;
 
-		$api = new Api();
+		$api = new api();
 		$uDenpyo = new Udenpyo();
-		$cookie = \Yii::$app->request->cookies;
-		//$cusInfo = $cookie->getValue('cus_info', '0');
-		$cusInfo = $api->getMemberInfo('277426000167'); //
-		$cusInfo['type_redirect'] = 1;
-		if($cusInfo['type_redirect'] == 1) {
-			$cusDb = $uDenpyo->getTd01Customer(['D01_KAIIN_CD' => $cusInfo['member_kaiinCd']]);
-			$cusDb = current($cusDb);
-			$cusInfo = $uDenpyo->convertKeyApiDB($cusInfo);
-			$cusInfo['D01_NOTE'] = $cusDb['D01_NOTE'];
-			$cusInfo['D01_KAKE_CARD_NO'] = $cusDb['D01_KAKE_CARD_NO'];
-			$cusInfo['D01_CUST_NO'] = $cusDb['D01_CUST_NO'];
-		}
+		$carDefault = $uDenpyo->setDefaultDataObj('car');
+		$cusInfo = $uDenpyo->setDefaultDataObj('customer');
+		$d03DenNo = 0;
+		$totalCarOfCus = 0;
+		$car = array(); // No car
+		$data['d03DenNo'] = $d03DenNo;
+		if($d03DenNo == 0) { // created denpyo
+			$denpyo = $uDenpyo->setDefaultDataObj('denpyo'); // set default data
+			$cookie = \Yii::$app->request->cookies; // get info cus from cookie
+			//$cusInfo = $cookie->getValue('cus_info', '0');
+			$cusInfo = $api->getMemberInfo('277426000167'); //
+			$cusInfo['type_redirect'] = 1; // check is member or is has card, is guest
+			if($cusInfo['type_redirect'] == 1) {  // created denpyo is member
+				$uDenpyo->getInforCarCusFromApi($uDenpyo, $api, $carDefault, $cusInfo, $totalCarOfCus, $car);
+			}
+			else {
 
-		$car = $uDenpyo->getCar($cusInfo['D01_KAIIN_CD']); // Get Infor Car
-		$tm08Sagyosya = $uDenpyo->getTm08Sagyosya(['M08_SS_CD' => $cusInfo['D01_SS_CD']]);
+				$car = array_pad($car,5,$carDefault);
+			}
+
+		}
+		else { //
+			if($cusInfo['type_redirect'] == 1) {  // edit is member
+				$uDenpyo->getInforCarCusFromApi($uDenpyo, $api, $carDefault, $cusInfo, $totalCarOfCus, $car);// get info member and car
+			}
+			else { // edit is db
+				$denpyo = $uDenpyo->getDenpyo(['D03_DEN_NO' => $d03DenNo]);
+				$denpyo = current($denpyo);
+				$cusDb = $uDenpyo->getTd01Customer(['D01_CUST_NO' => $denpyo['D03_CUST_NO']]);
+				$cusInfo = current($cusDb);
+				$car = $uDenpyo->getCar($cusInfo['D01_CUST_NO']); // Get Infor Car
+				$totalCarOfCus = count($car);
+				$car = array_pad($car,5,$carDefault);
+			}
+		}
+		$tempDenpyo['denpyo'] = $denpyo;
+		$car = array_merge($tempDenpyo,$car);
 		$tm01Sagyo = $uDenpyo->getTm01Sagyo([]); // Work job
 		$tm09WarrantyNo = $uDenpyo->getTm09WarrantyNo([]);
 		$ssUser = ['0' => ''];
+		$tm08Sagyosya = $uDenpyo->getTm08Sagyosya(['M08_SS_CD' => '277426']); // 277426 Is login
 		if(count($tm08Sagyosya)) {
 			foreach($tm08Sagyosya as $tmp) {
 				$ssUser[$tmp['M08_NAME_MEI'].$tmp['M08_NAME_SEI']] = $tmp['M08_NAME_MEI'].$tmp['M08_NAME_SEI'];
@@ -50,21 +69,7 @@ class DefaultController extends WsController
 		$data['filters']['limit'] = $data['pagination']->limit;
         $data['filters']['offset'] = $data['pagination']->offset;
 		$tm05Com = $uDenpyo->getTm05Com($data['filters']);
-		$denpyo = array();
-		$denpyo = $uDenpyo->getDenpyo(['D03_DEN_NO' =>'21','D03_CUST_NO' => $cusInfo['D01_CUST_NO']]);
-		if(count($denpyo) == 0) {
-			$denpyo = $uDenpyo->setDefaultDataObj('denpyo');
-		}
-		else {
-			$denpyo = current($denpyo);
-		}
 
-		$tempDenpyo = [];
-		foreach($denpyo as $field => $val) {
-			$tempDenpyo['denpyo'][str_replace('D03','D02',$field)] = $val;
-		}
-
-		$car = array_merge($tempDenpyo,$car);
 		//print_r($denpyo);
 		//die;
 
@@ -75,6 +80,7 @@ class DefaultController extends WsController
 		//die;
 	//	print_r($cus);
 	//	die;
+		$data['totalCarOfCus'] = $totalCarOfCus;
 		$data['cus'] = $cusInfo;
 		$data['car'] = $car;
 		$data['tm05Com'] = $tm05Com;
@@ -113,7 +119,7 @@ class DefaultController extends WsController
 	public function actionSs() {
 		$ssCode = Yii::$app->request->post('ssCode');
 		$uDenpyo = new Udenpyo();
-		$tm08Sagyosya = $uDenpyo->getSagyosy(['M08_SS_CD' => $ssCode]);
+		$tm08Sagyosya = $uDenpyo->getTm08Sagyosya(['M08_SS_CD' => $ssCode]);
 		$ssUser = ['0' => ''];
 		if(count($tm08Sagyosya)) {
 			foreach($tm08Sagyosya as $tmp) {
@@ -135,9 +141,89 @@ class DefaultController extends WsController
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		return $tm03LagreCom;
 	}
+	public function actionCar() {
+
+		$uDenpyo = new Udenpyo();
+		$carObj = new \app\models\Sdptd02car();
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$request = \Yii::$app->request;
+		$data = \Yii::$app->request->post('dataPost');
+		$data = json_decode($data,true);
+		$denpyoNo = $request->post('D03_DEN_NO');
+		$custNo = $request->post('D02_CUST_NO');
+		$carSeqInsert = [];
+		foreach($data as $tmp) {
+			$carSeqInsert[] = $tmp['D02_CAR_SEQ'];
+		}
+
+		if( ! $request->post('D02_CUST_NO')) { // Is guest not database
+			return ['result' => 0];
+		}
+		else
+		{
+			return $uDenpyo->updateCar($custNo, $carSeqInsert,$data);
+		}
+
+	}
+	public function actionMaker()
+	{
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		$api = new api();
+		$request = Yii::$app->request;
+		$maker_code = $request->post('car_maker_code','');
+		$model_code = $request->post('car_model_code','');
+		$year = $request->post('car_year','');
+		$year = substr($year,0,4);
+		$type_code = $request->post('car_type_code','');
+		$level = $request->post('level','');
+		if($maker_code && $model_code && $year && $type_code && $level == 4)
+		{
+			$list_grade_code = $api::getListGradeCode($maker_code,$model_code,$year,$type_code);
+			$list_grade = [];
+			foreach($list_grade_code as $gra) {
+				$list_grade[$gra['grade_code']] = $gra['grade'];
+			}
+
+			return $list_grade;
+
+		}
+
+		if($maker_code && $model_code && $year && $level == 3)
+		{
+			$list_type_code = $api::getListTypeCode($maker_code,$model_code,$year);
+			$list_type = [];
+			foreach($list_type_code as $tp) {
+				$list_type[$tp['type_code']] = $tp['type'];
+			}
+			return $list_type;
+		}
+
+		if($maker_code && $model_code && $level == 2)
+		{
+			$list_year = $api::getListYearMonth($maker_code,$model_code);
+			$option = '<option value="0">初度登録年を選択して下さい</option>';
+			if( ! isset($list_year['result']))
+			{
+				$option = str_replace('<option value="0"></option>','<option value="0">初度登録年を選択して下さい</option>',\Constants::array_to_option($list_year,'year','year'));
+			}
+
+			return new \Response($option, 200,array());
+		}
+
+		if($maker_code && $level == 1)
+		{
+			$list_model_code = $api::getListModel($maker_code);
+			$list_model = [];
+			foreach($list_model_code as $mod) {
+				$list_model[$mod['model_code']] = $mod['model'];
+			}
+
+			return $list_model;
+		}
+	}
 	public function actionCus() {
 
-		$api = new Api();
+		$api = new api();
 		$uDenpyo = new Udenpyo();
 		$cusObj = new \app\models\Sdptd01customer();
 		$request = Yii::$app->request;
@@ -177,9 +263,5 @@ class DefaultController extends WsController
 
 		}
 	}
-
-
-
-
 
 }

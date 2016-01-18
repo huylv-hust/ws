@@ -103,9 +103,9 @@ $(function() {
   });
   //（デモ用の仮script ここまで）
 
- validate('#frmLogin','.btnLogin');
+ //validate('#frmLogin','.btnLogin');
 
- validate('#frmCardNumber','#btnCardNumberVerify');
+ //validate('#frmCardNumber','#btnCardNumberVerify');
 
 });
 

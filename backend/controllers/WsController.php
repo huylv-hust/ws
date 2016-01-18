@@ -18,7 +18,7 @@ class WsController extends Controller
             unset($session['login_info']);
         }
         if ($loginInfo = $session->get('login_info')) {
-            $login_info['expired'] = time() + 30 * 60;
+            $login_info['expired'] = time() + Yii::$app->params['timeOutLogin'];
             $session->set('login_info', $login_info);
         }
 

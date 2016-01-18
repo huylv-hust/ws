@@ -11,7 +11,7 @@ var maintenance = function(){
             url: baseUrl + '/maintenance/staff/getss'
         });
         var response = request.done(function(data){
-            var option = '';
+            var option = '<option value=""></option>';
             $.each(data, function(key, value){
                 option += '<option value="' + key + '">' + value + '</option>';
             });
@@ -39,6 +39,12 @@ var maintenance = function(){
                 name: 'Sdptm08sagyosya[M08_NAME_SEI] Sdptm08sagyosya[M08_NAME_MEI]',
             },
             rules: {
+                'Sdptm08sagyosya[M08_HAN_CD]': {
+                    required: true
+                },
+                'Sdptm08sagyosya[M08_SS_CD]': {
+                    required: true
+                },
                 'Sdptm08sagyosya[M08_JYUG_CD]' : {
                     required: true,
                     digits: true
@@ -54,6 +60,12 @@ var maintenance = function(){
                 }
             },
             messages: {
+                'Sdptm08sagyosya[M08_SS_CD]': {
+                    required: 'SSを選択してください'
+                },
+                'Sdptm08sagyosya[M08_HAN_CD]': {
+                    required: '支店を選択してください'
+                },
                 'Sdptm08sagyosya[M08_JYUG_CD]': {
                     required: '従業員CDを入力してください',
                     digits: '従業員CDが10桁以内の数字で入力されていない場合'

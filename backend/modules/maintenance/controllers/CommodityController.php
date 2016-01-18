@@ -5,12 +5,13 @@ use app\models\Sdptm05com;
 use yii\helpers\BaseUrl;
 use yii\web\Controller;
 use Yii;
-use backend\components\Utilities;
+use backend\components\utilities;
 
 class CommodityController extends Controller
 {
     public function actionIndex()
     {
+        Yii::$app->view->title = 'メンテナンス';
         return $this->render('index');
     }
 
@@ -45,7 +46,7 @@ class CommodityController extends Controller
         if ($request->isPost && isset($_FILES['commodity'])) {
             $obj = new Sdptm05com();
             if (substr($_FILES['commodity']['name'], -4) == '.csv') {
-                $file = Utilities::convertUtf8($_FILES['commodity']['tmp_name']);
+                $file = utilities::convertUtf8($_FILES['commodity']['tmp_name']);
                 $result = $obj->saveImport($file);
                 $error = $result['error'];
             } else {

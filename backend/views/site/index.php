@@ -3,7 +3,7 @@
         <p>宇佐美ＳＳをご利用いただき、ありがとうございます。</p>
     </section>
     <article class="container">
-        <p class="mt50 centering">項目を選択してください。</p>
+        <p class="centering">項目を選択してください。</p>
         <nav class="navBasic">
             <ul class="ulNavBasic">
                 <li><a href="#" class="btnNavBasic iconCard" onclick="fncCard();">Usappy<br />カード番号変更</a></li>
@@ -18,7 +18,6 @@
     </article>
 </main>
 <footer id="footer">
-    <div class="toolbar"><a href="#" class="btnBack">戻る</a></div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>
 

@@ -25,9 +25,9 @@ table { border-collapse: collapse; border-spacing: 0; }
 hr { display: block; height: 1px; border: 0; border-top: 1px solid #cccccc; margin: 1em 0; padding: 0; }
 input, select { vertical-align: middle; }
 * {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 ul li{list-style:none;}
 /*
@@ -104,29 +104,29 @@ td.tdLeft{text-align:left;}
 ### form
 */
 .breadcrumb { margin-bottom: 20px; width: 100%;overflow:hidden;margin-top:1em; }
-.breadcrumb ul{ width:100%; }
+.breadcrumb ul{ width:100%; } 
 .breadcrumb li{ float:left;color:#FFF;font-size:14px;line-height:33px;width:33.33333333333333%;text-align:center;
-	background-color: #6a6a6a;position:relative;}
+background-color: #6a6a6a;position:relative;}
 .breadcrumb li.active{ background:#1d6f9d; }
 .breadcrumb li::after,
 .breadcrumb li::before{
-	content: "";
-	position: absolute;
-	top: 50%;
-	margin-top: -1.5em;
-	border-top: 1.5em solid transparent;
-	border-bottom: 1.5em solid transparent;
-	border-left: 1em solid;
-	right: -1em;
+  content: "";
+  position: absolute;
+  top: 50%;
+  margin-top: -1.5em;
+  border-top: 1.5em solid transparent;
+  border-bottom: 1.5em solid transparent;
+  border-left: 1em solid;
+  right: -1em;
 }
 .breadcrumb li::after{
-	z-index: 2;
-	border-left-color: #6a6a6a;
+  z-index: 2;
+  border-left-color: #6a6a6a;
 }
 .breadcrumb li::before{
-	border-left-color: #FFF;
-	right: -17px;
-	z-index: 1;
+  border-left-color: #FFF;
+  right: -17px;
+  z-index: 1;
 }
 .breadcrumb li.active:after{ border-left-color:#1d6f9d; }
 .breadcrumb li.active:before{ border-left-color:#FFFFFF; }
@@ -299,31 +299,31 @@ li:last-child .btnPaging { border-radius: 0 7px 7px 0; }
 */
 @page{margin:20px 10px 10px;}
 @media print{
-	body{font-size:10px !important;line-height:1.05 !important;-webkit-print-color-adjust:exact;}
-	.printNone{display:none;}
-	.readme{padding:3px 0;}
-	.titleContent{font-size:10px !important;line-height:1.05 !important;}
-	.container{margin:3px 10px;}
-	.pContent .titleLegend{margin-bottom:2px;font-size:10px !important;}
-	.formItem{margin-bottom:3px;}
-	.titleLabel{font-size:10px !important;line-height:1.05 !important;}
-	.txtValue, .txtSub {line-height: 1.05 !important;font-size:10px !important;}
-	.tablePrint{margin-bottom:5px;}
-	.tablePrint th{height:11px !important;line-height:1.05 !important;font-size:10px !important;}
-	.mini td{height:11px !important;line-height:1.05 !important;font-size:10px !important;}
-	.tablePrint p{line-height:1.05 !important;font-size:10px !important;}
-	.tablePrint td{padding:2px;vertical-align:top;}
-	.tablePrint td.vMiddle{vertical-align:middle;}
-	.tablePrint td .leftside{position:absolute;font-size:10px !important;}
-	.checkPrint{float:right;margin-right:35px;}
-	.areaPrintCheckImg{width:150px;}
-	.pageBreak{padding-top:3px;}
-	.labelPrintCheck{line-height:1.05 !important;font-size:10px !important;}
-	.labelPrintCheck input[type=checkbox]{width:12px;height:12px;vertical-align:tpp;}
-	.itemPrintAir{margin-top:10px;}
-	.pFlLeft{margin-right:20px;float:left !important;}
-	.itemPrintCheck.FR{left:10px;}
-	.itemPrintCheck.FL{left:10px;bottom:0;}
+  body{font-size:10px !important;line-height:1.05 !important;-webkit-print-color-adjust:exact;}
+  .printNone{display:none;}
+  .readme{padding:3px 0;}
+  .titleContent{font-size:10px !important;line-height:1.05 !important;}
+  .container{margin:3px 10px;}
+  .pContent .titleLegend{margin-bottom:2px;font-size:10px !important;}
+  .formItem{margin-bottom:3px;}
+  .titleLabel{font-size:10px !important;line-height:1.05 !important;}
+  .txtValue, .txtSub {line-height: 1.05 !important;font-size:10px !important;}
+  .tablePrint{margin-bottom:5px;}
+  .tablePrint th{height:11px !important;line-height:1.05 !important;font-size:10px !important;}
+  .mini td{height:11px !important;line-height:1.05 !important;font-size:10px !important;}
+  .tablePrint p{line-height:1.05 !important;font-size:10px !important;}
+  .tablePrint td{padding:2px;vertical-align:top;}
+  .tablePrint td.vMiddle{vertical-align:middle;}
+  .tablePrint td .leftside{position:absolute;font-size:10px !important;}
+  .checkPrint{float:right;margin-right:35px;}
+  .areaPrintCheckImg{width:150px;}
+  .pageBreak{padding-top:3px;}
+  .labelPrintCheck{line-height:1.05 !important;font-size:10px !important;}
+  .labelPrintCheck input[type=checkbox]{width:12px;height:12px;vertical-align:tpp;}
+  .itemPrintAir{margin-top:10px;}
+  .pFlLeft{margin-right:20px;float:left !important;}
+  .itemPrintCheck.FR{left:10px;}
+  .itemPrintCheck.FL{left:10px;bottom:0;}
 }
 /*============================common css=============================*/
 .bgGray{
@@ -335,12 +335,12 @@ li:last-child .btnPaging { border-radius: 0 7px 7px 0; }
 .borderRadius{
 	border-radius:10px;
 	-webkit-border-radius:10px;
-	-moz-border-radius:10px;
+	-moz-border-radius:10px;	
 }
 .btnBorderRadius{
 	border-radius:3px;
 	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
+	-moz-border-radius:3px;	
 }
 .borderGreen{
 	border:2px solid #008321;
@@ -369,23 +369,23 @@ label{
 }
 .toolTipMsg .tooltipArrow{
 	bottom: -5px;
-	left: 50%;
-	width: 0;
-	height: 0;
-	display:block;
+  left: 50%;
+  width: 0;
+  height: 0;
+  display:block;
 	position: absolute;
-	margin-left: -5px;
-	border-width: 5px 5px 0;
-	border-top-color: #f1b7ba;
-	border-left-color:transparent;
-	border-right-color: transparent;
-	border-style: solid;
+  margin-left: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #f1b7ba;
+  border-left-color:transparent;
+  border-right-color: transparent;
+  border-style: solid;
 }
 .toolTipMsg .tooltipInner{
 	display:block;
 }
 .invalid{
-	border:2px #f76c73 solid;
+  border:2px #f76c73 solid;
 }
 .bgGray{
 	background:#CCCCCC;
@@ -409,8 +409,8 @@ label{
 	border-spacing:2px;
 }
 .modal-body .frmContent{width:100%;}
-.frmContent .row{
-	display:table-row;
+.frmContent .row{	
+	display:table-row;	
 	margin-bottom:2px;
 }
 .frmContent .row .cell{

@@ -7,14 +7,13 @@ var type_receivable = '2';
 var type_other = '3';
 
 
-
 //Remove value and validate if modal hide
 function clearValueModal(form) {
     $('.box-alert').html('');
     $(form).find('input,textarea,select').each(function(index, element) {
         $(element).val('').end();
         $(element).removeClass('invalid');
-        hideToolTip($(element).parent());
+        $(element).parent().children('.tooltip').css('display','none');
     });
 }
 
@@ -75,6 +74,7 @@ function fncAuth(modalType){
     }
 }
 
+
 var cardmembers = function(){
     var validate = function(){
         $.validator.addMethod("mynumber", function (value, element) {
@@ -88,11 +88,12 @@ var cardmembers = function(){
             }
         });
         $.validator.addMethod("isKatakana", function (value, element) {
-            if(value.match(/^[ァ-ンー\s]+$/) && value.length <= 50) {
+            if (value.match(/^[\uFF65-\uFF9F0-9\-\+\s\(\)]+$/) || value == '') {
                 return true;
             }
             return false;
         });
+
         $('#card_member_usappy #moveTypeUsappy').click(function(){
             $('#card_member_usappy').validate({
                 rules: {
@@ -151,7 +152,6 @@ var cardmembers = function(){
                             }
                         }
                     }
-
                 },
                 messages: {
                     card_number:{
@@ -177,6 +177,12 @@ var cardmembers = function(){
                         rangelength: '電話番号は11文字の数字で入力してください',
                         required: '生年月日/車番/氏名カナ/電話番号のいずれか１つ以上を入力してください'
                     }
+                },
+                highlight: function(element, errorClass) {
+                    $(element).addClass('invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('invalid');
                 }
             }).form();
         });
@@ -264,6 +270,12 @@ var card = function(){
                         required: '掛カード番号を入力してください。',
                         mynumber: '掛カード番号を入力してください。'
                     }
+                },
+                highlight: function(element, errorClass) {
+                    $(element).addClass('invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('invalid');
                 }
             }).form();
         });

@@ -40,12 +40,15 @@
                 $model->M08_NAME_SEI = $post['M08_NAME_SEI'];
                 $model->M08_NAME_MEI = $post['M08_NAME_MEI'];
                 $model->M08_ORDER = $post['M08_ORDER'];
+                $all_ss = \backend\modules\maintenance\controllers\StaffController::processGetss($post['M08_HAN_CD'], $api);
+            } else {
+                if ($action == 'create') {
+                    $model->M08_HAN_CD = $default_value['M08_HAN_CD'];
+                    $model->M08_SS_CD = $default_value['M08_SS_CD'];
+                }
             }
 
-            if ($action == 'create') {
-                $model->M08_HAN_CD = $default_value['M08_HAN_CD'];
-                $model->M08_SS_CD = $default_value['M08_SS_CD'];
-            }
+
         ?>
         <section class="bgContent">
             <fieldset class="fieldsetRegist">

@@ -115,7 +115,7 @@ class Sdptd01customer extends \yii\db\ActiveRecord
     {
         return $this->obj->save();
     }
-
+	
 	public function setData($data = array(), $id = null)
     {
 		$login_info = \Yii::$app->session->get('login_info');
@@ -142,4 +142,13 @@ class Sdptd01customer extends \yii\db\ActiveRecord
         $query->orderBy('D01_CUST_NO ASC');
         return $query->all();
     }
+	public function setDataDefault() {
+		$attri = $this->attributeLabels();
+		$data = array();
+		foreach($attri as $key => $val)
+		{
+			$data[$key] = null;
+		}
+		return $data;
+	}
 }

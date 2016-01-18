@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\db\Query;
 use Yii;
 
@@ -44,7 +45,7 @@ class Sdptd02car extends \yii\db\ActiveRecord
     {
         return [
 
-			[['D02_CUST_NO', 'D02_CAR_SEQ'], 'required'],
+            [['D02_CUST_NO', 'D02_CAR_SEQ'], 'required'],
             [['D02_CUST_NO', 'D02_CAR_SEQ', 'D02_METER_KM'], 'integer'],
             [['D02_CAR_NAMEN'], 'string', 'max' => 100],
             [['D02_JIKAI_SHAKEN_YM', 'D02_MODEL_CD'], 'string', 'max' => 8],
@@ -88,17 +89,17 @@ class Sdptd02car extends \yii\db\ActiveRecord
         ];
     }
 
-	private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = array(), $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
 
         if (isset($filters['D02_CUST_NO']) && $filters['D02_CUST_NO']) {
-            $query->where('D02_CUST_NO =:cust_no', [':cust_no' => $filters['D02_CUST_NO']]);
+            $query->andwhere('D02_CUST_NO =:cust_no', [':cust_no' => $filters['D02_CUST_NO']]);
         }
 
         if (isset($filters['D02_CAR_NO']) && $filters['D02_CAR_NO']) {
-            $query->where('D02_CAR_NO =:car_no', [':car_no' => $filters['D02_CAR_NO']]);
+            $query->andwhere('D02_CAR_NO =:car_no', [':car_no' => $filters['D02_CAR_NO']]);
         }
 
         if (isset($filters['offset']) && $filters['offset']) {
@@ -114,6 +115,22 @@ class Sdptd02car extends \yii\db\ActiveRecord
     public function saveData()
     {
         return $this->obj->save();
+    }
+
+    public function saveDataMuti($insertData)
+    {
+
+        $columnNameArray = array_keys(current($insertData));
+        $data = [];
+        foreach ($insertData as $key => $row) {
+            $data[] = array_values($row);
+        }
+
+        //$columnNameArray = array_keys($this->attributeLabels());
+        $insertCount = Yii::$app->db->createCommand()
+            ->batchInsert(self::tableName(), $columnNameArray, $data)
+            ->execute();
+        return $insertCount;
     }
 
     public function setData($data = array(), $id = null)
@@ -133,8 +150,29 @@ class Sdptd02car extends \yii\db\ActiveRecord
 
     public function getData($filters = array(), $select = '*')
     {
-		$query = $this->getWhere($filters, $select);
+        $query = $this->getWhere($filters, $select);
         $query->orderBy('D02_CAR_SEQ ASC');
         return $query->all();
+    }
+
+    public function setDataDefault()
+    {
+        $attri = $this->attributeLabels();
+        $data = array();
+        foreach ($attri as $key => $val) {
+            $data[$key] = null;
+        }
+        return $data;
+    }
+
+    public function deleteData($where)
+    {
+        if ($where) {
+            return Sdptd02car::deleteAll($where);
+        }
+
+        return false;
+
+
     }
 }
