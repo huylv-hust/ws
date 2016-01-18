@@ -1,0 +1,53 @@
+<?php
+namespace backend\components;
+
+class Utilities
+{
+    public static function getAllBranch()
+    {
+        $api = new Api();
+        $ss = $api->getSsName();
+        $all_branch = array();
+        $all_ss = array();
+        $ss_address = array();
+        $ss_tel = array();
+        foreach ($ss as $k => $v) {
+            $all_branch[$v['branch_code']] =  $v['branch_name'];
+            $all_ss[$v['sscode']] = $v['ss_name'];
+            $all_ss_branch[$v['sscode']] = $v['branch_code'];
+            $all_branch_ss[$v['branch_code']][] = $v['sscode'];
+            $ss_address[$v['sscode']]= $v['address'];
+            $ss_tel[$v['sscode']] = $v['tel'];
+        }
+
+        return [
+            'all_ss' => $all_ss,
+            'all_branch' => $all_branch,
+            'all_branch_ss' => $all_branch_ss,
+            'all_ss_branch' => $all_ss_branch,
+            'ss_address' => $ss_address,
+            'ss_tel' => $ss_tel,
+        ];
+    }
+
+    public static function convertUtf8($file)
+    {
+        $data = file_get_contents($file);
+        if (mb_detect_encoding($data, 'UTF-8', true) === false) {
+            $encode_ary = array(
+                'ASCII',
+                'JIS',
+                'eucjp-win',
+                'sjis-win',
+                'EUC-JP',
+                'UTF-8',
+            );
+            $data = mb_convert_encoding($data, 'UTF-8', $encode_ary);
+        }
+
+        $fp = tmpfile();
+        fwrite($fp, $data);
+        rewind($fp);
+        return $fp;
+    }
+}

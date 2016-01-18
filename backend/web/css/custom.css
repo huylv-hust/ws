@@ -1,0 +1,13 @@
+.tooltip-inner {
+    background: #F1B7BA none repeat scroll 0% 0%!important;
+    color: #9D0D14!important;
+    font-size: 13px!important;
+    padding: 5px 25px;
+    display: inline;
+    font-weight: bold;
+}
+.tooltip-arrow{
+    border-top-color: #F1B7BA!important;
+label.error {
+    color : red;
+}
