@@ -174,7 +174,7 @@ class DetailController extends WsController
         return $this->render('preview', $data);
     }
 
-    public function checkfile($ss_code,$den_no)
+    public function checkfile($den_no)
     {
         return file_exists('/pdf/'.$den_no.'.pdf') ? 1 : 0;
     }
