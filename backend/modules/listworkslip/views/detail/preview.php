@@ -262,7 +262,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel pFlLeft">備考</label>
-                        <p class="txtValue">unknown</p>
+                        <p class="txtValue"></p>
                     </div>
                 </div>
             </fieldset>
@@ -479,30 +479,30 @@
                     </tr>
                     <tr>
                         <td colspan="6"><p class="leftside">備考</p>
-                            <p class="txtValue">unknown</p></td>
+                            <p class="txtValue"></p></td>
                     </tr>
                     <tr>
                         <th colspan="6">備考</th>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">unknown</td>
-                        <td colspan="3">unknown</td>
+                        <td colspan="3"></td>
+                        <td colspan="3"></td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">unknown</td>
-                        <td colspan="3">unknown</td>
+                        <td colspan="3"></td>
+                        <td colspan="3"></td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">unknown</td>
-                        <td colspan="3">unknown</td>
+                        <td colspan="3"></td>
+                        <td colspan="3"></td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">unknown</td>
-                        <td colspan="3">unknown</td>
+                        <td colspan="3"></td>
+                        <td colspan="3"></td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">unknown</td>
-                        <td colspan="3">unknown</td>
+                        <td colspan="3"></td>
+                        <td colspan="3"></td>
                     </tr>
                 </table>
                 <p class="txtSub mb5">※ドレーンボルト・ホイールナット等はトルクレンチ等を使用して確実な締付けを行っております。<br>

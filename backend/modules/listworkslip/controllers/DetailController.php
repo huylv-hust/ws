@@ -43,6 +43,7 @@ class DetailController extends WsController
 
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
+        $data['check_file'] = $this->checkfile($filter['detail_no']);
         Yii::$app->params['titlePage'] = '作業伝票詳細';
         Yii::$app->view->title = '作業伝票詳細';
 
@@ -171,5 +172,10 @@ class DetailController extends WsController
         $this->layout = '@app/views/layouts/print';
         Yii::$app->view->title = '作業確認書';
         return $this->render('preview', $data);
+    }
+
+    public function checkfile($ss_code,$den_no)
+    {
+        return file_exists('/pdf/'.$den_no.'.pdf') ? 1 : 0;
     }
 }

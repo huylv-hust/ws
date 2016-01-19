@@ -212,7 +212,6 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
                 $query->andwhere('SDP_TD03_DENPYO.D03_STATUS=:status', [':status' => 0]);
                 $query->andWhere(['<=', 'SDP_TD03_DENPYO.D03_SEKOU_YMD', date('Ymd')]);
             }
-            $query->andwhere('SDP_TD03_DENPYO.D03_STATUS=:status', [':status' => $filters['status']]);
         }
 
         if (isset($filters['car']) && $filters['car']) {
