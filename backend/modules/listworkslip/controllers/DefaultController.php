@@ -36,6 +36,7 @@ class DefaultController extends WsController
 
         if (empty($filters)) {
             $filters['start_time'] = date('Ymd');
+            $filters['end_time'] = date('Ymd');
         }
 
         $data['filters'] = $filters;
@@ -44,7 +45,6 @@ class DefaultController extends WsController
             'totalCount' => $count,
             'defaultPageSize' => Yii::$app->params['defaultPageSize'],
         ]);
-
         $data['page'] = $filters = Yii::$app->request->get('page');
         $data['filters']['limit'] = $data['pagination']->limit;
         $data['filters']['offset'] = $data['pagination']->offset;

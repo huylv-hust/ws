@@ -77,7 +77,18 @@
 							<td><?php echo $v['D03_SS_CD']; ?></td>
 							<td><?php echo $all_ss[$v['D03_SS_CD']]; ?></td>
 							<td><?php echo $v['D03_SEKOU_YMD']; ?></td>
-							<td><?php echo $v['D03_STATUS']; ?></td>
+							<td>
+								<?php
+								if ($v['D03_STATUS'] == 1) {
+									echo $status[2];
+								}
+								if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ydm')) {
+									echo $status[0];
+								}
+								if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ydm')) {
+									echo $status[1];
+								}?>
+							</td>
 							<td><?php echo $v['D01_CUST_NAMEN']; ?></td>
 							<td>
 								<?php

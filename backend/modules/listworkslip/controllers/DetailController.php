@@ -45,6 +45,7 @@ class DetailController extends WsController
         $data['status'] = Yii::$app->params['status'];
         Yii::$app->params['titlePage'] = '作業伝票詳細';
         Yii::$app->view->title = '作業伝票詳細';
+
         return $this->render('index', $data);
     }
 

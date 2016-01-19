@@ -18,7 +18,18 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">状況</label>
-                        <p class="txtValue"><?php echo $status[$detail['D03_STATUS']]; ?></p>
+                        <p class="txtValue">
+                            <?php
+                            if ($detail['D03_STATUS'] == 1) {
+                                echo $status[2];
+                            }
+                            if ($detail['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ydm')) {
+                                echo $status[0];
+                            }
+                            if ($detail['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ydm')) {
+                                echo $status[1];
+                            }?>
+                        </p>
                     </div>
                 </div>
             </fieldset>
@@ -211,7 +222,6 @@
                         <td><?php echo $detail['D03_SUM_KINGAKU']; ?>円</td>
                     </tr>
                 </table>
-                <!--không biết	      -->
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel pFlLeft">備考</label>
