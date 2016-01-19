@@ -30,12 +30,12 @@
                             if ($detail['D03_STATUS'] == 1) {
                                 echo $status[2];
                             }
-                            if ($detail['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ydm')) {
+                            if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ydm')) {
                                 echo $status[0];
                             }
-                            if ($detail['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ydm')) {
+                            if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ydm')) {
                                 echo $status[1];
-                            }?>
+                            } ?>
                         </p>
                     </div>
                 </div>
@@ -86,6 +86,8 @@
                         <label class="titleLabel">走行距離</label>
                         <p class="txtValue"><?php echo $detail['D03_METER_KM']; ?>km</p>
                     </div>
+                </div>
+                <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">運輸支局</label>
                         <p class="txtValue"><?php echo $detail['D03_RIKUUN_NAMEN']; ?></p>
@@ -181,6 +183,31 @@
                     <div class="formItem">
                         <label class="titleLabel">確認者</label>
                         <p class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] . '' . $detail['D03_KAKUNIN_MEI']; ?></p>
+                    </div>
+                </div>
+            </fieldset>
+        </section>
+        <section class="bgContent">
+            <fieldset class="fieldsetRegist">
+                <legend class="titleLegend">作業内容</legend>
+                <div class="formGroup">
+                    <div class="formItem">
+                        <p class="txtValue">
+                            <?php
+                            $sagyo = '';
+                            foreach ($detail['sagyo'] as $k => $v) {
+                                $sagyo .= $job[$v['D04_SAGYO_NO']] . '、';
+                            }
+                            echo trim($sagyo, '、');
+                            ?>
+                        </p>
+                    </div>
+                </div>
+                <div class="formGroup">
+                    <div class="formItem">
+                        <label class="titleLabel">その他作業内容</label>
+                        <p class="txtValue"><?php echo $detail['D03_SAGYO_OTHER']; ?></p>
+
                     </div>
                 </div>
             </fieldset>
@@ -366,32 +393,6 @@
                 </table>
             </fieldset>
         </section>
-
-        <section class="bgContent">
-            <fieldset class="fieldsetRegist">
-                <legend class="titleLegend">作業内容</legend>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <p class="txtValue">
-                            <?php
-                            $sagyo = '';
-                            foreach ($detail['sagyo'] as $k => $v) {
-                                $sagyo .= $job[$v['D04_SAGYO_NO']] . '、';
-                            }
-                            echo trim($sagyo, '、');
-                            ?>
-                        </p>
-                    </div>
-                </div>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel">その他作業内容</label>
-                        <p class="txtValue"><?php echo $detail['D03_SAGYO_OTHER']; ?></p>
-
-                    </div>
-                </div>
-            </fieldset>
-        </section>
         <section class="bgContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">商品情報</legend>
@@ -439,7 +440,21 @@
                 </div>
             </fieldset>
         </section>
-        <!-- chua lam-->
+        <section class="bgContent">
+            <fieldset class="fieldsetRegist">
+                <legend class="titleLegend">その他</legend>
+                <div class="formGroup">
+                    <div class="formItem">
+                        <label class="titleLabel">POS伝票番号</label>
+                        <p class="txtValue"><?php echo $detail['D03_POS_DEN_NO']; ?></p>
+                    </div>
+                    <div class="formItem">
+                        <label class="titleLabel">備考</label>
+                        <p class="txtValue"><?php echo $detail['D03_NOTE']; ?></p>
+                    </div>
+                </div>
+            </fieldset>
+        </section>
         <section class="bgContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">保証書情報</legend>
@@ -595,21 +610,6 @@
                     </div>
                     <div class="formItem">
                         <p class="txtValue"></p>
-                    </div>
-                </div>
-            </fieldset>
-        </section>
-        <section class="bgContent">
-            <fieldset class="fieldsetRegist">
-                <legend class="titleLegend">その他</legend>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel">POS伝票番号</label>
-                        <p class="txtValue"><?php echo $detail['D03_POS_DEN_NO']; ?></p>
-                    </div>
-                    <div class="formItem">
-                        <label class="titleLabel">備考</label>
-                        <p class="txtValue"><?php echo $detail['D03_NOTE']; ?></p>
                     </div>
                 </div>
             </fieldset>

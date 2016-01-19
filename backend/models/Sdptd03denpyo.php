@@ -201,10 +201,7 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         if (isset($filters['status']) && $filters['status'] != '') {
             if ($filters['status'] == 1) {
                 $query->andwhere('SDP_TD03_DENPYO.D03_STATUS=:status', [':status' => 0]);
-                $query->andWhere([
-                    '>=', 'SDP_TD03_DENPYO.D03_SEKOU_YMD',
-                    date('Ymd', strtotime('next day'.date('Ymd')))
-                ]);
+                $query->andWhere(['>', 'SDP_TD03_DENPYO.D03_SEKOU_YMD', date('Ymd')]);
             }
 
             if ($filters['status'] == 2) {

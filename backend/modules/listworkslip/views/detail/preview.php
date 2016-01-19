@@ -23,10 +23,10 @@
                             if ($detail['D03_STATUS'] == 1) {
                                 echo $status[2];
                             }
-                            if ($detail['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ydm')) {
+                            if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ydm')) {
                                 echo $status[0];
                             }
-                            if ($detail['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ydm')) {
+                            if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ydm')) {
                                 echo $status[1];
                             }?>
                         </p>
@@ -229,7 +229,6 @@
                     </div>
                 </div>
             </fieldset>
-            <!--	    Fix Cứng-->
         </section>
         <section class="pContent">
             <fieldset class="fieldsetRegist">
@@ -263,7 +262,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel pFlLeft">備考</label>
-                        <p class="txtValue">備考です</p>
+                        <p class="txtValue">unknown</p>
                     </div>
                 </div>
             </fieldset>
@@ -480,30 +479,30 @@
                     </tr>
                     <tr>
                         <td colspan="6"><p class="leftside">備考</p>
-                            <p class="txtValue">備考です</p></td>
+                            <p class="txtValue">unknown</p></td>
                     </tr>
                     <tr>
                         <th colspan="6">備考</th>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">備考です</td>
-                        <td colspan="3">備考です</td>
+                        <td colspan="3">unknown</td>
+                        <td colspan="3">unknown</td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">備考です</td>
-                        <td colspan="3">備考です</td>
+                        <td colspan="3">unknown</td>
+                        <td colspan="3">unknown</td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">備考です</td>
-                        <td colspan="3">備考です</td>
+                        <td colspan="3">unknown</td>
+                        <td colspan="3">unknown</td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">備考です</td>
-                        <td colspan="3">備考です</td>
+                        <td colspan="3">unknown</td>
+                        <td colspan="3">unknown</td>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3">備考です</td>
-                        <td colspan="3">備考です</td>
+                        <td colspan="3">unknown</td>
+                        <td colspan="3">unknown</td>
                     </tr>
                 </table>
                 <p class="txtSub mb5">※ドレーンボルト・ホイールナット等はトルクレンチ等を使用して確実な締付けを行っております。<br>
