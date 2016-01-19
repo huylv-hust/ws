@@ -176,6 +176,6 @@ class DetailController extends WsController
 
     public function checkfile($den_no)
     {
-        return file_exists('/pdf/'.$den_no.'.pdf') ? 1 : 0;
+        return file_exists(BaseUrl::base(true) . '/pdf/' . $den_no . '.pdf') ? 1 : 0;
     }
 }
