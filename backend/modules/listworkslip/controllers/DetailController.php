@@ -43,6 +43,8 @@ class DetailController extends WsController
 
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
+        Yii::$app->params['titlePage'] = '作業伝票詳細';
+        Yii::$app->view->title = '作業伝票詳細';
         return $this->render('index', $data);
     }
 
@@ -120,7 +122,8 @@ class DetailController extends WsController
                 $obj = new Sdptd03denpyo();
                 if ($obj->deleteData(['den_no' => $den_no, 'cus_no' => $cus_no, 'car_no' => $car_no])) {
                     Yii::$app->session->setFlash('success', '伝票No.' . $den_no . 'を削除しました。');
-                    return $this->redirect(BaseUrl::base(true) . '/list-workslip.html');
+                    $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip.html';
+                    return $this->redirect($url);
                 }
             }
             Yii::$app->session->setFlash('error', '削除をできません。');
@@ -165,6 +168,7 @@ class DetailController extends WsController
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
         $this->layout = '@app/views/layouts/print';
+        Yii::$app->view->title = '作業確認書';
         return $this->render('preview', $data);
     }
 }

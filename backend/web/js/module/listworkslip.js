@@ -1,4 +1,4 @@
-var search = function(){
+var listworkslip = function(){
     /* END SCREEN SEARCH */
     var change_branch_search = function(){
         $('#selectBranch').off('change').on('change', function(){
@@ -34,49 +34,41 @@ var search = function(){
     /* END SCREEN SEARCH */
 
     var validate = function(){
-        $('#staff_form').validate({
-            groups: {
-                name: 'start_time end_time',
-            },
+        $('#listworkslip').validate({
             rules: {
                 'start_time' : {
-                    digits: true
+                    digits: true,
+                    minlength: 8
                 },
                 'end_time': {
+                    digits: true,
+                    minlength: 8
                 },
-                'Sdptm08sagyosya[M08_NAME_MEI]': {
-                    required: true
-                },
-                'Sdptm08sagyosya[M08_ORDER]': {
-                    digits:true
+                'car': {
+                    digits: true,
+                    minlength: 4
                 }
             },
             messages: {
                 'start_time': {
-                    digits: '従業員CDが10桁以内の数字で入力されていない場合'
+                    digits : '施行日（予約日）開始日は8文字の数字で入力してください',
+                    minlength: '施行日（予約日）開始日は8文字の数字で入力してください'
                 },
                 'end_time': {
-                    required: '作業者名 姓を入力してください'
+                    digits : '施行日（予約日）終了日は8文字の数字で入力してください',
+                    minlength: '施行日（予約日）終了日は8文字の数字で入力してください'
                 },
-                'Sdptm08sagyosya[M08_NAME_MEI]': {
-                    required: '作業者名 姓を入力してください'
-                },
-                'Sdptm08sagyosya[M08_ORDER]': {
-                    digits: '表示順は3文字以内の数字で入力してください'
+                'car': {
+                    digits: '車両No.は4文字の数字で入力してください',
+                    minlength: '車両No.は4文字の数字で入力してください'
                 }
             }
         });
     };
 
     var convert_zen2han = function(){
-        $('#sdptm08sagyosya-m08_jyug_cd , #sdptm08sagyosya-m08_order').on('change',function(){
+        $('#start_time , #end_time, #car').on('change',function(){
             utility.zen2han(this);
-        });
-    };
-
-    var convert_han2zen = function() {
-        $('#sdptm08sagyosya-m08_name_sei , #sdptm08sagyosya-m08_name_mei').on('change',function(){
-            utility.han2zen(this);
         });
     };
 
@@ -86,10 +78,9 @@ var search = function(){
           search();
           validate();
           convert_zen2han();
-          convert_han2zen();
       }
     };
 }();
 $(function(){
-    search.init();
+    listworkslip.init();
 });
