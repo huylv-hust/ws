@@ -174,7 +174,12 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">予約内容</label>
-                        <p class="txtValue"><?php echo $job[$detail['D03_YOYAKU_SAGYO_NO']]; ?></p>
+                        <p class="txtValue"><?php
+                            if (isset($job[$detail['D03_YOYAKU_SAGYO_NO']])) {
+                                echo $job[$detail['D03_YOYAKU_SAGYO_NO']];
+                            } else {
+                                echo '';
+                            } ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
@@ -624,8 +629,10 @@
             $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip.html';
             ?>
             <a href="<?php echo $url; ?>" class="btnTool">情報検索</a>
-            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview.html?den_no=<?php echo $detail['D03_DEN_NO']; ?>" class="btnTool" target="_blank">作業確認</a>
-            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/pdf/tmp/20151227124515_1127370023.pdf" class="btnTool" target="_blank">保証書を表示</a>';
+            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview.html?den_no=<?php echo $detail['D03_DEN_NO']; ?>"
+               class="btnTool" target="_blank">作業確認</a>
+            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/pdf/tmp/20151227124515_1127370023.pdf"
+               class="btnTool" target="_blank">保証書を表示</a>';
             <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/regist-workslip.html" class="btnTool">編集</a>
             <a href="#modalRemoveConfirm" class="btnTool" data-toggle="modal">削除</a>
         </div>

@@ -157,9 +157,9 @@ class DetailController extends WsController
         }
 
         $data['detail'] = $detail[0];
-        $data['ss'] = $ss[$data['detail']['D03_SS_CD']];
-        $data['address'] = $address[$data['detail']['D03_SS_CD']];
-        $data['tel'] = $tel[$data['detail']['D03_SS_CD']];
+        $data['ss'] = isset($ss[$data['detail']['D03_SS_CD']]) ? $ss[$data['detail']['D03_SS_CD']] : '';
+        $data['address'] = isset($address[$data['detail']['D03_SS_CD']]) ? $address[$data['detail']['D03_SS_CD']] : '';
+        $data['tel'] = isset($tel[$data['detail']['D03_SS_CD']]) ? $tel[$data['detail']['D03_SS_CD']] : '';
         $data['detail']['D02_SYAKEN_CYCLE'] = $this->getCar([
             'D02_CUST_NO' => $data['detail']['D03_CUST_NO'],
             'D02_CAR_NO' => $data['detail']['D03_CAR_NO']

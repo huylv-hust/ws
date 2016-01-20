@@ -28,7 +28,7 @@
                             }
                             if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ydm')) {
                                 echo $status[1];
-                            }?>
+                            } ?>
                         </p>
                     </div>
                 </div>
@@ -159,7 +159,12 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">予約内容</label>
-                        <p class="txtValue"><?php echo $job[$detail['D03_YOYAKU_SAGYO_NO']]; ?></p>
+                        <p class="txtValue"><?php
+                            if (isset($job[$detail['D03_YOYAKU_SAGYO_NO']])) {
+                                echo $job[$detail['D03_YOYAKU_SAGYO_NO']];
+                            } else {
+                                echo '';
+                            } ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
