@@ -76,7 +76,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検満了日</label>
-                        <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? Yii::$app->formatter->asDate($detail['D03_JIKAI_SHAKEN_YM'], 'yyyy年MM月dd日') : ''; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? substr($detail['D03_JIKAI_SHAKEN_YM'],0,4).'年'.substr($detail['D03_JIKAI_SHAKEN_YM'],4,2).'月'.substr($detail['D03_JIKAI_SHAKEN_YM'],6,2).'日' : ''; ?> </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検サイクル</label>
@@ -151,7 +151,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">施行日（予約日）</label>
-                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate($detail['D03_SEKOU_YMD'], 'yyyy/MM/dd') : ''; ?> </p>
+                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? substr($detail['D03_SEKOU_YMD'],0,4).'/'.substr($detail['D03_SEKOU_YMD'],4,2).'/'.substr($detail['D03_SEKOU_YMD'],6,2) : ''; ?> </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
@@ -631,9 +631,11 @@
             <a href="<?php echo $url; ?>" class="btnTool">情報検索</a>
             <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview.html?den_no=<?php echo $detail['D03_DEN_NO']; ?>"
                class="btnTool" target="_blank">作業確認</a>
-            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/pdf/tmp/20151227124515_1127370023.pdf"
-               class="btnTool" target="_blank">保証書を表示</a>';
-            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/regist-workslip.html" class="btnTool">編集</a>
+
+            <a href="<?php echo \yii\helpers\BaseUrl::base(true).'/data/pdf/'.$detail['D03_DEN_NO'].'.pdf' ?>"
+               class="btnTool" target="_blank" style="<?php if ($check_file == 0) {echo 'pointer-events: none';} else { echo '';}?>" id="pdf">保証書を表示</a>'
+
+            <a href="<?php echo \yii\helpers\BaseUrl::base(true).'/regist-workslip.html?denpyo_no='.$detail['D03_DEN_NO']?>" class="btnTool">編集</a>
             <a href="#modalRemoveConfirm" class="btnTool" data-toggle="modal">削除</a>
         </div>
         <?php if (!empty($detail['sagyo']) && !empty($detail['D03_TANTO_SEI'] && !empty($detail['D03_KAKUNIN_SEI']) && $detail['D03_STATUS'] == 0 && !empty($detail['product']))) {

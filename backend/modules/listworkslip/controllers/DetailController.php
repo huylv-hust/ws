@@ -8,6 +8,7 @@ use app\models\Sdptd04denpyosagyo;
 use app\models\Sdptd05denpyocom;
 use app\models\Sdptm01sagyo;
 use app\models\Sdptm05com;
+use backend\components\csv;
 use backend\components\utilities;
 use backend\controllers\WsController;
 use Yii;
@@ -43,10 +44,10 @@ class DetailController extends WsController
 
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
-        $data['check_file'] = $this->checkfile($filter['detail_no']);
+        $data['check_file'] = $this->checkFile($filter['detail_no']);
         Yii::$app->params['titlePage'] = '作業伝票詳細';
         Yii::$app->view->title = '作業伝票詳細';
-
+//var_dump($data['detail']);die;
         return $this->render('index', $data);
     }
 
@@ -174,8 +175,20 @@ class DetailController extends WsController
         return $this->render('preview', $data);
     }
 
-    public function checkfile($den_no)
+    public function checkFile($den_no)
     {
-        return file_exists(BaseUrl::base(true) . '/pdf/' . $den_no . '.pdf') ? 1 : 0;
+        if (file_exists('data/pdf/' . $den_no . '.pdf')) {
+            return csv::readcsv(['D03_DEN_NO' => $den_no])['status'] == 0 ? 1 : 0;
+        }
+        return 0;
+    }
+
+    public function actionUpdatestatus($den_no)
+    {
+        $post = csv::readcsv(['D03_DEN_NO' => $den_no]);
+        $post['status'] = 1;
+
+        csv::writecsv($post);
+        return true;
     }
 }

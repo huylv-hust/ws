@@ -25,6 +25,7 @@ class Sdptw01deldenpyo extends \yii\db\ActiveRecord
     }
 
     public $obj;
+
     /**
      * @inheritdoc
      */
@@ -58,7 +59,12 @@ class Sdptw01deldenpyo extends \yii\db\ActiveRecord
     public function setData($data = array(), $id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
-        $data['W01_KANRI_ID'] = date('YmdHis');
+
+        $time = microtime();
+        $time_list = explode(' ', $time);
+        $time_micro = explode('.', $time_list[0]);
+        $data['W01_KANRI_ID'] = date('YmdHis') . substr($time_micro[1], 0, 3);
+
         $data['W01_UPD_DATE'] = date('d-M-y');
         $data['W01_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 

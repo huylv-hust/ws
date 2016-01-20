@@ -14,7 +14,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">受付日</label>
-                        <p class="txtValue"><?php echo Yii::$app->formatter->asDate($detail['D03_INP_DATE'], 'yyyy/MM/dd'); ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? substr($detail['D03_SEKOU_YMD'],0,4).'/'.substr($detail['D03_SEKOU_YMD'],4,2).'/'.substr($detail['D03_SEKOU_YMD'],6,2) : ''; ?> </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">状況</label>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検満了日</label>
-                        <p class="txtValue txtSub"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? Yii::$app->formatter->asDate($detail['D03_JIKAI_SHAKEN_YM'], 'yyyy年MM月dd日') : ''; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? substr($detail['D03_JIKAI_SHAKEN_YM'],0,4).'年'.substr($detail['D03_JIKAI_SHAKEN_YM'],4,2).'月'.substr($detail['D03_JIKAI_SHAKEN_YM'],6,2).'日' : ''; ?> </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検サイクル</label>
