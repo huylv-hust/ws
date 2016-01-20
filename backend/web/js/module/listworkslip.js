@@ -33,6 +33,14 @@ var listworkslip = function(){
     };
     /* END SCREEN SEARCH */
 
+    /* start change status */
+    var click_change_status = function(){
+
+    };
+    var change_status = function(){
+
+    };
+    /* end change status */
     var validate = function(){
         $('#listworkslip').validate({
             rules: {
@@ -78,6 +86,8 @@ var listworkslip = function(){
           search();
           validate();
           convert_zen2han();
+          click_change_status();
+          change_status();
       }
     };
 }();
