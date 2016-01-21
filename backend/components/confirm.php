@@ -11,13 +11,8 @@ namespace backend\components;
 
 class confirm
 {
-    public static function writeconfim($post = array())
+    public static function writeconfirm($post = array())
     {
-        $branch = utilities::getAllBranch();
-        $branch_code = isset($branch['all_ss_branch'][$post['D01_SS_CD']]) ? $branch['all_ss_branch'][$post['D01_SS_CD']] : '';
-        $branch_name = isset($branch['all_branch'][$branch_code]) ? $branch['all_branch'][$branch_code] : '';
-        $ss_name = isset($branch['all_ss'][$post['D01_SS_CD']]) ? $branch['all_ss'][$post['D01_SS_CD']] : '';
-
         $data[0] = array(
             'タイヤ交換図1',
             'タイヤ交換図2',
@@ -70,7 +65,7 @@ class confirm
             'status' => isset($post['status']) ? $post['status'] : '0',
         );
 
-        $fp = fopen(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv', 'w+');
+        $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {
             fputcsv($fp, $value);
@@ -81,8 +76,8 @@ class confirm
 
     public static function readconfirm($post = array())
     {
-        if (file_exists(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv')) {
-            $data = file_get_contents(getcwd().'/data/csv/' . $post['D03_DEN_NO'] . '.csv');
+        if (file_exists(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv')) {
+            $data = file_get_contents(getcwd().'/data/confirm/' . $post['D03_DEN_NO'] . '.csv');
 
             if (substr($data, 0, 3) == "\xEF\xBB\xBF") {
                 $data = substr($data, 3);

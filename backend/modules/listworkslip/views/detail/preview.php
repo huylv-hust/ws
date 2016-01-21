@@ -142,20 +142,15 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
-                        <p class="txtValue"><?php if (isset($detail['D03_AZU_BEGIN_HH'])) {
-                                echo $detail['D03_AZU_BEGIN_HH'];
-                            }
-                            if (isset($detail['D03_AZU_BEGIN_MI'])) {
-                                echo ':' . $detail['D03_AZU_BEGIN_HH'];
-                            }
-                            if (isset($detail['D03_AZU_END_HH'])) {
-                                echo '～' . $detail['D03_AZU_END_HH'];
-                            }
-                            if (isset($detail['D03_AZU_END_MI'])) {
-                                echo ':' . $detail['D03_AZU_END_MI'];
-                            } else {
-                                echo '';
-                            } ?></p>
+                        <p class="txtValue">
+                            <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? $detail['D03_AZU_BEGIN_HH'] : '00'; ?>
+                            ：
+                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? $detail['D03_AZU_BEGIN_MI'] : '00'; ?>
+                            ～
+                            <?php echo isset($detail['D03_AZU_END_HH']) ? $detail['D03_AZU_END_HH'] : '00'; ?>
+                            ：
+                            <?php echo isset($detail['D03_AZU_END_MI']) ? $detail['D03_AZU_END_MI'] : '00'; ?>
+                        </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">予約内容</label>
@@ -281,26 +276,27 @@
                     </tr>
                     <tr>
                         <td colspan="2"><p class="leftside">タイヤ交換図</p>
-                            <div class="areaPrintCheckImg"><img src="img/handwriting.png" alt=""
-                                                                class="itemPrintCheckImg">
+                            <div class="areaPrintCheckImg"><img
+                                    src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/img/handwriting.png" alt=""
+                                    class="itemPrintCheckImg">
                                 <div class="itemPrintCheck FR">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" disabled>
+                                        <input type="checkbox" <?php echo isset($confirm['tire_1'])==1 ? 'checked' : '' ?> disabled name="tire_1">
                                     </label>
                                 </div>
                                 <div class="itemPrintCheck FL">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" disabled>
+                                        <input type="checkbox" <?php echo isset($confirm['tire_2'])==1 ? 'checked' : '' ?> disabled name="tire_2">
                                     </label>
                                 </div>
                                 <div class="itemPrintCheck RR">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" disabled>
+                                        <input type="checkbox" <?php echo isset($confirm['tire_3'])==1 ? 'checked' : '' ?> disabled name="tire_3">
                                     </label>
                                 </div>
                                 <div class="itemPrintCheck RL">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" disabled>
+                                        <input type="checkbox" <?php echo isset($confirm['tire_4'])==1 ? 'checked' : '' ?> disabled name="tire_4">
                                     </label>
                                 </div>
                             </div>
@@ -308,11 +304,13 @@
                         <td colspan="2"><p class="leftside">空気圧</p>
                             <div class="areaAirCheck">
                                 <div class="itemPrintAir">
-                                    <p class="txtValue"><span class="txtUnit">前</span><span class="spcValue"><!-- 1000 --></span><span
+                                    <p class="txtValue"><span class="txtUnit">前</span><span class="spcValue"><input
+                                                type="number" class="textFormConf" value="<?php echo isset($confirm['pressure_front']) ? $confirm['pressure_front'] : '' ?>" disabled name="pressure_front"></span><span
                                             class="txtUnit">kpa</span></p>
                                 </div>
                                 <div class="itemPrintAir">
-                                    <p class="txtValue"><span class="txtUnit">後</span><span class="spcValue"><!-- 1000 --></span><span
+                                    <p class="txtValue"><span class="txtUnit">後</span><span class="spcValue"><input
+                                                type="number" class="textFormConf" value="<?php echo isset($confirm['pressure_behind']) ? $confirm['pressure_behind'] : '' ?>" disabled name="pressure_behind"></span><span
                                             class="txtUnit">kpa</span></p>
                                 </div>
                             </div>
@@ -322,28 +320,28 @@
                         <td><p class="leftside">リムバルブ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['rim'])==1 ? 'checked' : '' ?> disabled name="rim">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">トルクレンチ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['rim']) ? 'checked' : '' ?> disabled name="torque">
                                     締付</label>
                             </div>
                         </td>
                         <td><p class="leftside">ホイルキャップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['foil'])==1 ? 'checked' : '' ?> disabled name="foil">
                                     取付</label>
                             </div>
                         </td>
                         <td><p class="leftside">持帰ナット</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['nut'])==1 ? 'checked' : '' ?> disabled name="nut">
                                     確認</label>
                             </div>
                         </td>
@@ -355,28 +353,28 @@
                         <td><p class="leftside">オイル量</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['oil'])==1 ? 'checked' : '' ?> disabled name="oil">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">オイルキャップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox"<?php echo isset($confirm['oil_cap'])==1 ? 'checked' : '' ?> disabled name="oil_cap">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">レベルゲージ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['level'])==1 ? 'checked' : '' ?> disabled name="level">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">ドレンボルト</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['drain_bolt'])==1 ? 'checked' : '' ?> disabled name="drain_bolt">
                                     確認</label>
                             </div>
                         </td>
@@ -385,22 +383,28 @@
                         <td><p class="leftside">パッキン</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['packing'])==1 ? 'checked' : '' ?> disabled name="packing">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">オイル漏れ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['oil_leak'])==1 ? 'checked' : '' ?> disabled name="oil_leak">
                                     確認</label>
                             </div>
                         </td>
                         <td colspan="2"><p class="leftside">次回交換目安</p>
                             <div class="checkPrint">
-                                <p class="txtValue">　　　<span class="txtUnit">年</span>　　<span
-                                        class="txtUnit">月</span>　　<span class="txtUnit">日　または、</span>　　　<span
-                                        class="txtUnit">km</span></p>
+                                <p class="txtValue">
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],0,4) : '' ?>" disabled maxlength="4" style="width:4em;" name="date_1">
+                                    <span class="txtUnit">年</span>
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],4,2) : '' ?>" disabled maxlength="2" style="width:2em;" name="date_2">
+                                    <span class="txtUnit">月</span>
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],6,2) : '' ?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
+                                    <span class="txtUnit">日　または、</span>
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['km']) ? $confirm['km'] : '' ?>" disabled name="km">
+                                    <span class="txtUnit">km</span></p>
                             </div>
                         </td>
                     </tr>
@@ -411,28 +415,28 @@
                         <td><p class="leftside">ターミナル締付</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['terminal'])==1 ? 'checked' : '' ?> disabled name="terminal">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">ステー取付</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['stay'])==1 ? 'checked' : '' ?> disabled name="stay">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">バックアップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['backup'])==1 ? 'checked' : '' ?> disabled name="backup">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">スタートアップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" disabled>
+                                    <input type="checkbox" <?php echo isset($confirm['startup'])==1 ? 'checked' : '' ?> disabled name="startup">
                                     確認</label>
                             </div>
                         </td>

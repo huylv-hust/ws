@@ -35,10 +35,25 @@ var listworkslip = function(){
 
     /* start change status */
     var click_change_status = function(){
-
+        $('#pdf').off('click').on('click', function(){
+            change_status();
+        });
     };
     var change_status = function(){
-
+        var den_no = $('#den_no').val();
+        $.ajax({
+            url: baseUrl + '/listworkslip/detail/updatestatus',
+            type: 'post',
+            data: {
+                status: 1,
+                den_no: den_no,
+            },
+            success: function(data){
+                $('#pdf').addClass('off');
+                $('#pdf').css('pointer-events', 'none');
+                window.open(baseUrl + '/data/pdf/'+den_no+'.pdf');
+            }
+        });
     };
     /* end change status */
     var validate = function(){
@@ -87,7 +102,6 @@ var listworkslip = function(){
           validate();
           convert_zen2han();
           click_change_status();
-          change_status();
       }
     };
 }();

@@ -8,6 +8,7 @@ use app\models\Sdptd04denpyosagyo;
 use app\models\Sdptd05denpyocom;
 use app\models\Sdptm01sagyo;
 use app\models\Sdptm05com;
+use backend\components\confirm;
 use backend\components\csv;
 use backend\components\utilities;
 use backend\controllers\WsController;
@@ -45,9 +46,13 @@ class DetailController extends WsController
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
         $data['check_file'] = $this->checkFile($filter['detail_no']);
+
+        $data['csv'] = csv::readcsv(['D03_DEN_NO' => $filter['detail_no']]);
+        $data['confirm'] = confirm::readconfirm(['D03_DEN_NO' => $filter['detail_no']]);
+
         Yii::$app->params['titlePage'] = '作業伝票詳細';
         Yii::$app->view->title = '作業伝票詳細';
-//var_dump($data['detail']);die;
+
         return $this->render('index', $data);
     }
 
@@ -106,7 +111,8 @@ class DetailController extends WsController
             $obj->setData(['D03_STATUS' => $status_update], $den_no);
             if ($obj->saveData()) {
                 Yii::$app->session->setFlash('success', '変更しました。');
-                return $this->redirect(BaseUrl::base(true) . '/list-workslip.html');
+                $url = $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip.html';
+                return $this->redirect($url);
             }
             Yii::$app->session->setFlash('error', '変更するできません。');
             return $this->redirect(BaseUrl::base(true) . '/detail-workslip.html?den_no=' . $den_no);
@@ -170,6 +176,9 @@ class DetailController extends WsController
 
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
+
+        $data['csv'] = csv::readcsv(['D03_DEN_NO' => $filter['detail_no']]);
+        $data['confirm'] = confirm::readconfirm(['D03_DEN_NO' => $filter['detail_no']]);
         $this->layout = '@app/views/layouts/print';
         Yii::$app->view->title = '作業確認書';
         return $this->render('preview', $data);
@@ -177,18 +186,22 @@ class DetailController extends WsController
 
     public function checkFile($den_no)
     {
-        if (file_exists('data/pdf/' . $den_no . '.pdf')) {
-            return csv::readcsv(['D03_DEN_NO' => $den_no])['status'] == 0 ? 1 : 0;
+
+        if (file_exists(getcwd() . '/data/pdf/' . $den_no . '.pdf')) {
+            if (isset(confirm::readconfirm(['D03_DEN_NO' => $den_no])['status'])) {
+                return confirm::readconfirm(['D03_DEN_NO' => $den_no])['status'] == 0 ? 1 : 0;
+            }
+            return 0;
         }
         return 0;
     }
 
-    public function actionUpdatestatus($den_no)
+    public function actionUpdatestatus()
     {
-        $post = csv::readcsv(['D03_DEN_NO' => $den_no]);
-        $post['status'] = 1;
-
-        csv::writecsv($post);
-        return true;
+        $post['den_no'] = Yii::$app->request->post('den_no');
+        $post = confirm::readconfirm(['D03_DEN_NO' => $post['den_no']]);
+        $post['status'] = Yii::$app->request->post('status');
+        confirm::writeconfirm($post);
+        return;
     }
 }
