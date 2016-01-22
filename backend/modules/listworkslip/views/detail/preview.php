@@ -138,7 +138,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">施行日（予約日）</label>
-                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate($detail['D03_SEKOU_YMD'], 'yyyy/MM/dd') : ''; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? substr($detail['D03_SEKOU_YMD'],0,4).'/'.substr($detail['D03_SEKOU_YMD'],4,2).'/'.substr($detail['D03_SEKOU_YMD'],6,2) : ''; ?> </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
