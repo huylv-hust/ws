@@ -466,11 +466,26 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">購入日</label>
-                        <p class="txtValue"><?php echo isset($csv['purchase_date']) ? $csv['purchase_date'] : '' ?></p>
+                        <p class="txtValue">
+                            <?php echo isset($csv['purchase_date']) ? substr($csv['purchase_date'], 0, 4) : '' ?>
+                            <span class="txtUnit">年</span>
+                            <?php echo isset($csv['purchase_date']) ? substr($csv['purchase_date'], 4, 2) : '' ?>
+                            <span class="txtUnit">月</span>
+                            <?php echo isset($csv['purchase_date']) ? substr($csv['purchase_date'], 6, 2 ) : '' ?>
+                            <span class="txtUnit">日</span>
+                        </p>
+
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">保証期間</label>
-                        <p class="txtValue"><?php echo isset($csv['warranty_period']) ? $csv['warranty_period'] : '' ?></p>
+                        <p class="txtValue">
+                            <?php echo isset($csv['warranty_period']) ? substr($csv['warranty_period'], 0, 4) : '' ?>
+                            <span class="txtUnit">年</span>
+                            <?php echo isset($csv['warranty_period']) ? substr($csv['warranty_period'], 4, 2) : '' ?>
+                            <span class="txtUnit">月</span>
+                            <?php echo isset($csv['warranty_period']) ? substr($csv['warranty_period'], 6, 2 ) : '' ?>
+                            <span class="txtUnit">日</span>
+                        </p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">

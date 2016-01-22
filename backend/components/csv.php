@@ -132,7 +132,7 @@ class csv
     public static function readcsv($post = array())
     {
         if (file_exists(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv')) {
-            $data = file_get_contents(BaseUrl::base(true) . '/data/csv/' . $post['D03_DEN_NO'] . '.csv');
+            $data = file_get_contents(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv');
 
             if (substr($data, 0, 3) == "\xEF\xBB\xBF") {
                 $data = substr($data, 3);
