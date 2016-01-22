@@ -14,7 +14,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">受付日</label>
-                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
+                        <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">状況</label>
@@ -397,10 +397,15 @@
                         <td colspan="2"><p class="leftside">次回交換目安</p>
                             <div class="checkPrint">
                                 <p class="txtValue">
-                                    <input type="number" class="textFormConf" value="<?php echo $confirm['date'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($confirm['date'])), 'yyyy/MM/dd') : '' ?>" disabled name="date">
-                                    <span class="txtUnit">または、</span>
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],0,4) : '' ?>" disabled maxlength="4" style="width:4em;" name="date_1">
+                                    <span class="txtUnit">年</span>
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],4,2) : '' ?>" disabled maxlength="2" style="width:2em;" name="date_2">
+                                    <span class="txtUnit">月</span>
+                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],6,2) : '' ?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
+                                    <span class="txtUnit">日　または、</span>
                                     <input type="number" class="textFormConf" value="<?php echo isset($confirm['km']) ? $confirm['km'] : '' ?>" disabled name="km">
-                                    <span class="txtUnit">km</span></p>
+                                    <span class="txtUnit">km</span>
+                                </p>
                             </div>
                         </td>
                     </tr>

@@ -46,6 +46,7 @@ class DetailController extends WsController
         $data['job'] = $job;
         $data['status'] = Yii::$app->params['status'];
         $data['check_file'] = $this->checkFile($filter['detail_no']);
+        $data['check_csv'] = file_exists(getcwd() . '/data/csv/' . $filter['detail_no'] . '.csv') ? 1 : 0;
 
         $data['csv'] = csv::readcsv(['D03_DEN_NO' => $filter['detail_no']]);
         $data['confirm'] = confirm::readconfirm(['D03_DEN_NO' => $filter['detail_no']]);
@@ -187,7 +188,6 @@ class DetailController extends WsController
 
     public function checkFile($den_no)
     {
-
         if (file_exists(getcwd() . '/data/pdf/' . $den_no . '.pdf')) {
             if (isset(confirm::readconfirm(['D03_DEN_NO' => $den_no])['status'])) {
                 return confirm::readconfirm(['D03_DEN_NO' => $den_no])['status'] == 0 ? 1 : 0;

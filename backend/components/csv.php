@@ -62,7 +62,7 @@ class csv
         );
 
         $data[1] = array(
-            'warranty_card_number' => $post['M09_WARRANTY'],
+            'warranty_card_number' => $post['M09_WARRANTY_NO'],
             'warranty_period' => $post['warranty_period'],
             'purchase_date' => $post['M09_INP_DATE'],
             'purchase_no' => $post['D05_SURYO'],
@@ -117,7 +117,7 @@ class csv
             fputcsv($fp, $value);
         }
         fclose($fp);
-        exit();
+
     }
 
     public static function readcsv($post = array())
@@ -141,10 +141,10 @@ class csv
             $title = fgetcsv($fp);
             $data = fgetcsv($fp);
             $result = array(
-                'warranty_card_number' => $data['0'],
+                'M09_WARRANTY_NO' => $data['0'],
                 'warranty_period' => $data['1'],
-                'purchase_date' => $data['2'],
-                'purchase_no' => $data['3'],
+                'M09_INP_DATE' => $data['2'],
+                'D05_SURYO' => $data['3'],
                 'D01_CUST_NAMEN' => $data['4'],
                 'D01_CUST_NAMEK' => $data['5'],
                 'D01_YUBIN_BANGO' => $data['6'],
@@ -191,6 +191,61 @@ class csv
             );
             return $result;
         }
+        return self::defaultcsv();
     }
+    public function defaultcsv()
+    {
+        $result = array(
+            'M09_WARRANTY_NO' => '',
+            'warranty_period' => '',
+            'M09_INP_DATE' => '',
+            'D05_SURYO' => '',
+            'D01_CUST_NAMEN' => '',
+            'D01_CUST_NAMEK' => '',
+            'D01_YUBIN_BANGO' => '',
+            'D01_ADDR' => '',
+            'D01_TEL_NO' => '',
+            'D02_MODEL_CD' => '',
+            'D02_CAR_NO' => '',
+            'right_front_manu' => '',
+            'right_front_product' => '',
+            'right_front_size' => '',
+            'right_front_serial' => '',
+            'right_front_no' => '',
+            'left_front_manu' => '',
+            'left_front_product' => '',
+            'left_front_size' => '',
+            'left_front_serial' => '',
+            'left_front_no' => '',
+            'right_behind_manu' => '',
+            'right_behind_product' => '',
+            'right_behind_size' => '',
+            'right_behind_serial' => '',
+            'right_behind_no' => '',
+            'left_behind_manu' => '',
+            'left_behind_product' => '',
+            'left_behind_size' => '',
+            'left_behind_serial' => '',
+            'left_behind_no' => '',
+            'other_a_manu' => '',
+            'other_a_product' => '',
+            'other_a_size' => '',
+            'other_a_serial' => '',
+            'other_a_no' => '',
+            'other_b_manu' => '',
+            'other_b_product' => '',
+            'other_b_size' => '',
+            'other_b_serial' => '',
+            'other_b_no' => '',
+            'D03_POS_DEN_NO' => '',
+            'branch_code' => '',
+            'branch_name' => '',
+            'ss_name' => '',
+            'D01_SS_CD' => '',
+            'D03_DEN_NO' => '',
+        );
+        return $result;
+    }
+
 
 }
