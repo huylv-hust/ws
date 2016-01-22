@@ -77,7 +77,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検満了日</label>
-                        <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? substr($detail['D03_JIKAI_SHAKEN_YM'],0,4).'年'.substr($detail['D03_JIKAI_SHAKEN_YM'],4,2).'月'.substr($detail['D03_JIKAI_SHAKEN_YM'],6,2).'日' : ''; ?> </p>
+                        <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($detail['D03_JIKAI_SHAKEN_YM'])), 'yyyy年MM月dd日') : '' ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検サイクル</label>
@@ -152,7 +152,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">施行日（予約日）</label>
-                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? substr($detail['D03_SEKOU_YMD'],0,4).'/'.substr($detail['D03_SEKOU_YMD'],4,2).'/'.substr($detail['D03_SEKOU_YMD'],6,2) : ''; ?> </p>
+                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
@@ -345,12 +345,8 @@
                         <td colspan="2"><p class="leftside">次回交換目安</p>
                             <div class="checkPrint">
                                 <p class="txtValue">
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],0,4) : '' ?>" disabled maxlength="4" style="width:4em;" name="date_1">
-                                    <span class="txtUnit">年</span>
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],4,2) : '' ?>" disabled maxlength="2" style="width:2em;" name="date_2">
-                                    <span class="txtUnit">月</span>
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],6,2) : '' ?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
-                                    <span class="txtUnit">日　または、</span>
+                                    <input type="number" class="textFormConf" value="<input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($confirm['date'])), 'yyyy/MM/dd') : '' ?>" disabled name="date">" disabled ">
+                                    <span class="txtUnit">または、</span>
                                     <input type="number" class="textFormConf" value="<?php echo isset($confirm['km']) ? $confirm['km'] : '' ?>" disabled name="km">
                                     <span class="txtUnit">km</span></p>
                             </div>
@@ -462,29 +458,19 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">保証書番号</label>
-                        <p class="txtValue"><?php echo isset($csv['warranty_card_number']) ? $csv['warranty_card_number'] : '' ?></p>
+                        <p class="txtValue"><?php echo isset($csv['M09_WARRANTY']) ? $csv['M09_WARRANTY'] : '' ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">購入日</label>
                         <p class="txtValue">
-                            <?php echo isset($csv['purchase_date']) ? substr($csv['purchase_date'], 0, 4) : '' ?>
-                            <span class="txtUnit">年</span>
-                            <?php echo isset($csv['purchase_date']) ? substr($csv['purchase_date'], 4, 2) : '' ?>
-                            <span class="txtUnit">月</span>
-                            <?php echo isset($csv['purchase_date']) ? substr($csv['purchase_date'], 6, 2 ) : '' ?>
-                            <span class="txtUnit">日</span>
+                            <?php echo isset($csv['M09_INP_DATE']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd') : '' ;?>
                         </p>
 
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">保証期間</label>
                         <p class="txtValue">
-                            <?php echo isset($csv['warranty_period']) ? substr($csv['warranty_period'], 0, 4) : '' ?>
-                            <span class="txtUnit">年</span>
-                            <?php echo isset($csv['warranty_period']) ? substr($csv['warranty_period'], 4, 2) : '' ?>
-                            <span class="txtUnit">月</span>
-                            <?php echo isset($csv['warranty_period']) ? substr($csv['warranty_period'], 6, 2 ) : '' ?>
-                            <span class="txtUnit">日</span>
+                            <?php echo isset($csv['warranty_period']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['warranty_period'])), 'yyyy年MM月dd') : '' ;?>
                         </p>
                     </div>
                 </div>

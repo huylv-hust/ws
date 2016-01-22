@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: levan_000
- * Date: 1/21/2016
- * Time: 11:20 AM
- */
 
 namespace backend\components;
-
 
 class confirm
 {
@@ -71,13 +64,12 @@ class confirm
             fputcsv($fp, $value);
         }
         fclose($fp);
-        exit();
     }
 
     public static function readconfirm($post = array())
     {
         if (file_exists(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv')) {
-            $data = file_get_contents(getcwd().'/data/confirm/' . $post['D03_DEN_NO'] . '.csv');
+            $data = file_get_contents(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv');
 
             if (substr($data, 0, 3) == "\xEF\xBB\xBF") {
                 $data = substr($data, 3);

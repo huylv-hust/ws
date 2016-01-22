@@ -1,15 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: huylv
- * Date: 1/20/2016
- * Time: 9:23 AM
- */
 
 namespace backend\components;
-
-
-use yii\helpers\BaseUrl;
 
 class csv
 {
@@ -71,10 +62,10 @@ class csv
         );
 
         $data[1] = array(
-            'warranty_card_number' => $post['warranty_card_number'],
+            'warranty_card_number' => $post['M09_WARRANTY'],
             'warranty_period' => $post['warranty_period'],
-            'purchase_date' => $post['purchase_date'],
-            'purchase_no' => $post['purchase_no'],
+            'purchase_date' => $post['M09_INP_DATE'],
+            'purchase_no' => $post['D05_SURYO'],
             'D01_CUST_NAMEN' => $post['D01_CUST_NAMEN'],
             'D01_CUST_NAMEK' => $post['D01_CUST_NAMEK'],
             'D01_YUBIN_BANGO' => $post['D01_YUBIN_BANGO'],

@@ -179,6 +179,7 @@ class DetailController extends WsController
 
         $data['csv'] = csv::readcsv(['D03_DEN_NO' => $filter['detail_no']]);
         $data['confirm'] = confirm::readconfirm(['D03_DEN_NO' => $filter['detail_no']]);
+
         $this->layout = '@app/views/layouts/print';
         Yii::$app->view->title = '作業確認書';
         return $this->render('preview', $data);
@@ -198,10 +199,11 @@ class DetailController extends WsController
 
     public function actionUpdatestatus()
     {
-        $post['den_no'] = Yii::$app->request->post('den_no');
-        $post = confirm::readconfirm(['D03_DEN_NO' => $post['den_no']]);
+        $den_no = Yii::$app->request->post('den_no');
+        $post = confirm::readconfirm(['D03_DEN_NO' => $den_no]);
+        $post['D03_DEN_NO'] = $den_no;
         $post['status'] = Yii::$app->request->post('status');
         confirm::writeconfirm($post);
-        return;
+        return true;
     }
 }
