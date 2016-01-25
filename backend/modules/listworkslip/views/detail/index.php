@@ -31,10 +31,10 @@
                             if ($detail['D03_STATUS'] == 1) {
                                 echo $status[2];
                             }
-                            if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ymd')) {
+                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ymd')) {
                                 echo $status[0];
                             }
-                            if ($detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ymd')) {
+                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ymd')) {
                                 echo $status[1];
                             } ?>
                         </p>

@@ -51,16 +51,16 @@
                     ?>
                 </nav>
                 <table class="tableList">
-                    <tr>
-                        <th>No.</th>
-                        <th>伝票No.</th>
-                        <th>SSコード</th>
-                        <th>SS名</th>
-                        <th>施行日（予約日）</th>
-                        <th>データ確認</th>
-                        <th>お客様名</th>
-                        <th>作業内容</th>
-                        <th>作業確認</th>
+                    <tr style="max-width: 100%">
+                        <th style="min-width: 49px;">No.</th>
+                        <th style="min-width: 85px;">伝票No.</th>
+                        <th style="min-width: 99px;">SSコード</th>
+                        <th style="max-width: 20%;min-width: 164px;">SS名</th>
+                        <th style="min-width: 164px;">施行日（予約日）</th>
+                        <th style="min-width: 110px;">データ確認</th>
+                        <th style="max-width: 20%;min-width: 164px;">お客様名</th>
+                        <th style="max-width: 25%;min-width: 200px;">作業内容</th>
+                        <th style="min-width: 93px;">作業確認</th>
                     </tr>
                     <?php
                     if (isset($page)) {
@@ -87,10 +87,10 @@
                                 if ($v['D03_STATUS'] == 1) {
                                     echo $status[2];
                                 }
-                                if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ymd')) {
+                                if ($v['D03_STATUS'] != '' && $v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ymd')) {
                                     echo $status[0];
                                 }
-                                if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ymd')) {
+                                if ($v['D03_STATUS'] != '' && $v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ymd')) {
                                     echo $status[1];
                                 } ?>
                             </td>
