@@ -641,7 +641,7 @@
 
             <a href="#modalRemoveConfirm" class="btnTool" data-toggle="modal">削除</a>
         </div>
-        <?php if (!empty($detail['sagyo']) && !empty($detail['D03_TANTO_SEI'] && !empty($detail['D03_KAKUNIN_SEI']) && $detail['D03_STATUS'] == 0 && !empty($detail['product']))) {
+        <?php if (!empty($detail['sagyo']) && !empty($detail['D03_TANTO_SEI'] && !empty($detail['D03_KAKUNIN_SEI']) && $detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && !empty($detail['product']))) {
             echo '<a href="#modalWorkSlipComp" class="btnSubmit" data-toggle="modal">作業確定</a>';
         } ?>
     </div>
