@@ -468,14 +468,14 @@
                     <div class="formItem">
                         <label class="titleLabel">購入日</label>
                         <p class="txtValue">
-                            <?php echo isset($csv['M09_INP_DATE']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd') : '' ;?>
+                            <?php echo isset($csv['M09_INP_DATE']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd日') : '' ;?>
                         </p>
 
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">保証期間</label>
                         <p class="txtValue">
-                            <?php echo isset($csv['warranty_period']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['warranty_period'])), 'yyyy年MM月dd') : '' ;?>
+                            <?php echo isset($csv['warranty_period']) ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['warranty_period'])), 'yyyy年MM月dd日') : '' ;?>
                         </p>
                     </div>
                 </div>
