@@ -87,10 +87,10 @@
                                 if ($v['D03_STATUS'] == 1) {
                                     echo $status[2];
                                 }
-                                if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ydm')) {
+                                if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] <= date('Ymd')) {
                                     echo $status[0];
                                 }
-                                if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ydm')) {
+                                if ($v['D03_STATUS'] == 0 && $v['D03_SEKOU_YMD'] > date('Ymd')) {
                                     echo $status[1];
                                 } ?>
                             </td>
