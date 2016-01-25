@@ -183,6 +183,7 @@ class DetailController extends WsController
 
         $this->layout = '@app/views/layouts/print';
         Yii::$app->view->title = '作業確認書';
+        Yii::$app->params['titlePage'] = '作業確認書';
         return $this->render('preview', $data);
     }
 

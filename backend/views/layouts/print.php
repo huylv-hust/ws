@@ -10,6 +10,7 @@ AppAsset::register($this);
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= isset(Yii::$app->view->title) ? Yii::$app->view->title : ''; ?></title>
     <script>
         var baseUrl = '<?php echo \yii\helpers\BaseUrl::base(true); ?>';
     </script>
