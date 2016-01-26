@@ -55,7 +55,7 @@ class confirm
             'stay' => isset($post['stay']) ? 1 : 0,
             'backup' => isset($post['backup']) ? 1 : 0,
             'startup' => isset($post['startup']) ? 1 : 0,
-            'status' => isset($post['status']) ? $post['status'] : '0',
+            'status' => isset($post['status']) ? $post['status'] : 0,
         );
         $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
