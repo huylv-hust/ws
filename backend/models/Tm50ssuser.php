@@ -70,18 +70,19 @@ class Tm50ssuser extends \yii\db\ActiveRecord
         if (! isset($dataUser['ssid']) || ! isset($dataUser['password'])) {
             $flag = false;
         } else {
+            $password = md5($dataUser['password'].md5('12345'.$dataUser['password']));
             $sql = (new Query())
                 ->select(['M50_USER_ID','M50_SS_CD','M50_USER_NAME'])
                 ->from(self::tableName())
-//                ->where('M50_SS_CD = :ssid', [':ssid' => $dataUser['ssid']])
-//                ->andWhere('M50_PASSWORD = :password', [':password' => md5($dataUser['password'])])
-//                ->andWhere('M50_DEL_FLG != 1 or M50_DEL_FLG is NULL')
-                ->one();
-            $data[0] = $sql;
-            if (count($data) == 1) {
+                ->where('M50_USER_ID = :ssid', [':ssid' => $dataUser['ssid']])
+                ->andWhere('M50_PASSWORD = :password', [':password' => $password])
+                ->andWhere('M50_DEL_FLG != 1 or M50_DEL_FLG is NULL')
+                ->all();
+
+            if (count($sql) == 1) {
                 $flag = true;
             }
         }
-        return ['flag' => $flag,'sql' => $data];
+        return ['flag' => $flag,'sql' => $sql];
     }
 }

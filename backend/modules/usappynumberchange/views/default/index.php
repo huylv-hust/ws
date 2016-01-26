@@ -1,4 +1,4 @@
-<main class="contents-usappynumberchange">
+<main id="contents">
     <section class="readme">
         <h2 class="titleContent">新カード入力</h2>
     </section>
@@ -73,3 +73,11 @@
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>
 <script type="text/javascript" src="js/module/usappynumberchange.js"></script>
+<script type="text/javascript">
+    $(function(){
+        history.pushState(null, null, 'usappy-number-change.html');
+        window.addEventListener('popstate', function(event) {
+            history.pushState(null, null, 'usappy-number-change.html');
+        });
+    });
+</script>

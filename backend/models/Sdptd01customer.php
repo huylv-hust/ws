@@ -113,23 +113,28 @@ class Sdptd01customer extends \yii\db\ActiveRecord
     }
 	public function saveData()
     {
-        return $this->obj->save();
-    }
-	
-	public function setData($data = array(), $id = null)
-    {
-		$login_info = \Yii::$app->session->get('login_info');
-		$userId = isset($login_info['M05_USER_ID']) ? $login_info['M05_USER_ID'] : null;
-        $data['D01_UPD_DATE'] = date('d-M-y');
-		$obj = new Sdptd01customer();
-        if($id) {
-			$obj = static::findOne($id);
-			$data['D01_UPD_DATE'] = date('d-M-y');
-			$data['D01_UPD_USER_ID'] = $userId;
-		}
 
-		$obj->attributes = $data;
-        foreach($obj->attributes as $k => $v){
+		return $this->obj->save();
+    }
+
+	public function setData($data = array(), &$id = null)
+    {
+		$login_info = Yii::$app->session->get('login_info');
+        $data['D01_UPD_DATE'] = date('d-M-y');
+        $data['D01_UPD_USER_ID'] = $login_info['M50_USER_ID'];
+        if ($id) {
+            $obj = static::findOne($id);
+        } else {
+            $obj = new Sdptd01customer();
+			$data['D01_CUST_NO'] = $obj->getSeq();
+			$id = $data['D01_CUST_NO'];
+            $data['D01_INP_DATE'] = date('d-M-y');
+            $data['D01_INP_USER_ID'] = $login_info['M50_USER_ID'];
+
+        }
+
+        $obj->attributes = $data;
+        foreach ($obj->attributes as $k => $v) {
             $obj->{$k} = trim($v) != '' ? trim($v) : null;
         }
 
@@ -150,5 +155,10 @@ class Sdptd01customer extends \yii\db\ActiveRecord
 			$data[$key] = null;
 		}
 		return $data;
+	}
+	public function getSeq() {
+		$command = \Yii::$app->db->createCommand('SELECT SDP_TD01_CUSTOMER_SEQ.nextval FROM dual');
+		$res = $command->queryAll();
+		return $res['0']['NEXTVAL'];
 	}
 }

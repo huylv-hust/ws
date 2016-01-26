@@ -12,21 +12,10 @@ use yii\web\Cookie;
  */
 class SiteController extends WsController
 {
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
-
     public function actionIndex()
     {
         utilities::deleteCookie('cus_info');//Delete coolkie cus_info
+        \Yii::$app->params['titlePage'] = 'SSサポートサイトTOP';
         \Yii::$app->view->title = 'SSサポートサイトTOP';
         return $this->render('index');
     }

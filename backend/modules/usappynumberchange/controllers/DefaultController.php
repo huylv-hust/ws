@@ -5,7 +5,7 @@ namespace backend\modules\usappynumberchange\controllers;
 use backend\components\api;
 use backend\components\utilities;
 use backend\controllers\WsController;
-use kartik\mpdf\Pdf;
+use backend\modules\pdf\controllers\PdfController;
 use yii\helpers\BaseUrl;
 
 class DefaultController extends WsController
@@ -37,7 +37,9 @@ class DefaultController extends WsController
             return $this->goHome();
         }
         $data['cus_info'] = $cus_info;
+
         \Yii::$app->view->title = 'Usappyカード変更';
+        \Yii::$app->params['titlePage'] = 'Usappyカード変更';
         return $this->render('index', $data);
     }
 
@@ -71,6 +73,7 @@ class DefaultController extends WsController
             'newCardNumber' => $data['newCardNumber']
         ];
         \Yii::$app->view->title = 'Usappyカード変更';
+        \Yii::$app->params['titlePage'] = 'Usappyカード変更';
         return $this->render('confirm', $form);
     }
     /**
@@ -101,10 +104,9 @@ class DefaultController extends WsController
             'oldCardNumber' => $oldCardNumber,
             'newCardNumber' => $newCardNumber
         ];
-
         \Yii::$app->view->title = 'Usappyカード変更';
+        \Yii::$app->params['titlePage'] = 'Usappyカード変更';
         return $this->render('complete', $form);
-
     }
 
     /**
@@ -114,9 +116,9 @@ class DefaultController extends WsController
     public function actionTestapi()
     {
         $api = new api();
-        $member_info = $api->getMemberInfo('282704000162');
-        $infocar = $api->getInfoListCar('282704000162');
-        $infocard = $api->getInfoListCard('282704000162');
+        $member_info = $api->getMemberInfo('277426000167');
+        $infocar = $api->getInfoListCar('277426000167');
+        $infocard = $api->getInfoListCard('277426000167');
         echo '<pre>';
         var_dump($member_info);
         var_dump($infocar);
@@ -124,17 +126,76 @@ class DefaultController extends WsController
         echo '</pre>';
         die;
     }
+
     /**
      *export pdf
      * @author: Dang Bui
      */
     public function actionPdf()
     {
-        $stringTarget = $this->renderPartial('pdf');
-//        $pdf = new \mPDF('ja+aCJK');
-        $pdf = new \mPDF('utf-8');
-        $pdf->WriteHTML($stringTarget);
-        $pdf->Output();
-        exit;
+        $info_warranty = [
+            'number' => 'test19022016',
+            'date' => 'info_warranty_date',
+            'expired' => 'info_warranty_expired'
+        ];
+        $info_car = [
+            'customer_name' => 'info_car_customer',
+            'car_name' => 'info_car_name',
+            'car_license' => 'info_car_license'
+        ];
+        $info_bill = [
+            'front_wheel_right' => [
+                'info_market' => 'Thông tin market1',
+                'product_name' => '321',
+                'size' => '12',
+                'serial' => '1223'
+            ],
+            'front_wheel_left' => [
+                'info_market' => 'Thông tin market2',
+                'product_name' => '123',
+                'size' => '123',
+                'serial' => '123'
+            ],
+            'back_wheel_right' => [
+                'info_market' => 'Thông tin market3',
+                'product_name' => '',
+                'size' => '',
+                'serial' => ''
+            ],
+            'back_wheel_left' => [
+                'info_market' => 'Thông tin market4',
+                'product_name' => '',
+                'size' => '',
+                'serial' => ''
+            ],
+            'otherA' => [
+                'info_market' => 'Thông tin market5',
+                'product_name' => '',
+                'size' => '',
+                'serial' => ''
+            ],
+            'otherB' => [
+                'info_market' => 'Thông tin market6',
+                'product_name' => '',
+                'size' => '',
+                'serial' => ''
+            ]
+        ];
+        $info_ss = [
+            'name' => 'SS name',
+            'address' => 'Address',
+            'mobile' => 'Mobile'
+        ];
+        $data = [
+            'info_warranty' => $info_warranty,
+            'info_car' => $info_car,
+            'info_bill' => $info_bill,
+            'info_ss' => $info_ss
+        ];
+
+        $pdf_export = new PdfController();
+        $pdf_export->exportBill($info_warranty, $info_car, $info_bill, $info_ss, 'save', 1);
+        $file = BaseUrl::base(true).'/data/pdf/'.$info_warranty['number'].'.pdf';
+        var_dump($file);
     }
 }

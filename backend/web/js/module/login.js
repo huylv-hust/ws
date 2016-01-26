@@ -39,8 +39,17 @@ var login = function(){
             form.submit();
         });
     };
+    var zen2han = function() {
+        $('#form-ssid').on('change', function () {
+            utility.zen2han(this);
+        });
+        $('#form-password').on('change', function () {
+            utility.zen2han(this);
+        });
+    };
     return{
         init: function(){
+            zen2han();
             submit();
             validate();
         }

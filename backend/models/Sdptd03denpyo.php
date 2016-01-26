@@ -163,6 +163,7 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         } else {
             $obj = new Sdptd03denpyo();
             $data['D03_INP_DATE'] = date('d-M-y');
+			$data['D03_STATUS']  = 0;
             $data['D03_INP_USER_ID'] = $login_info['M50_USER_ID'];
         }
 
@@ -262,7 +263,6 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         $query = $this->getWhereSearch($filters);
         return $query->count();
     }
-
     public function setDataDefault()
     {
         $attri = $this->attributeLabels();
@@ -314,4 +314,9 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
 
         return false;
     }
+	public function getSeq() {
+		$command = \Yii::$app->db->createCommand('SELECT SDP_TD03_DENPYO_SEQ.nextval FROM dual');
+		$res = $command->queryAll();
+		return $res['0']['NEXTVAL'];
+	}
 }

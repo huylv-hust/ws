@@ -61,4 +61,20 @@ class utilities
         $cookies->remove($namecookie);
         unset($cookies[$namecookie]);
     }
+
+    /**
+     * Create folder in server if folder not exist
+     */
+    public static function createFolder($path)
+    {
+        $string_path = explode('/', $path);
+        $string = '';
+        foreach ($string_path as $k => $v) {
+            $string = $string.'/'.$v;
+            $string = trim($string, '/');
+            if (! is_dir($string)) {
+                mkdir($string);
+            }
+        }
+    }
 }

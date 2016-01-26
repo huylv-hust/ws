@@ -17,10 +17,6 @@ class UserController extends Controller
 {
     public function actionLogin()
     {
-        if (\Yii::$app->session->has('login_info')) {
-            return $this->goHome();
-        }
-
         $user = new Tm50ssuser();
         if (Yii::$app->request->post()) {
             $isLogin = $user->checkLogin(Yii::$app->request->post());
@@ -33,8 +29,9 @@ class UserController extends Controller
                 Yii::$app->session->setFlash('error', '入力されたSSＩＤまたはパスワードが正しくありません');
             }
         }
-
-        $this->layout = 'login';
+        \Yii::$app->params['titlePage'] = 'ログイン';
+        \Yii::$app->view->title = 'ログイン';
+        $this->layout = '@backend/views/layouts/blank';
         return $this->render('login');
     }
 
@@ -46,4 +43,29 @@ class UserController extends Controller
         Yii::$app->session->setFlash('success_logout', '<span class="noti">ログアウトしました。</span>');
         $this->redirect(BaseUrl::base(true).'/login.html');
     }
+
+    /**
+     *time out
+     * @author: Dang Bui
+     */
+    public function actionTimeout()
+    {
+        \Yii::$app->params['titlePage'] = 'エラー';
+        \Yii::$app->view->title = 'エラー';
+        $this->layout = '@backend/views/layouts/error';
+        return $this->render('timeout');
+    }
+
+    /**
+     *error page
+     * @author: Dang Bui
+     */
+    public function actionError()
+    {
+        \Yii::$app->params['titlePage'] = 'エラー';
+        \Yii::$app->view->title = 'エラー';
+        $this->layout = '@backend/views/layouts/error';
+        return $this->render('error');
+    }
+
 }

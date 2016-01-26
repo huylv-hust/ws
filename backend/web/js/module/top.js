@@ -1,7 +1,6 @@
 //GLOBAR var
 var url_usappy_number_change = base_url+'/usappy-number-change.html';
 var url_regist_workslip = base_url+'/regist-workslip.html';
-var url_list_workslip = base_url+'/list-workslip.html';
 var type_usappy = '1';
 var type_receivable = '2';
 var type_other = '3';
@@ -22,10 +21,9 @@ function fncCard(){
     $('#modalAuthUsappy').on('hidden.bs.modal', function (e) {
         clearValueModal(this);
     });
-    $("#modalAuthUsappy").on('show.bs.modal', function(event){
-        $('.card_url_redirect').attr('value', url_usappy_number_change);
-        $('.card_type_redirect').attr('value',type_usappy);
-    });
+    $('.card_url_redirect').attr('value', url_usappy_number_change);
+    $('.card_type_redirect').attr('value',type_usappy);
+
     $.sidr("close", "sidr", function(){
         return false;
     });
@@ -48,16 +46,15 @@ function fncType(moveType) {
             return false;
         });
         $("#modalSelectMember").modal();
-    }else if(moveType === "search"){
-        $('.card_url_redirect').attr('value', url_list_workslip);
-        // $.sidr("close", "sidr");
-        $.sidr("close", "sidr", function(){
-            return false;
-        });
-        $("#modalSelectMember").modal();
     }
 }
 function fncAuth(modalType){
+    $("#modalAuthUsappy").on('hidden.bs.modal', function (e) {
+        clearValueModal(this);
+    });
+    $("#modalAuthReceivable").on('hidden.bs.modal', function (e) {
+        clearValueModal(this);
+    });
     $("#modalSelectMember").modal("hide");
     if(modalType === "usappy"){
         $('.card_type_redirect').attr('value',type_usappy);
@@ -231,10 +228,26 @@ var cardmembers = function(){
         });
     };
 
+    var zen2han = function() {
+        $('#form_card_number').on('change', function () {
+            utility.zen2han(this);
+        });
+        $('#form_member_birthday').on('change', function () {
+            utility.zen2han(this);
+        });
+        $('#form_license_plates').on('change', function () {
+            utility.zen2han(this);
+        });
+        $('#form_member_tel').on('change', function () {
+            utility.zen2han(this);
+        });
+    };
+
     return{
         init: function(){
             validate();
             submit();
+            zen2han();
         }
     };
 }();
@@ -289,8 +302,8 @@ var card = function(){
             if (valid == false)
                 return false;
             //Get url and type
-            var url_redirect = $('#card_usappy .card_url_redirect').val();
-            var type_redirect = $('#card_usappy .card_type_redirect').val();
+            var url_redirect = $('#card_member_usappy .card_url_redirect').val();
+            var type_redirect = $('#card_member_usappy .card_type_redirect').val();
             var card_number = $('#card_usappy #form_card_number').val();
 
             $.ajax({

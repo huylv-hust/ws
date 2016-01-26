@@ -1,4 +1,4 @@
-<form id="update_commodity" method="post" enctype="multipart/form-data" action="<?php \yii\helpers\BaseUrl::base(true)?>/maintenance/commodity/import">
+<form id="update_commodity" method="post" enctype="multipart/form-data" action="<?php echo \yii\helpers\BaseUrl::base(true)?>/maintenance/commodity/import">
 <main id="contents">
     <section class="readme">
         <h2 class="titleContent">商品情報更新</h2>

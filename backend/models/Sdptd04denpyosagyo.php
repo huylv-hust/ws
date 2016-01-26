@@ -83,10 +83,19 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
 
     public function setData($data = array(), $id = null)
     {
-        $obj = new Sdptd04denpyosagyo();
+        $login_info = Yii::$app->session->get('login_info');
+		$obj = new Sdptd04denpyosagyo();
+		$data['D04_UPD_DATE'] = date('d-M-y');
+        $data['D04_UPD_USER_ID'] = $login_info['M50_USER_ID'];
+
         if ($id) {
             $obj = static::findOne($id);
         }
+		else
+		{
+			$data['D04_INP_DATE'] = date('d-M-y');
+            $data['D04_INP_USER_ID'] = $login_info['M50_USER_ID'];
+		}
 
         $obj->attributes = $data;
         foreach ($obj->attributes as $k => $v) {
@@ -96,10 +105,34 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         $this->obj = $obj;
     }
 
+	public function saveDataMuti($insertData)
+    {
+
+        $columnNameArray = array_keys(current($insertData));
+        $data = [];
+        foreach ($insertData as $key => $row) {
+            $data[] = array_values($row);
+        }
+        //$columnNameArray = array_keys($this->attributeLabels());
+        $insertCount = Yii::$app->db->createCommand()
+            ->batchInsert(self::tableName(), $columnNameArray, $data)
+            ->execute();
+        return $insertCount;
+    }
+
     public function getData($filters = array(), $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('D04_DEN_NO ASC');
         return $query->all();
+    }
+
+    public function deleteData($where)
+    {
+        if ($where) {
+            return Sdptd04denpyosagyo::deleteAll($where);
+        }
+
+        return false;
     }
 }

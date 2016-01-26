@@ -1,4 +1,4 @@
-<main class="contents-usappynumberchange">
+<main  id="contents">
     <section class="readme">
         <h2 class="titleContent">変更完了</h2>
     </section>

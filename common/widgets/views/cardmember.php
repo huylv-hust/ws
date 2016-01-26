@@ -4,7 +4,7 @@
         <form id="card_member_usappy">
             <div class="modal-content">
                 <input type="hidden" class="card_url_redirect" value="">
-                <input type="hidden" class="card_type_redirect" value="1">
+                <input type="hidden" class="card_type_redirect" value="">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Usappy会員認証</h4>

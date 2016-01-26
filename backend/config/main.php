@@ -23,6 +23,9 @@ return [
         ],
         'usappynumberchange' => [
             'class' => 'backend\modules\usappynumberchange\UsappyNumberChange',
+        ],
+        'pdf' => [
+            'class' => 'backend\modules\pdf\Pdf',
         ]
     ],
     'components' => [
@@ -42,14 +45,15 @@ return [
                 ],
             ],
         ],
-//        'errorHandler' => [
-//            'errorAction' => 'site/error',
-//        ],
+        'errorHandler' => [
+           'errorAction' => 'user/error',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                 '/login.html'       => 'user/login',
+                '/timeout.html'   => 'user/timeout',
                 '/menu.html'        => 'site/index',
                 '/maintenance.html' => 'maintenance/default/index',
                 '/list-staff.html' => 'maintenance/staff/index',
@@ -62,7 +66,10 @@ return [
                 '/usappy-number-change.html' => 'usappynumberchange/default/index',
                 '/usappy-number-change-confirm.html' => 'usappynumberchange/default/confirm',
                 '/usappy-number-change-complete.html' => 'usappynumberchange/default/complete',
-                '/preview.html' => 'listworkslip/detail/preview'
+                '/exportpdf.html' => 'usappynumberchange/default/pdf',
+                '/zipfile.html' => 'pdf/zipfile/index',
+                '/testapi.html' => 'usappynumberchange/default/testapi',
+                '/preview.html' => 'listworkslip/detail/preview',
             ]
         ],
     ],

@@ -91,7 +91,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
 
     public function setData($data = array(), $id = null)
     {
-        $obj = new Sdptd04denpyosagyo();
+        $obj = new Sdptd05denpyocom();
         if ($id) {
             $obj = static::findOne($id);
         }
@@ -107,6 +107,41 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
     public function getData($filters = array(), $select = '*')
     {
         $query = $this->getWhere($filters, $select);
-        return $query->all();
+        $query->orderBy('D05_COM_SEQ ASC');
+		return $query->all();
+    }
+	public function saveDataMuti($insertData)
+    {
+
+        $columnNameArray = array_keys(current($insertData));
+        $data = [];
+        foreach ($insertData as $key => $row) {
+            $data[] = array_values($row);
+        }
+
+        //$columnNameArray = array_keys($this->attributeLabels());
+        $insertCount = Yii::$app->db->createCommand()
+            ->batchInsert(self::tableName(), $columnNameArray, $data)
+            ->execute();
+        return $insertCount;
+    }
+
+	public function setDataDefault() {
+		$attri = $this->attributeLabels();
+		$data = array();
+		foreach($attri as $key => $val)
+		{
+			$data[$key] = null;
+		}
+		return $data;
+	}
+
+	public function deleteData($where)
+    {
+        if ($where) {
+            return Sdptd05denpyocom::deleteAll($where);
+        }
+
+        return false;
     }
 }

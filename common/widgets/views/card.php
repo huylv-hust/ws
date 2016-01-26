@@ -7,8 +7,8 @@
                     <h4 class="modal-title">掛カード会員</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" class="card_url_redirect" value="">
-                    <input type="hidden" class="card_type_redirect" value="2">
+<!--                    <input type="hidden" class="card_url_redirect" value="">-->
+<!--                    <input type="hidden" class="card_type_redirect" value="2">-->
                     <div class="box-alert">
 
                     </div>

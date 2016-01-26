@@ -1,4 +1,4 @@
-<main class="contents-usappynumberchange">
+<main id="contents">
     <section class="readme">
         <h2 class="titleContent">入力内容確認</h2>
     </section>
@@ -67,3 +67,11 @@
 </footer>
 
 <script type="text/javascript" src="js/module/usappynumberchange.js"></script>
+<script type="text/javascript">
+    $(function(){
+        history.pushState(null, null, 'usappy-number-change-confirm.html');
+        window.addEventListener('popstate', function(event) {
+            history.pushState(null, null, 'usappy-number-change-confirm.html');
+        });
+    });
+</script>

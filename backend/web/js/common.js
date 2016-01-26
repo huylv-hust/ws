@@ -58,6 +58,7 @@ $(function() {
       acc.addClass("accClose");
       $(this).text("追加");
     }
+
     return false;
   });
 
@@ -87,9 +88,11 @@ $(function() {
       lastID = lastID + onCount;
 
       // 保証書作成部分表示
+      /*
       if (onCount === 2) {
         $("#warrantyBox").show();
       }
+      */
     }
     $("#" + lastID).addClass("on");
     return false;
@@ -276,7 +279,6 @@ var agreeForm = function() {
     btn.removeClass("disabled");
     btn.removeAttr("disabled");
   } else {
-    console.log("disable");
     btn.addClass("disabled");
     btn.attr("disabled", "disabled");
   }
@@ -293,3 +295,50 @@ function fncMakeWarranty(){
   $("#modalWorkSlipComp").modal("hide");
   $("#modalMakeWarranty").modal("show");
 }
+
+jQuery.validator.addMethod("hiragana", function(value,element) {
+    return true;
+
+    if(value == '') return true;
+    if(value.match(/^[あ-ん]+$/)){
+        return true;
+    }
+    return false;
+});
+
+jQuery.validator.addMethod("date_format", function(value,element) {
+    var list_month_30 = [4,6,9,11],
+        list_month_31 = [1,3,5,7,8,10,12],
+        leap_year = false;
+    if(value == '') return true;
+    if(value.match(/^\d{8}$/))
+    {
+        var year = parseInt(value.substr(0,4)),
+            month = parseInt(value.substr(4,2)),
+            day = parseInt(value.substr(6,2));
+        if((year % 100 != 0 && year % 4 == 0) || year % 400 == 0) leap_year = true;
+        if(((month < 1 || month > 12) || day < 1 || year < 1)
+            || (leap_year == true && month == 2 && day > 29)
+            || (leap_year == false && month == 2 && day > 28)
+            || ($.inArray(month,list_month_30) >=0 && day > 30)
+            || ($.inArray(month,list_month_31) >=0 && day > 31))
+            return false;
+
+        return true;
+    }
+    return false;
+});
+
+jQuery.validator.addMethod("date_year_month", function(value,element) {
+    if(value == '') return true;
+    if(value.match(/^\d{6}$/))
+    {
+        var year = parseInt(value.substr(0,4)),
+            month = parseInt(value.substr(4,2));
+        if(((month < 1 || month > 12) || year < 1))
+            return false;
+
+        return true;
+    }
+    return false;
+});

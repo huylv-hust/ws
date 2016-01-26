@@ -35,9 +35,6 @@ var maintenance = function(){
     /*SCREEN CREATE*/
     var validate = function(){
         $('#staff_form').validate({
-            groups: {
-                name: 'Sdptm08sagyosya[M08_NAME_SEI] Sdptm08sagyosya[M08_NAME_MEI]',
-            },
             rules: {
                 'Sdptm08sagyosya[M08_HAN_CD]': {
                     required: true

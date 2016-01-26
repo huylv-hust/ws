@@ -52,7 +52,8 @@ class StaffController extends WsController
         $data['filters']['offset'] = $data['pagination']->offset;
         $data['staffs'] = $obj->getData($data['filters']);
 
-        Yii::$app->view->title = 'メンテナンス';
+        Yii::$app->params['titlePage'] = 'メンテナンス';
+        Yii::$app->view->title = '作業者一覧';
         return $this->render('index', $data);
     }
 
@@ -109,7 +110,8 @@ class StaffController extends WsController
                 'M08_SS_CD' => $request->get('ss'),
                 'M08_JYUG_CD' => $request->get('cd'),
             );
-            if (!$data['model'] = Sdptm08sagyosya::findOne($primary)) {
+            $data['model'] = Sdptm08sagyosya::findOne($primary);
+            if (!$data['model']) {
                 return $this->redirect(BaseUrl::base().'/list-staff.html');
             }
             $data['action'] = 'edit';
@@ -117,11 +119,13 @@ class StaffController extends WsController
             Yii::$app->session->set('url_edit_staff', BaseUrl::base(true)
             .'/edit-staff.html?branch='.$primary['M08_HAN_CD']
             .'&ss='.$primary['M08_SS_CD']).'&cd='.$primary['M08_JYUG_CD'];
+            Yii::$app->view->title = '作業者編集';
         } else {
             $primary = null;
             $data['model'] = new Sdptm08sagyosya();
             $data['action'] = 'create';
             $all_ss = $this->processGetss($data['default_value']['M08_HAN_CD'], $data['api']);
+            Yii::$app->view->title = '作業者登録';
         }
 
         $data['all_ss'] = array('' => '') + $all_ss;
@@ -136,7 +140,7 @@ class StaffController extends WsController
             Yii::$app->session->setFlash('error', 'error');
         }
 
-        Yii::$app->view->title = 'メンテナンス';
+        Yii::$app->params['titlePage'] = 'メンテナンス';
         return $this->render('staff', $data);
     }
 

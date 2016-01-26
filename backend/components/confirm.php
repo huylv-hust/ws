@@ -1,6 +1,6 @@
 <?php
-
 namespace backend\components;
+
 
 class confirm
 {
@@ -57,7 +57,6 @@ class confirm
             'startup' => $post['startup'],
             'status' => isset($post['status']) ? $post['status'] : '0',
         );
-
         $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {

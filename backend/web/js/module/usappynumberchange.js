@@ -1,11 +1,6 @@
 var usappynumberchange = function(){
     var ready = function(){
-        $(function(){
-            history.pushState(null, null, 'thanks');
-            window.addEventListener('popstate', function(event) {
-                history.pushState(null, null, 'thanks');
-            });
-        });
+
     };
 
     var validate = function(){
@@ -75,12 +70,21 @@ var usappynumberchange = function(){
             $('#usappy_number_change_confirm').submit();
         });
     };
+    var zen2han = function() {
+        $('#form_oldCardNumber').on('change', function () {
+            utility.zen2han(this);
+        });
+        $('#form_newCardNumber').on('change', function () {
+            utility.zen2han(this);
+        });
+    };
 
     return{
         init: function(){
             ready();
             validate();
             submit();
+            zen2han();
             back();
         }
     };

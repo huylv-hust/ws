@@ -5,7 +5,10 @@
 <form method="post" id="staff_form">
 <main id="contents">
     <section class="readme">
-        <h2 class="titleContent">作業者登録</h2>
+        <?php $title_top = ($action == 'edit') ? '作業者編集' : '作業者登録';?>
+        <h2 class="titleContent">
+            <?php echo $title_top;?>
+        </h2>
     </section>
     <article class="container">
         <p class="note">作業車情報を入力して更新ボタンを押してください。 <span class="must">*</span>は必須入力項目です。</p>
@@ -70,9 +73,9 @@
                     <div class="formItem">
                         <label class="titleLabel">作業者名<span class="must">*</span></label>
                         <span class="txtUnit">姓&nbsp;</span>
-                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_SEI', ['class' => 'textForm', 'maxlength' => 15]); ?>
+                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_SEI', ['class' => 'textForm', 'maxlength' => 30]); ?>
                         &nbsp;<span class="txtUnit">名&nbsp;</span>
-                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_MEI', ['class' => 'textForm', 'maxlength' => 15]); ?>
+                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_MEI', ['class' => 'textForm', 'maxlength' => 30]); ?>
                         <label id="name-error" class="error" for="name"></label>
                     </div>
                     <div class="formItem">
