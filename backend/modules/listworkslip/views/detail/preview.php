@@ -206,7 +206,7 @@
                         <th>金額</th>
                     </tr>
                     <?php
-                    foreach ($post['product'] as $k => $v) {
+                    foreach ($detail['product'] as $k => $v) {
                         ?>
                         <tr class="mini">
                             <td class="tdLeft"><?php echo $v['D05_COM_CD'] . $v['D05_NST_CD']; ?></td>

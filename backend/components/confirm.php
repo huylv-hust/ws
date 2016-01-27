@@ -6,6 +6,11 @@ class confirm
 {
     public static function writeconfirm($post = array())
     {
+
+        $confirm = confirm::readconfirm(['D03_DEN_NO' => $post['D03_DEN_NO']]);
+        if ($confirm['status'] == 1) {
+            $post['status'] = 1;
+        }
         $data[0] = array(
             'タイヤ交換図1',
             'タイヤ交換図2',
@@ -37,10 +42,10 @@ class confirm
             'tire_2' => isset($post['tire_2']) ? 1 : 0,
             'tire_3' => isset($post['tire_3']) ? 1 : 0,
             'tire_4' => isset($post['tire_4']) ? 1 : 0,
-            'pressure_front' => isset($post['pressure_front']) ? $post['pressure_front'] :0,
+            'pressure_front' => isset($post['pressure_front']) ? $post['pressure_front'] : 0,
             'pressure_behind' => isset($post['pressure_behind']) ? $post['pressure_behind'] : 0,
-            'rim' => isset($post['rim']) ? 1 : 0 ,
-            'torque' => isset($post['torque']) ? 1 : 0 ,
+            'rim' => isset($post['rim']) ? 1 : 0,
+            'torque' => isset($post['torque']) ? 1 : 0,
             'foil' => isset($post['foil']) ? 1 : 0,
             'nut' => isset($post['nut']) ? 1 : 0,
             'oil' => isset($post['oil']) ? 1 : 0,
@@ -54,9 +59,11 @@ class confirm
             'terminal' => isset($post['terminal']) ? 1 : 0,
             'stay' => isset($post['stay']) ? 1 : 0,
             'backup' => isset($post['backup']) ? 1 : 0,
-            'startup' => isset($post['startup']) ? 1 :0,
+            'startup' => isset($post['startup']) ? 1 : 0,
             'status' => isset($post['status']) ? $post['status'] : 0,
         );
+
+
         $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {
