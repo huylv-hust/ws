@@ -10,26 +10,15 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">伝票No</label>
-                        <p class="txtValue"><?php echo $detail['D03_DEN_NO']; ?></p>
+                        <p class="txtValue"><?php echo isset($post['D03_DEN_NO']) ? $post['D03_DEN_NO'] : ''; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">受付日</label>
-                        <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
+                        <p class="txtValue"><?php echo isset($post['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($post['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">状況</label>
-                        <p class="txtValue">
-                            <?php
-                            if ($detail['D03_STATUS'] == 1) {
-                                echo $status[2];
-                            }
-                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ymd')) {
-                                echo $status[0];
-                            }
-                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ymd')) {
-                                echo $status[1];
-                            } ?>
-                        </p>
+                        <p class="txtValue"></p>
                     </div>
                 </div>
             </fieldset>
@@ -40,15 +29,15 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">お名前</label>
-                        <p class="txtValue"><?php echo $detail['D01_CUST_NAMEN']; ?></p>
+                        <p class="txtValue"><?php echo $post['D01_CUST_NAMEN']; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">フリガナ</label>
-                        <p class="txtValue"><?php echo $detail['D01_CUST_NAMEK']; ?></p>
+                        <p class="txtValue"><?php echo $post['D01_CUST_NAMEK']; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
-                        <p><?php echo $detail['D01_NOTE']; ?></p>
+                        <p><?php echo nl2br($post['D01_NOTE']); ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -59,38 +48,59 @@
                     <legend class="titleLegend">車両情報</legend>
                 </div>
                 <div class="formGroup">
+                    <?php if(!isset($post['D02_CAR_SEQ_SELECT'])) {
+                        $D02_CAR_NAMEN = '';
+                        $D02_JIKAI_SHAKEN_YM = '';
+                        $D02_SYAKEN_CYCLE = '';
+                        $D02_METER_KM = '';
+                        $D02_RIKUUN_NAMEN = '';
+                        $D02_CAR_ID = '';
+                        $D02_HIRA = '';
+                        $D02_CAR_NO = '';
+
+                    } else {
+                        $D02_CAR_NAMEN = $post['D02_CAR_NAMEN_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_JIKAI_SHAKEN_YM = $post['D02_JIKAI_SHAKEN_YM_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_SYAKEN_CYCLE = $post['D02_SYAKEN_CYCLE_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_METER_KM = $post['D02_METER_KM_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_RIKUUN_NAMEN = $post['D02_RIKUUN_NAMEN_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_CAR_ID = $post['D02_CAR_ID_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_HIRA = $post['D02_HIRA_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_CAR_NO = $post['D02_CAR_NO_'.$post['D02_CAR_SEQ_SELECT']];
+                    }?>
                     <div class="formItem">
                         <label class="titleLabel">車名</label>
-                        <p class="txtValue"><?php echo $detail['D03_CAR_NAMEN']; ?></p>
+                        <p class="txtValue"><?php echo $D02_CAR_NAMEN; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検満了日</label>
-                        <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($detail['D03_JIKAI_SHAKEN_YM'])), 'yyyy年MM月dd日') : '' ?></p>
+                        <p class="txtValue"><?php echo $D02_JIKAI_SHAKEN_YM != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($D02_JIKAI_SHAKEN_YM)), 'yyyy年MM月dd日') : '' ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">車検サイクル</label>
-                        <p class="txtValue"><?php echo $detail['D02_SYAKEN_CYCLE']; ?>年</p>
+                        <p class="txtValue"><?php echo $D02_SYAKEN_CYCLE; ?>年</p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">走行距離</label>
-                        <p class="txtValue"><?php echo $detail['D03_METER_KM']; ?>km</p>
+                        <p class="txtValue"><?php echo $D02_METER_KM; ?>km</p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">運輸支局</label>
-                        <p class="txtValue"><?php echo $detail['D03_RIKUUN_NAMEN']; ?></p>
+                        <p class="txtValue"><?php echo $D02_RIKUUN_NAMEN; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">分類コード</label>
-                        <p class="txtValue"><?php echo $detail['D03_CAR_ID']; ?></p>
+                        <p class="txtValue"><?php echo $D02_CAR_ID; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">ひらがな</label>
-                        <p class="txtValue"><?php echo $detail['D03_HIRA']; ?></p>
+                        <p class="txtValue"><?php echo $D02_HIRA; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">登録番号</label>
-                        <p class="txtValue"><?php echo $detail['D03_CAR_NO']; ?></p>
+                        <p class="txtValue"><?php echo $D02_CAR_NO; ?></p>
                     </div>
+
                 </div>
             </fieldset>
         </section>
@@ -100,7 +110,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">貴重品</label>
-                        <?php if (isset($detail['D03_KITYOHIN']) && $detail['D03_KITYOHIN'] == 0) {
+                        <?php if (isset($post['D03_KITYOHIN']) && $post['D03_KITYOHIN'] == 0) {
                             echo '<p class="txtValue">無し</p>';
                         } else {
                             echo '<p class="txtValue">有り</p>';
@@ -108,7 +118,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お客様確認</label>
-                        <?php if (isset($detail['D03_KAKUNIN']) && $detail['D03_KAKUNIN'] == 0) {
+                        <?php if (isset($post['D03_KAKUNIN']) && $post['D03_KAKUNIN'] == 0) {
                             echo '<p class="txtValue">未了承</p>';
                         } else {
                             echo '<p class="txtValue">了承済</p>';
@@ -116,16 +126,16 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">精算方法</label>
-                        <?php if (isset($detail['D03_SEISAN']) && $detail['D03_SEISAN'] == 0) {
+                        <?php if (isset($post['D03_SEISAN']) && $post['D03_SEISAN'] == 0) {
                             echo '<p class="txtValue">現金</p>';
                         }
-                        if (isset($detail['D03_SEISAN']) && $detail['D03_SEISAN'] == 1) {
+                        if (isset($post['D03_SEISAN']) && $post['D03_SEISAN'] == 1) {
                             echo '<p class="txtValue">プリカ</p>';
                         }
-                        if (isset($detail['D03_SEISAN']) && $detail['D03_SEISAN'] == 2) {
+                        if (isset($post['D03_SEISAN']) && $post['D03_SEISAN'] == 2) {
                             echo '<p class="txtValue">クレジット</p>';
                         }
-                        if (isset($detail['D03_SEISAN']) && $detail['D03_SEISAN'] == 3) {
+                        if (isset($post['D03_SEISAN']) && $post['D03_SEISAN'] == 3) {
                             echo '<p class="txtValue">掛</p>';
                         } ?>
                     </div>
@@ -138,36 +148,36 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">施行日（予約日）</label>
-                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
+                        <p class="txtValue"><?php echo $post['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-Y', strtotime($post['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
                         <p class="txtValue">
-                            <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? $detail['D03_AZU_BEGIN_HH'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_BEGIN_HH']) ? $post['D03_AZU_BEGIN_HH'] : '00'; ?>
                             ：
-                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? $detail['D03_AZU_BEGIN_MI'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_BEGIN_MI']) ? $post['D03_AZU_BEGIN_MI'] : '00'; ?>
                             ～
-                            <?php echo isset($detail['D03_AZU_END_HH']) ? $detail['D03_AZU_END_HH'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_END_HH']) ? $post['D03_AZU_END_HH'] : '00'; ?>
                             ：
-                            <?php echo isset($detail['D03_AZU_END_MI']) ? $detail['D03_AZU_END_MI'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_END_MI']) ? $post['D03_AZU_END_MI'] : '00'; ?>
                         </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">予約内容</label>
                         <p class="txtValue"><?php
-                            if (isset($job[$detail['D03_YOYAKU_SAGYO_NO']])) {
-                                echo $job[$detail['D03_YOYAKU_SAGYO_NO']];
+                            if (isset($job[$post['D03_YOYAKU_SAGYO_NO']])) {
+                                echo $job[$post['D03_YOYAKU_SAGYO_NO']];
                             } else {
                                 echo '';
                             } ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
-                        <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] . '' . $detail['D03_TANTO_MEI']; ?></p>
+                        <p class="txtValue"><?php echo $post['D03_TANTO_MEI_D03_TANTO_SEI']; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">確認者</label>
-                        <p class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] . '' . $detail['D03_KAKUNIN_MEI']; ?></p>
+                        <p class="txtValue"><?php echo $post['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']; ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -179,17 +189,18 @@
                     <div class="formItem">
                         <p class="txtValue">
                             <?php
-                            $sagyo = '';
-                            foreach ($detail['sagyo'] as $k => $v) {
-                                $sagyo .= $job[$v['D04_SAGYO_NO']] . '、';
+                            $sagyo = ''; if (isset($post['M01_SAGYO_NO'])) {
+                                foreach ($post['M01_SAGYO_NO'] as $k => $v) {
+                                    $sagyo .= $job[$v] . '、';
+                                }
+                                echo trim($sagyo, '、');
                             }
-                            echo trim($sagyo, '、');
                             ?>
                         </p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">その他作業内容</label>
-                        <p class="txtValue"><?php echo $detail['D03_SAGYO_OTHER']; ?></p>
+                        <p class="txtValue"><?php echo nl2br($post['D03_SAGYO_OTHER']); ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -206,26 +217,27 @@
                         <th>金額</th>
                     </tr>
                     <?php
-                    foreach ($post['product'] as $k => $v) {
+                    for ($k = 1; $k <= 10; $k++) {
+                        if ($post['D05_COM_CD'.$k]) {
                         ?>
                         <tr class="mini">
-                            <td class="tdLeft"><?php echo $v['D05_COM_CD'] . $v['D05_NST_CD']; ?></td>
-                            <td class="tdLeft"><?php echo $v['M05_COM_NAMEN']; ?></td>
-                            <td><?php echo $v['D05_SURYO']; ?></td>
-                            <td><?php echo $v['D05_TANKA']; ?>円</td>
-                            <td><?php echo $v['D05_KINGAKU']; ?>円</td>
+                            <td class="tdLeft"><?php echo $post['D05_COM_CD'.$k]. $post['D05_NST_CD'.$k]; ?></td>
+                            <td class="tdLeft"><?php echo $post['M05_COM_NAMEN'.$k]; ?></td>
+                            <td><?php echo $post['D05_SURYO'.$k]; ?>円</td>
+                            <td><?php echo $post['D05_TANKA'.$k]; ?>円</td>
+                            <td><?php echo $post['D05_KINGAKU'.$k]; ?>円</td>
                         </tr>
-                    <?php } ?>
+                    <?php }} ?>
                     <tr class="mini">
                         <td colspan="3"></td>
                         <th>合計</th>
-                        <td><?php echo $detail['D03_SUM_KINGAKU']; ?>円</td>
+                        <td><?php echo $post['D03_SUM_KINGAKU']; ?>円</td>
                     </tr>
                 </table>
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel pFlLeft">備考</label>
-                        <p class="txtValue"><?php echo $detail['D03_NOTE']; ?></p>
+                        <p class="txtValue"><?php echo nl2br($post['D03_NOTE']); ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -281,22 +293,22 @@
                                     class="itemPrintCheckImg">
                                 <div class="itemPrintCheck FR">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" <?php echo isset($confirm['tire_1'])==1 ? 'checked' : '' ?> disabled name="tire_1">
+                                        <input type="checkbox" <?php echo !empty($post['tire_1']) ? 'checked' : '' ?> disabled name="tire_1">
                                     </label>
                                 </div>
                                 <div class="itemPrintCheck FL">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" <?php echo isset($confirm['tire_2'])==1 ? 'checked' : '' ?> disabled name="tire_2">
+                                        <input type="checkbox" <?php echo !empty($post['tire_2']) ? 'checked' : '' ?> disabled name="tire_2">
                                     </label>
                                 </div>
                                 <div class="itemPrintCheck RR">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" <?php echo isset($confirm['tire_3'])==1 ? 'checked' : '' ?> disabled name="tire_3">
+                                        <input type="checkbox" <?php echo !empty($post['tire_3']) ? 'checked' : '' ?> disabled name="tire_3">
                                     </label>
                                 </div>
                                 <div class="itemPrintCheck RL">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" <?php echo isset($confirm['tire_4'])==1 ? 'checked' : '' ?> disabled name="tire_4">
+                                        <input type="checkbox" <?php echo !empty($post['tire_4']) ? 'checked' : '' ?> disabled name="tire_4">
                                     </label>
                                 </div>
                             </div>
@@ -305,12 +317,12 @@
                             <div class="areaAirCheck">
                                 <div class="itemPrintAir">
                                     <p class="txtValue"><span class="txtUnit">前</span><span class="spcValue"><input
-                                                type="number" class="textFormConf" value="<?php echo isset($confirm['pressure_front']) ? $confirm['pressure_front'] : '' ?>" disabled name="pressure_front"></span><span
+                                                type="number" class="textFormConf" value="<?php echo !empty($post['pressure_front']) ? $post['pressure_front'] : '' ?>" disabled name="pressure_front"></span><span
                                             class="txtUnit">kpa</span></p>
                                 </div>
                                 <div class="itemPrintAir">
                                     <p class="txtValue"><span class="txtUnit">後</span><span class="spcValue"><input
-                                                type="number" class="textFormConf" value="<?php echo isset($confirm['pressure_behind']) ? $confirm['pressure_behind'] : '' ?>" disabled name="pressure_behind"></span><span
+                                                type="number" class="textFormConf" value="<?php echo !empty($post['pressure_behind']) ? $post['pressure_behind'] : '' ?>" disabled name="pressure_behind"></span><span
                                             class="txtUnit">kpa</span></p>
                                 </div>
                             </div>
@@ -320,28 +332,28 @@
                         <td><p class="leftside">リムバルブ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['rim'])==1 ? 'checked' : '' ?> disabled name="rim">
+                                    <input type="checkbox" <?php echo !empty($post['rim']) ? 'checked' : '' ?> disabled name="rim">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">トルクレンチ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['rim']) ? 'checked' : '' ?> disabled name="torque">
+                                    <input type="checkbox" <?php echo !empty($post['rim']) ? 'checked' : '' ?> disabled name="torque">
                                     締付</label>
                             </div>
                         </td>
                         <td><p class="leftside">ホイルキャップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['foil'])==1 ? 'checked' : '' ?> disabled name="foil">
+                                    <input type="checkbox" <?php echo !empty($post['foil']) ? 'checked' : '' ?> disabled name="foil">
                                     取付</label>
                             </div>
                         </td>
                         <td><p class="leftside">持帰ナット</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['nut'])==1 ? 'checked' : '' ?> disabled name="nut">
+                                    <input type="checkbox" <?php echo !empty($post['nut']) ? 'checked' : '' ?> disabled name="nut">
                                     確認</label>
                             </div>
                         </td>
@@ -353,28 +365,28 @@
                         <td><p class="leftside">オイル量</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['oil'])==1 ? 'checked' : '' ?> disabled name="oil">
+                                    <input type="checkbox" <?php echo !empty($post['oil']) ? 'checked' : '' ?> disabled name="oil">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">オイルキャップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox"<?php echo isset($confirm['oil_cap'])==1 ? 'checked' : '' ?> disabled name="oil_cap">
+                                    <input type="checkbox"<?php echo !empty($post['oil_cap']) ? 'checked' : '' ?> disabled name="oil_cap">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">レベルゲージ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['level'])==1 ? 'checked' : '' ?> disabled name="level">
+                                    <input type="checkbox" <?php echo !empty($post['level']) ? 'checked' : '' ?> disabled name="level">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">ドレンボルト</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['drain_bolt'])==1 ? 'checked' : '' ?> disabled name="drain_bolt">
+                                    <input type="checkbox" <?php echo !empty($post['drain_bolt']) ? 'checked' : '' ?> disabled name="drain_bolt">
                                     確認</label>
                             </div>
                         </td>
@@ -383,27 +395,27 @@
                         <td><p class="leftside">パッキン</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['packing'])==1 ? 'checked' : '' ?> disabled name="packing">
+                                    <input type="checkbox" <?php echo !empty($post['packing']) ? 'checked' : '' ?> disabled name="packing">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">オイル漏れ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['oil_leak'])==1 ? 'checked' : '' ?> disabled name="oil_leak">
+                                    <input type="checkbox" <?php echo !empty($post['oil_leak'])? 'checked' : '' ?> disabled name="oil_leak">
                                     確認</label>
                             </div>
                         </td>
                         <td colspan="2"><p class="leftside">次回交換目安</p>
                             <div class="checkPrint">
                                 <p class="txtValue">
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],0,4) : '' ?>" disabled maxlength="4" style="width:4em;" name="date_1">
+                                    <input type="number" class="textFormConf" value="<?php echo !empty($post['date_1']) ? $post['date_1'] : '' ?>" disabled maxlength="4" style="width:4em;" name="date_1">
                                     <span class="txtUnit">年</span>
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],4,2) : '' ?>" disabled maxlength="2" style="width:2em;" name="date_2">
+                                    <input type="number" class="textFormConf" value="<?php echo !empty($post['date_2']) ? $post['date_2'] : '' ?>" disabled maxlength="2" style="width:2em;" name="date_2">
                                     <span class="txtUnit">月</span>
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['date']) ? substr($confirm['date'],6,2) : '' ?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
+                                    <input type="number" class="textFormConf" value="<?php echo !empty($post['date_3']) ? $post['date_3'] : '' ?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
                                     <span class="txtUnit">日　または、</span>
-                                    <input type="number" class="textFormConf" value="<?php echo isset($confirm['km']) ? $confirm['km'] : '' ?>" disabled name="km">
+                                    <input type="number" class="textFormConf" value="<?php echo !empty($post['km']) ? $post['km'] : '' ?>" disabled name="km">
                                     <span class="txtUnit">km</span>
                                 </p>
                             </div>
@@ -416,28 +428,28 @@
                         <td><p class="leftside">ターミナル締付</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['terminal'])==1 ? 'checked' : '' ?> disabled name="terminal">
+                                    <input type="checkbox" <?php echo !empty($post['terminal']) ? 'checked' : '' ?> disabled name="terminal">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">ステー取付</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['stay'])==1 ? 'checked' : '' ?> disabled name="stay">
+                                    <input type="checkbox" <?php echo !empty($post['stay']) ? 'checked' : '' ?> disabled name="stay">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">バックアップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['backup'])==1 ? 'checked' : '' ?> disabled name="backup">
+                                    <input type="checkbox" <?php echo !empty($post['backup']) ? 'checked' : '' ?> disabled name="backup">
                                     確認</label>
                             </div>
                         </td>
                         <td><p class="leftside">スタートアップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
-                                    <input type="checkbox" <?php echo isset($confirm['startup'])==1 ? 'checked' : '' ?> disabled name="startup">
+                                    <input type="checkbox" <?php echo !empty($post['startup']) ? 'checked' : '' ?> disabled name="startup">
                                     確認</label>
                             </div>
                         </td>
@@ -529,10 +541,10 @@
                     </tr>
                     <tr>
                         <td class="vMiddle"><p
-                                class="txtValue"><?php echo $detail['D03_TANTO_SEI'] . '' . $detail['D03_TANTO_MEI']; ?></p>
+                                class="txtValue"><?php echo $post['D03_TANTO_MEI_D03_TANTO_SEI']; ?></p>
                         </td>
                         <td class="vMiddle"><p
-                                class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] . '' . $detail['D03_KAKUNIN_MEI']; ?></p>
+                                class="txtValue"><?php echo $post['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']; ?></p>
                         </td>
                     </tr>
                 </table>

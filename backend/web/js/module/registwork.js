@@ -26,7 +26,7 @@ var regist_work = function () {
                 var tr = '<tr><th></th><th>商品コード</th><th>荷姿コード</th><th>品名</th></tr>';
                 $.each(data.product, function (key, value) {
                     tr += '<tr>'
-                        + '<td><input type="radio" value="' + value.M05_COM_CD + value.M05_NST_CD + '" onclick="setValue(\'' + value.M05_COM_CD + value.M05_NST_CD + '\','+parseInt(value.M05_COM_CD)+')"'
+                        + '<td><input type="radio" value="' + value.M05_COM_CD + value.M05_NST_CD + '" onclick="setValue(\'' + value.M05_COM_CD + value.M05_NST_CD + '\',' + parseInt(value.M05_COM_CD) + ')"'
                         + ' name="M05_COM_CD.M05_NST_CD"></td>'
                         + '<td>' + value.M05_COM_CD + '</td>'
                         + '<td>' + value.M05_NST_CD + '</td>'
@@ -35,8 +35,8 @@ var regist_work = function () {
                         + '<input type="hidden" id="price' + value.M05_COM_CD + value.M05_NST_CD + '" value="' + ((value.M05_LIST_PRICE == null) ? '' : value.M05_LIST_PRICE) + '">'
                         + '<input type="hidden" id="kind' + value.M05_COM_CD + value.M05_NST_CD + '" value="' + value.M05_KIND_COM_NO + '">'
                         + '<input type="hidden" id="large' + value.M05_COM_CD + value.M05_NST_CD + '" value="' + value.M05_LARGE_COM_NO + '">'
-                        + '<input type="hidden" value="'+value.M05_COM_CD+'" id="comcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
-                        + '<input type="hidden" value="'+value.M05_NST_CD+'" id="nstcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
+                        + '<input type="hidden" value="' + value.M05_COM_CD + '" id="comcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
+                        + '<input type="hidden" value="' + value.M05_NST_CD + '" id="nstcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
                         + '</tr>'
 
                 });
@@ -69,7 +69,7 @@ var regist_work = function () {
                 var tr = '<tr><th></th><th>商品コード</th><th>荷姿コード</th><th>品名</th></tr>';
                 $.each(data.product, function (key, value) {
                     tr += '<tr>'
-                        + '<td><input type="radio" value="' + value.M05_COM_CD + value.M05_NST_CD + '" onclick="setValue(\'' + value.M05_COM_CD + value.M05_NST_CD + '\','+parseInt(value.M05_COM_CD)+')"'
+                        + '<td><input type="radio" value="' + value.M05_COM_CD + value.M05_NST_CD + '" onclick="setValue(\'' + value.M05_COM_CD + value.M05_NST_CD + '\',' + parseInt(value.M05_COM_CD) + ')"'
                         + ' name="M05_COM_CD.M05_NST_CD"></td>'
                         + '<td>' + value.M05_COM_CD + '</td>'
                         + '<td>' + value.M05_NST_CD + '</td>'
@@ -78,8 +78,8 @@ var regist_work = function () {
                         + '<input type="hidden" id="price' + value.M05_COM_CD + value.M05_NST_CD + '" value="' + ((value.M05_LIST_PRICE == null) ? '' : value.M05_LIST_PRICE) + '">'
                         + '<input type="hidden" id="kind' + value.M05_COM_CD + value.M05_NST_CD + '" value="' + value.M05_KIND_COM_NO + '">'
                         + '<input type="hidden" id="large' + value.M05_COM_CD + value.M05_NST_CD + '" value="' + value.M05_LARGE_COM_NO + '">'
-                        + '<input type="hidden" value="'+value.M05_COM_CD+'" id="comcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
-                        + '<input type="hidden" value="'+value.M05_NST_CD+'" id="nstcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
+                        + '<input type="hidden" value="' + value.M05_COM_CD + '" id="comcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
+                        + '<input type="hidden" value="' + value.M05_NST_CD + '" id="nstcd' + value.M05_COM_CD + value.M05_NST_CD + '" />'
                         + '</tr>'
 
                 });
@@ -201,13 +201,11 @@ var regist_work = function () {
     };
 
     var validate_car = function () {
-        jQuery.validator.addMethod("car_no", function(value,element) {
-            if(value == '0000') return false;
+        jQuery.validator.addMethod("car_no", function (value, element) {
+            if (value == '0000') return false;
             return true;
         });
-        $('#modal_car').validate({
-
-        });
+        $('#modal_car').validate({});
 
         $('.D02_SHONENDO_YM').each(function () {
             var rel = $(this).parents('section').attr('rel');
@@ -215,7 +213,7 @@ var regist_work = function () {
                 minlength: 6,
                 date_year_month: true,
                 messages: {
-                    minlength: function() {
+                    minlength: function () {
                         return rel + '台目の初年度登録年月は6文字の数字で入力してください';
                     },
                     date_year_month: rel + '台目の初年度登録年月が正しくありません'
@@ -223,21 +221,21 @@ var regist_work = function () {
             });
         });
 
-        $('.D02_JIKAI_SHAKEN_YM').each(function(){
+        $('.D02_JIKAI_SHAKEN_YM').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
                 required: true,
-                digits:true,
+                digits: true,
                 minlength: 8,
                 date_format: true,
                 messages: {
-                    required: function() {
+                    required: function () {
                         return rel + '台目の車検満了日を入力してください';
                     },
-                    digits: function() {
+                    digits: function () {
                         return rel + '台目の車検満了日は8文字の数字で入力してください';
                     },
-                    minlength: function() {
+                    minlength: function () {
                         return rel + '台目の車検満了日は8文字の数字で入力してください';
                     },
                     date_format: rel + '台目の車検満了日が正しくありません'
@@ -245,41 +243,41 @@ var regist_work = function () {
             });
         });
 
-        $('.D02_METER_KM').each(function(){
+        $('.D02_METER_KM').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
                 required: true,
                 digits: true,
                 messages: {
-                    required: function() {
+                    required: function () {
                         return rel + '台目の走行距離を入力してください';
                     },
-                    digits: function() {
+                    digits: function () {
                         return rel + '台目の走行距離は数字で入力してください';
                     }
                 }
             });
         });
 
-        $('.D02_RIKUUN_NAMEN').each(function(){
+        $('.D02_RIKUUN_NAMEN').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
                 required: true,
                 messages: {
-                    required: function() {
+                    required: function () {
                         return rel + '台目の運輸支局を入力してください';
                     }
                 }
             });
         });
 
-        $('.D02_CAR_ID').each(function(){
+        $('.D02_CAR_ID').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
                 required: true,
                 minlength: 3,
                 messages: {
-                    required: function() {
+                    required: function () {
                         return rel + '台目の分類コードを入力してください';
                     },
                     minlength: rel + '台目の分類コードは3文字の数字で入力してください'
@@ -287,23 +285,23 @@ var regist_work = function () {
             });
         });
 
-        $('.D02_HIRA').each(function(){
+        $('.D02_HIRA').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
                 required: true,
                 hiragana: true,
                 messages: {
-                    required: function() {
+                    required: function () {
                         return rel + '台目のひらがなを入力してください';
                     },
-                    hiragana: function() {
+                    hiragana: function () {
                         return rel + '台目のひらがなはひらがなで入力してください';
                     }
                 }
             });
         });
 
-        $('.D02_CAR_NO').each(function(){
+        $('.D02_CAR_NO').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
                 required: true,
@@ -311,16 +309,16 @@ var regist_work = function () {
                 minlength: 4,
                 car_no: true,
                 messages: {
-                    required: function() {
+                    required: function () {
                         return rel + '台目の登録番号を入力してください';
                     },
-                    digits: function() {
+                    digits: function () {
                         return rel + '台目の登録番号は4文字の数字で入力してください';
                     },
-                    minlength: function() {
+                    minlength: function () {
                         return rel + '台目の登録番号は4文字の数字で入力してください';
                     },
-                    car_no: function() {
+                    car_no: function () {
                         return rel + '台目の登録番号に0000は入力できません';
                     }
                 }
@@ -328,46 +326,46 @@ var regist_work = function () {
         });
     };
 
-    var validate_workslip = function() {
-        jQuery.validator.addMethod("totalPriceProduct", function(value,element) {
+    var validate_workslip = function () {
+        jQuery.validator.addMethod("totalPriceProduct", function (value, element) {
             var count = parseInt($(element).closest('.on').find('.noProduct').val()),
                 price = parseInt($(element).closest('.on').find('.priceProduct').val());
-            if(parseInt(value) < count*price ) return false;
+            if (parseInt(value) < count * price) return false;
             return true;
         });
 
-        jQuery.validator.addMethod("pos_den_no", function(value,element) {
-            if(value == '') return true;
-            if(value.match(/^([0-9,]+)?$/)){
+        jQuery.validator.addMethod("pos_den_no", function (value, element) {
+            if (value == '') return true;
+            if (value.match(/^([0-9,]+)?$/)) {
                 var arr = value.split(','),
                     arr_length = arr.length,
                     count_delimeter = arr_length - 1;
 
                 if (count_delimeter == 0) {
-                   if(value.length != 4) {
-                       return false;
-                   }
+                    if (value.length != 4) {
+                        return false;
+                    }
                 } else {
-                    for (var i = 0; i < arr_length; i ++) {
-                        if(arr[i].length != 4) return false;
+                    for (var i = 0; i < arr_length; i++) {
+                        if (arr[i].length != 4) return false;
                     }
                 }
 
                 return true;
             }
             return false;
-        },'POS伝票番号はカンマ区切りの4文字の数字で入力してください');
+        }, 'POS伝票番号はカンマ区切りの4文字の数字で入力してください');
 
-        jQuery.validator.addMethod("check_date_order", function(value,element) {
+        jQuery.validator.addMethod("check_date_order", function (value, element) {
             var start_h = parseInt($('[name=D03_AZU_BEGIN_HH]').val()),
                 start_m = parseInt($('[name=D03_AZU_BEGIN_MI]').val()),
                 end_h = parseInt($('[name=D03_AZU_END_HH]').val()),
                 end_m = parseInt($('[name=D03_AZU_END_MI]').val());
 
-            if(start_h > end_h) return false;
-            if(start_h == end_h && start_m > end_m) return false;
+            if (start_h > end_h) return false;
+            if (start_h == end_h && start_m > end_m) return false;
             return true;
-        },'終了時間は開始時間より入力してください。');
+        }, '終了時間は開始時間より入力してください。');
 
         $('#login_form').validate({
             ignore: "",
@@ -393,7 +391,7 @@ var regist_work = function () {
                     pos_den_no: true
                 },
                 D03_KAKUNIN: {
-                    required: function() {
+                    required: function () {
                         return $('#valuables1').is(':checked');
                     }
                 },
@@ -420,14 +418,14 @@ var regist_work = function () {
                     date_format: '施行日が正しくありません'
                 },
                 D03_KAKUNIN: {
-                    required: function() {
+                    required: function () {
                         return '貴重品「有」の場合は、お客様確認を行い、お客様確認チェックをＯＮにしてください';
                     }
                 }
             }
         });
 
-        $('.noProduct').each(function(){
+        $('.noProduct').each(function () {
             $(this).rules("add", {
                 digits: true,
                 messages: {
@@ -436,7 +434,7 @@ var regist_work = function () {
             });
         });
 
-        $('.priceProduct').each(function(){
+        $('.priceProduct').each(function () {
             $(this).rules("add", {
                 digits: true,
                 messages: {
@@ -445,7 +443,7 @@ var regist_work = function () {
             });
         });
 
-        $('.totalPriceProduct').each(function(){
+        $('.totalPriceProduct').each(function () {
             $(this).rules("add", {
                 digits: true,
                 totalPriceProduct: true,
@@ -457,15 +455,15 @@ var regist_work = function () {
         });
     };
 
-    var submit_registWork = function() {
-        $('#btnRegistWorkSlip').on('click',function(){
+    var submit_registWork = function () {
+        $('#btnRegistWorkSlip').on('click', function () {
             var form = $(this).closest('form'),
                 valid = form.valid();
-            if(valid == false) {
+            if (valid == false) {
                 var tooltip_hidden = $('input[name=D03_KAKUNIN]').attr('aria-describedby');
                 if (tooltip_hidden != '') {
-                    $('#' + tooltip_hidden).css({"top":"-29px","left":"-202px"});
-                    $('#' + tooltip_hidden).find('.tooltip-arrow').css("left","50%");
+                    $('#' + tooltip_hidden).css({"top": "-29px", "left": "-202px"});
+                    $('#' + tooltip_hidden).find('.tooltip-arrow').css("left", "50%");
                 }
                 return false;
             }
@@ -487,8 +485,8 @@ var regist_work = function () {
         });
     };
 
-    var click_label_modal_customer = function() {
-        $('#agreeLabel').on('click',function() {
+    var click_label_modal_customer = function () {
+        $('#agreeLabel').on('click', function () {
             var status = $("#agreeCheck");
             var btn = $("#agreeFormBtn");
             if (status.attr("checked")) {
@@ -498,6 +496,12 @@ var regist_work = function () {
                 btn.addClass("disabled");
                 btn.attr("disabled", "disabled");
             }
+        });
+    };
+
+    var preview = function () {
+        $('#preview').on('click', function () {
+            $('#login_form').attr('action', baseUrl + '/registworkslip/preview/index').submit();
         });
     };
 
@@ -512,6 +516,7 @@ var regist_work = function () {
             validate_workslip();
             submit_registWork();
             click_label_modal_customer();
+            preview();
         }
     };
 }();

@@ -60,7 +60,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
-                        <p><?php echo nl2br($detail['D01_NOTE']); ?></p>
+                        <p><?php echo $detail['D01_NOTE']; ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -207,7 +207,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">その他作業内容</label>
-                        <p class="txtValue"><?php echo nl2br($detail['D03_SAGYO_OTHER']); ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_SAGYO_OTHER']; ?></p>
 
                     </div>
                 </div>
@@ -451,7 +451,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
-                        <p class="txtValue"><?php echo nl2br($detail['D03_NOTE']); ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_NOTE']; ?></p>
                     </div>
                 </div>
             </fieldset>

@@ -70,6 +70,7 @@ return [
                 '/zipfile.html' => 'pdf/zipfile/index',
                 '/testapi.html' => 'usappynumberchange/default/testapi',
                 '/preview.html' => 'listworkslip/detail/preview',
+                '/preview2.html' => 'registworkslip/preview/index',
             ]
         ],
     ],

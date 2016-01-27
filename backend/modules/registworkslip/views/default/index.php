@@ -48,16 +48,19 @@
                     <div class="formItem">
                         <label class="titleLabel">お名前</label>
                         <p class="txtValue"><?= $cus['D01_CUST_NAMEN'] ?></p>
+                        <input type="hidden" value="<?= $cus['D01_CUST_NAMEN'] ?>" name="D01_CUST_NAMEN">
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">フリガナ</label>
                         <p class="txtValue"><?= $cus['D01_CUST_NAMEK'] ?></p>
+                        <input type="hidden" value="<?= $cus['D01_CUST_NAMEK'] ?>" name="D01_CUST_NAMEK">
                     </div>
                 </div>
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
                         <p><?= $cus['D01_NOTE'] ?></p>
+                        <input type="hidden" value="<?= $cus['D01_NOTE'] ?>" name="D01_NOTE">
                     </div>
                 </div>
             </fieldset>
@@ -98,6 +101,8 @@
 						<input type="hidden" name="D02_HIRA_<?= $k ?>" value="<?= $carFirst['D02_HIRA'] ?>"/>
 						<input type="hidden" name="D02_CAR_NAMEN_<?= $k ?>" value="<?= $carFirst['D02_CAR_NAMEN'] ?>"/>
 						<input type="hidden" name="D02_JIKAI_SHAKEN_YM_<?= $k ?>" value="<?= $carFirst['D02_JIKAI_SHAKEN_YM'] ?>"/>
+                        <input type="hidden" name="D02_SYAKEN_CYCLE_<?= $k ?>" value="<?= $carFirst['D02_SYAKEN_CYCLE'] ?>"/>
+                        <input type="hidden" name="D02_RIKUUN_NAMEN_<?= $k ?>" value="<?= $carFirst['D02_RIKUUN_NAMEN'] ?>"/>
 						<div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
 							<label class="titleLabel">車名</label>
 							<p class="txtValue"><?= $carFirst['D02_CAR_NAMEN'] ?></p>
@@ -316,11 +321,12 @@ foreach ($tm01Sagyo as $work) {
                     <div class="formItem">
                         <label class="titleLabel">その他作業内容</label>
                         <textarea maxlength="1000" class="textarea"
-                                  name="D03_SAGYO_OTHER"><?= nl2br($denpyo['D03_SAGYO_OTHER']);?></textarea>
+                                  name="D03_SAGYO_OTHER"><?= $denpyo['D03_SAGYO_OTHER'] ?></textarea>
                     </div>
                 </div>
             </fieldset>
         </section>
+
        <section class="bgContent" id="bgContentProduct">
             <fieldset class="fieldsetRegist">
                 <a class="addCommodity" href="#">追加</a>
@@ -332,13 +338,15 @@ foreach ($tm01Sagyo as $work) {
 						<input name="D05_NST_CD<?= $k ?>" id="nstcd<?= $k ?>" type="hidden" value="<?=$com['D05_NST_CD'] ?>"/>
 						<input name="D05_COM_CD<?= $k ?>" id="comcd<?= $k ?>" type="hidden" value="<?=$com['D05_COM_CD'] ?>"/>
 						<input name="D05_COM_SEQ<?= $k ?>" id="comseq<?= $k ?>" type="hidden" value="<?= $k ?>">
-						<div class="formGroup">
+                        <input name="LIST_NAME[<?=$k?>]" id="list<?= $k ?>" type="hidden" value=""/>
+                        <div class="formGroup">
 							<div class="formItem">
 								<label class="titleLabel">商品・荷姿コード</label>
 								<input rel="<?= $k ?>" type="text" name="code_search<?= $k ?>" id="code_search<?= $k ?>"
 									   maxlength="9" value="<?=$com['D05_COM_CD'].$com['D05_NST_CD']?>" class="textForm codeSearchProduct">
 								<a onclick="codeSearch(<?= $k ?>);" class="btnFormTool openSearchCodeProduct"
-								   style="cursor: pointer" rel="<?= $k ?>">コード一覧から選択</a></div>
+								   style="cursor: pointer" rel="<?= $k ?>">コード一覧から選択</a>
+                            </div>
 							<div class="formItem">
 								<label class="titleLabel">品名</label>
 								<p class="txtValue" id="txtValueName<?= $k ?>"><?php if(isset($listTm05Edit[$com['D05_COM_CD']])) echo $listTm05Edit[$com['D05_COM_CD']]['M05_COM_NAMEN']?></p>
@@ -563,7 +571,7 @@ foreach ($tm01Sagyo as $work) {
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
-                        <textarea class="textarea" name="D03_NOTE"><?= nl2br($denpyo['D03_NOTE']); ?></textarea>
+                        <textarea class="textarea" name="D03_NOTE"><?= $denpyo['D03_NOTE'] ?></textarea>
                     </div>
                 </div>
             </fieldset>
@@ -572,7 +580,10 @@ foreach ($tm01Sagyo as $work) {
 </main>
 <footer id="footer">
     <div class="toolbar">
-        <a class="btnBack" href="<?php echo isset($d03DenNo) ? yii\helpers\BaseUrl::base(true).'/detail-workslip.html?den_no='.$d03DenNo : yii\helpers\BaseUrl::base(true) ?>">戻る</a>
+        <a class="btnBack" href="<?php yii\helpers\BaseUrl::base(true)?>/detail-workslip.html?den_no=<?=$d03DenNo?>">戻る</a>
+        <div class="btnSet" style="width:150px;">
+            <a class="btnTool" href="javascript:void(0)" id="preview">作業指示書</a>
+        </div>
         <a class="btnSubmit" id="btnRegistWorkSlip">登録</a>
     </div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
@@ -653,7 +664,7 @@ foreach ($tm01Sagyo as $work) {
                             <div class="formItem">
                                 <label class="titleLabel">備考</label>
                                 <textarea maxlength="1000" class="textarea" name="D01_NOTE"
-                                          id="D01_NOTE"><?= nl2br($cus['D01_NOTE']); ?></textarea>
+                                          id="D01_NOTE"><?= $cus['D01_NOTE'] ?></textarea>
                             </div>
                         </div>
                         <div class="formGroup">
@@ -1155,6 +1166,7 @@ foreach ($tm01Sagyo as $work) {
 		$('#nstcd' + index).val($("#nstcd" + m05ComCD).val());
 		$('#comcd' + index).val($("#comcd" + m05ComCD).val());
 		$("#code_search"+index).val(m05ComCD);
+        $("#list" + index).val(m05ComCD);
 		comCd = parseInt(comCd);
 		if(comCd > 41999 && comCd < 43000) {
 			$("#warrantyBox").show();
