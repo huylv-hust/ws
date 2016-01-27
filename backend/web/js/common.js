@@ -287,7 +287,8 @@ var agreeForm = function() {
 
 // コード一覧から選択ボタン
 function codeSearch(){
-  $("#modalCodeSearch").modal();
+    $("#modalCodeSearch input[type=radio]").attr('checked', false);
+    $("#modalCodeSearch").modal();
 }
 
 // 作業確定ボタン

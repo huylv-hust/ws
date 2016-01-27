@@ -121,48 +121,41 @@ class Udenpyo {
 			'D02_CAR_SEQ' => 0,
 			'D02_CAR_NAMEN' => '',
 			'D02_JIKAI_SHAKEN_YM' => '',
-			'D02_METER_KM' => 0,
-			'D02_SYAKEN_CYCLE' => 0,
+			'D02_METER_KM' => '',
+			'D02_SYAKEN_CYCLE' => '0',
 			'D02_RIKUUN_NAMEN' => '',
-			'D02_CAR_ID' => 0, //
+			'D02_CAR_ID' => '', //
 			'D02_HIRA' => '',
 			'D02_CAR_NO' => '',
 			'D02_INP_DATE' => date('y-M-d'),
-			'D02_INP_USER_ID' => 0, //
+			'D02_INP_USER_ID' => '0', //
 			'D02_UPD_DATE' => date('y-M-d'), //
-			'D02_UPD_USER_ID' => 0, //
-			'D02_MAKER_CD' => 0,
-			'D02_MODEL_CD' => 0,
+			'D02_UPD_USER_ID' => '0', //
+			'D02_MAKER_CD' => '0',
+			'D02_MODEL_CD' => '0',
 			'D02_SHONENDO_YM' => '',
-			'D02_TYPE_CD' => 0,
-			'D02_GRADE_CD' => 0,
+			'D02_TYPE_CD' => '0',
+			'D02_GRADE_CD' => '0',
 			'ApiCar' => [
-				'car_haikiRyou' => '',
-				'car_gradeNamen' => '',
+				'car_haikiRyou' => '0',
 				'car_syataiBangou' => '',
-				'car_makerNamen' => '',
-				'car_ruibetuKbn' => '',
+				'car_ruibetuKbn' => '1',
 				'car_bodyColor' => '',
 				'car_styleBangou' => '',
-				'car_totalJyuuryou' => '',
+				'car_totalJyuuryou' => '0',
 				'car_yunyu' => '',
 				'car_gendokiStyle' => '',
-				'car_maxSekisai' => '',
+				'car_maxSekisai' => '0',
 				'car_modelNamen' => '',
-				'car_jyuuryou' => '',
+				'car_jyuuryou' => '0',
 				'car_style' => '',
-				'car_syubetu' => '',
-				'car_typeNamen' => '',
 				'car_mission' => '',
 				'car_handler' => '',
-				'car_riunJimusyoName' => '',
-				'carLength' => 0,
 			]
 		];
 	}
 
 	public function convertKeyApiDbCar($getCarApi) {
-
 		if (count($getCarApi) == 0)
 			return $this->defaultApiCar();
 		$carApis = [];
@@ -182,7 +175,7 @@ class Udenpyo {
 			$arr[] = [
 				'D02_CUST_NO' => 0,
 				'D02_CAR_SEQ' => $car['car_carSeq'],
-				'D02_CAR_NAMEN' => $car['car_carName'],
+				'D02_CAR_NAMEN' => $car['car_modelNamen'],
 				'D02_JIKAI_SHAKEN_YM' => $car['car_jikaiSyakenYmd'],
 				'D02_METER_KM' => $car['car_meterKm'],
 				'D02_SYAKEN_CYCLE' => $car['car_syakenCycle'],
@@ -201,9 +194,7 @@ class Udenpyo {
 				'D02_GRADE_CD' => $car['car_gradeCd'],
 				'ApiCar' => [
 					'car_haikiRyou' => $car['car_haikiRyou'],
-					'car_gradeNamen' => $car['car_gradeNamen'],
 					'car_syataiBangou' => $car['car_syataiBangou'],
-					'car_makerNamen' => $car['car_makerNamen'],
 					'car_ruibetuKbn' => $car['car_ruibetuKbn'],
 					'car_bodyColor' => $car['car_bodyColor'],
 					'car_styleBangou' => $car['car_styleBangou'],
@@ -211,14 +202,11 @@ class Udenpyo {
 					'car_yunyu' => $car['car_yunyu'],
 					'car_gendokiStyle' => $car['car_gendokiStyle'],
 					'car_maxSekisai' => $car['car_maxSekisai'],
-					'car_modelNamen' => $car['car_modelNamen'],
+					'car_carName' => $car['car_carName'],
 					'car_jyuuryou' => $car['car_jyuuryou'],
 					'car_style' => $car['car_style'],
-					'car_syubetu' => $car['car_syubetu'],
-					'car_typeNamen' => $car['car_typeNamen'],
 					'car_mission' => $car['car_mission'],
 					'car_handler' => $car['car_handler'],
-					'car_riunJimusyoName' => $car['car_riunJimusyoName'],
 					'carLength' => $info['carLength']
 				]
 			];
@@ -267,7 +255,7 @@ class Udenpyo {
 		$cusInfo['D01_CUST_NO'] = $cusDb['D01_CUST_NO'];
 		$cusInfo['D01_UKE_JYUG_CD'] = $cusDb['D01_UKE_JYUG_CD'];
 		$totalCarOfCus = count($car);
-		$car = array_pad($car, 5, $carDefault);
+		$car = array_pad($car, 5, $this->defaultApiCar());
 	}
 
 	public function deleteDataObj($obj, $where) {

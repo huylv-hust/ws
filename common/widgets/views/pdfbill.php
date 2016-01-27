@@ -126,16 +126,16 @@
         <tr>
             <td>右前</td>
             <td width="15%">
-                <?php echo isset($info_bill['front_wheel_right']['info_market']) ? $info_bill['front_wheel_right']['info_market'] : ''; ?>
+                <?php echo isset($info_bill['right_front']['info_market']) ? $info_bill['right_front']['info_market'] : ''; ?>
             </td>
             <td width="15%">
-                <?php echo isset($info_bill['front_wheel_right']['product_name']) ? $info_bill['front_wheel_right']['product_name'] : ''; ?>
+                <?php echo isset($info_bill['right_front']['product_name']) ? $info_bill['right_front']['product_name'] : ''; ?>
             </td>
             <td width="15%">
-                <?php echo isset($info_bill['front_wheel_right']['size']) ? $info_bill['front_wheel_right']['size'] : ''; ?>
+                <?php echo isset($info_bill['right_front']['size']) ? $info_bill['right_front']['size'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['front_wheel_right']['serial']) ? $info_bill['front_wheel_right']['serial'] : ''; ?>
+                <?php echo isset($info_bill['right_front']['serial']) ? $info_bill['right_front']['serial'] : ''; ?>
             </td>
             <td>年　　月　　日</td>
             <td></td>
@@ -144,16 +144,16 @@
         <tr>
             <td>左前</td>
             <td>
-                <?php echo isset($info_bill['front_wheel_left']['info_market']) ? $info_bill['front_wheel_left']['info_market'] : ''; ?>
+                <?php echo isset($info_bill['left_front']['info_market']) ? $info_bill['left_front']['info_market'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['front_wheel_left']['product_name']) ? $info_bill['front_wheel_left']['product_name'] : ''; ?>
+                <?php echo isset($info_bill['left_front']['product_name']) ? $info_bill['left_front']['product_name'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['front_wheel_left']['size']) ? $info_bill['front_wheel_left']['size'] : ''; ?>
+                <?php echo isset($info_bill['left_front']['size']) ? $info_bill['left_front']['size'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['front_wheel_left']['serial']) ? $info_bill['front_wheel_left']['serial'] : ''; ?>
+                <?php echo isset($info_bill['left_front']['serial']) ? $info_bill['left_front']['serial'] : ''; ?>
             </td>
             <td>年　　月　　日</td>
             <td></td>
@@ -162,16 +162,16 @@
         <tr>
             <td>右後</td>
             <td>
-                <?php echo isset($info_bill['back_wheel_right']['info_market']) ? $info_bill['front_wheel_right']['info_market'] : ''; ?>
+                <?php echo isset($info_bill['right_behind']['info_market']) ? $info_bill['right_behind']['info_market'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['back_wheel_right']['product_name']) ? $info_bill['front_wheel_right']['product_name'] : ''; ?>
+                <?php echo isset($info_bill['right_behind']['product_name']) ? $info_bill['right_behind']['product_name'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['back_wheel_right']['size']) ? $info_bill['front_wheel_right']['size'] : ''; ?>
+                <?php echo isset($info_bill['right_behind']['size']) ? $info_bill['right_behind']['size'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['back_wheel_right']['serial']) ? $info_bill['front_wheel_right']['serial'] : ''; ?>
+                <?php echo isset($info_bill['right_behind']['serial']) ? $info_bill['right_behind']['serial'] : ''; ?>
             </td>
             <td>年　　月　　日</td>
             <td></td>
@@ -180,16 +180,16 @@
         <tr>
             <td>左後</td>
             <td>
-                <?php echo isset($info_bill['back_wheel_left']['info_market']) ? $info_bill['back_wheel_left']['info_market'] : ''; ?>
+                <?php echo isset($info_bill['left_behind']['info_market']) ? $info_bill['left_behind']['info_market'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['back_wheel_left']['product_name']) ? $info_bill['back_wheel_left']['product_name'] : ''; ?>
+                <?php echo isset($info_bill['left_behind']['product_name']) ? $info_bill['left_behind']['product_name'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['back_wheel_left']['size']) ? $info_bill['back_wheel_left']['size'] : ''; ?>
+                <?php echo isset($info_bill['left_behind']['size']) ? $info_bill['left_behind']['size'] : ''; ?>
             </td>
             <td>
-                <?php echo isset($info_bill['back_wheel_left']['serial']) ? $info_bill['back_wheel_left']['serial'] : ''; ?>
+                <?php echo isset($info_bill['left_behind']['serial']) ? $info_bill['left_behind']['serial'] : ''; ?>
             </td>
             <td>年　　月　　日</td>
             <td></td>

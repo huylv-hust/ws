@@ -422,6 +422,12 @@ var regist_work = function () {
                         return '貴重品「有」の場合は、お客様確認を行い、お客様確認チェックをＯＮにしてください';
                     }
                 }
+            },
+            invalidHandler: function() {
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    validator.errorList[0].element.focus();
+                }
             }
         });
 

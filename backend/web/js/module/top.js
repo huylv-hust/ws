@@ -223,6 +223,7 @@ var cardmembers = function(){
                     }
                     else {
                         $('.box-alert').html('');
+                        window.location.href = url_redirect;
                     }
                 });
         });
@@ -317,11 +318,13 @@ var card = function(){
                 dataType: 'json'
             })
                 .success(function (data) {
-                    if (data === false) {
+                    if (data == false) {
                         $('.box-alert').html('<div class="alert alert-danger" role="alert">設定された掛カード番号が存在しません</div>');
                     }
                     else {
                         $('.box-alert').html('');
+                        window.location.href = url_redirect;
+
                     }
                 });
         });
@@ -350,7 +353,11 @@ var other = function(){
                 dataType: 'json'
             })
                 .success(function (data) {
-
+                    if(data == true) {
+                        window.location.href = url_redirect;
+                    } else {
+                        $('.box-alert').html('<div class="alert alert-danger" role="alert">設定された掛カード番号が存在しません</div>');
+                    }
                 });
         });
     };

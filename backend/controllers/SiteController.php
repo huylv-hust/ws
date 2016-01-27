@@ -118,9 +118,11 @@ class SiteController extends WsController
                 'value' => $member_info
             ]);
             \Yii::$app->response->cookies->add($cookie);
-            $this->redirect($url_redirect);
+            $flag = true;
         }
-        print_r(json_encode($flag));
+
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $flag;
     }
 
     /**
@@ -146,9 +148,10 @@ class SiteController extends WsController
                 'value' => $member_info
             ]);
             \Yii::$app->getResponse()->getCookies()->add($cookie);
-            $this->redirect($url_redirect);
+            $flag = true;
         }
-        print_r(json_encode($flag));
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $flag;
     }
     /**
      * @inheritdoc
@@ -157,6 +160,7 @@ class SiteController extends WsController
      */
     public function actionCheckother()
     {
+        $flag = false;
         utilities::deleteCookie('cus_info');//Delete coolkie cus_info
         $member_info = array();
         $url_redirect = Yii::$app->request->post('url_redirect');
@@ -167,6 +171,11 @@ class SiteController extends WsController
             'value' => $member_info
         ]);
         \Yii::$app->getResponse()->getCookies()->add($cookie);
-        $this->redirect($url_redirect);
+
+        if (! empty($member_info)) {
+            $flag = true;
+        }
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $flag;
     }
 }

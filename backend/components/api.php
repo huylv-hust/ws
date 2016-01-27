@@ -29,7 +29,7 @@ class api
 		{
 			$curl->set_option(CURLOPT_PROXY, static::$api['proxy']);
 		}
-
+		
 		if($method == 'post') {
 
 			$curl->setOption(CURLOPT_POSTFIELDS,json_encode($params,JSON_UNESCAPED_UNICODE));
@@ -40,6 +40,7 @@ class api
 
 		$res = $curl->$method($url);
 		$res = json_decode($res,true);
+
 		$status = $curl->responseCode;
 		if($status == 200)
 		{

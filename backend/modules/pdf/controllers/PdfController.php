@@ -8,7 +8,18 @@ use yii\base\Controller;
 
 class PdfController
 {
-    public function exportBill($info_warranty = array(), $info_car = array(), $info_bill = array(), $info_ss = array(),$denpyoNo, $savetype = null, $watermark = null)
+    /**
+	 *
+	 * @param type $info_warranty
+	 * @param type $info_car
+	 * @param type $info_bill
+	 * @param type $info_ss
+	 * @param type $denpyoNo
+	 * @param type $savetype
+	 * @param type $watermark 1 has lock
+	 * @return boolean|string
+	 */
+	public function exportBill($info_warranty = array(), $info_car = array(), $info_bill = array(), $info_ss = array(),$denpyoNo, $savetype = null, $watermark = null)
     {
 		$data = [
             'info_warranty' => $info_warranty,
