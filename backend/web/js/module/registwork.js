@@ -501,7 +501,7 @@ var regist_work = function () {
 
     var preview = function () {
         $('#preview').on('click', function () {
-            $('#login_form').attr('action', baseUrl + '/registworkslip/preview/index').submit();
+            $('#login_form').attr('action', baseUrl + '/preview2.html').submit();
         });
     };
 
