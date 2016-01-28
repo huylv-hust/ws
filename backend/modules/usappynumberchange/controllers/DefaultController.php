@@ -116,9 +116,9 @@ class DefaultController extends WsController
     public function actionTestapi()
     {
         $api = new api();
-        $member_info = $api->getMemberInfo('277426000167');
-        $infocar = $api->getInfoListCar('277426000167');
-        $infocard = $api->getInfoListCard('277426000167');
+        $member_info = $api->getMemberInfo('336915000145');
+        $infocar = $api->getInfoListCar('336915000145');
+        $infocard = $api->getInfoListCard('336915000145');
         echo '<pre>';
         var_dump($member_info);
         var_dump($infocar);

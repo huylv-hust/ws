@@ -95,6 +95,7 @@ var cardmembers = function(){
             $('#card_member_usappy').validate({
                 rules: {
                     card_number:{
+                        rangelength: [16,16],
                         required: true,
                         mynumber: true
                     },
@@ -152,6 +153,7 @@ var cardmembers = function(){
                 },
                 messages: {
                     card_number:{
+                        rangelength: 'カード番号は16文字で入力してください',
                         required: 'カード番号を入力してください',
                         mynumber: 'カード番号は数字で入力してください'
                     },

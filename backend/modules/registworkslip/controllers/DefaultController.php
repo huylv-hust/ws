@@ -616,7 +616,7 @@ class DefaultController extends WsController {
 		$postData['D05_SURYO'] = 1;
 		$totalTaisa = 0;
 		for ($i = 1; $i < 11; ++$i) {
-			if (isset($postData['warranty_check']) && (int) $postData['D05_COM_CD' . $i] && in_array((int) $postData['D05_COM_CD' . $i], range(42000, 42999))) {
+			if ((int) $postData['D05_COM_CD' . $i] && in_array((int) $postData['D05_COM_CD' . $i], range(42000, 42999))) {
 				$totalTaisa = $totalTaisa + 1;
 			}
 		}

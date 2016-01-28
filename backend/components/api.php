@@ -131,6 +131,21 @@ class api
     }
 
     /**
+     * get info card
+     * @param type $card_no
+     * @return array card_infor empty array error 500 else
+     */
+    public static function getInfoCardTop($card_no)
+    {
+        $res = self::getInfoCard($card_no);
+        if (array_key_exists('member_kaiinCd', $res)) {
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * get list info card
      * @param type kaiinCd
      * @return array card_infor empty array error 500 else

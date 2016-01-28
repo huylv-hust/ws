@@ -11,6 +11,7 @@
         <input type="hidden" name="D01_CUST_NO" value="<?= $cus['D01_CUST_NO'] ?>" id="D01_CUST_NO"/>
         <input type="hidden" name="WARRANTY_CUST_NAMEN" value="<?= $cus['D01_CUST_NAMEN'] ?>" id="D01_CUST_NAMEN"/>
         <input type="hidden" name="D03_CUST_NO" value="<?= $denpyo['D03_CUST_NO'] ?>" id="D03_CUST_NO"/>
+        <input type="hidden" name="D03_STATUS" value="<?= isset($denpyo['D03_STATUS']) ? $denpyo['D03_STATUS'] : 0?>" id="D03_CUST_NO"/>
         <article class="container">
             <?php if (isset($errorEditInsert)) { ?>
                 <div class="alert alert-danger">編集が失敗しました。</div>
@@ -641,8 +642,8 @@
                                 <div class="formItem">
                                     <label class="titleLabel">金額</label>
 
-                                    <input type="text" name="D05_KINGAKU<?= $k ?>" rel="<?= $k ?>" id="total_<?= $k ?>"
-                                           value="<?= $com['D05_KINGAKU'] ?>" class="textForm">
+                                    <input maxlength="10" type="text" name="D05_KINGAKU<?= $k ?>" rel="<?= $k ?>" id="total_<?= $k ?>"
+                                           value="<?= $com['D05_KINGAKU'] ?>" class="textForm totalPriceProduct">
                                     <span class="txtUnit">円</span></div>
                             </div>
                         </div>
@@ -654,10 +655,10 @@
                     <div class="formGroup lineTop">
                         <div class="flexRight">
                             <label class="titleLabelTotal">合計金額</label>
-                            <p class="txtValue"><strong class="totalPrice"
+                            <p class="txtValue" style="position: relative"><strong class="totalPrice"
                                                         id="totalPrice"><?= $denpyo['D03_SUM_KINGAKU'] ?></strong><span
                                     class="txtUnit">円</span>
-                                <input type="hidden" id="D03_SUM_KINGAKU" name="D03_SUM_KINGAKU"/>
+                                <input maxlength="10" type="hidden" id="D03_SUM_KINGAKU" name="D03_SUM_KINGAKU"/>
                             </p>
                         </div>
                     </div>
@@ -1566,6 +1567,22 @@
                     $("#D03_KAKUNIN_MEI_D03_KAKUNIN_SEI").html(option1);
                 }
             );
+        });
+
+        $('.totalPriceProduct').on('change', function(){
+            var total = 0,
+                sub_price = Number.isInteger(parseInt($(this).val())) ? parseInt($(this).val()) : 0,
+                totalHasVat;
+            for (var i = 1; i < 11; ++i) {
+                if ($('#commodity' + i).hasClass('on')) {
+                    sub_price = Number.isInteger(parseInt($("#total_" + i).val())) ? parseInt($("#total_" + i).val()) : 0,
+                    total = total + sub_price;
+                }
+            }
+            totalHasVat = (total *<?php echo(100 + Yii::$app->params['vat']) ?>) / 100;
+            totalHasVat = Math.round(totalHasVat);
+            $("#D03_SUM_KINGAKU").val(totalHasVat);
+            $("#totalPrice").html(totalHasVat);
         });
 
         $(".priceProduct,.noProduct").change(function () {

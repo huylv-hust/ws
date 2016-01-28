@@ -398,6 +398,9 @@ var regist_work = function () {
                 D03_AZU_END_HH: {
                     check_date_order: true
                 },
+                D03_SUM_KINGAKU: {
+                    maxlength: 10
+                }
             },
             messages: {
                 M08_NAME_MEI_M08_NAME_SEI: {
@@ -421,6 +424,9 @@ var regist_work = function () {
                     required: function () {
                         return '貴重品「有」の場合は、お客様確認を行い、お客様確認チェックをＯＮにしてください';
                     }
+                },
+                D03_SUM_KINGAKU: {
+                    maxlength: '合計金額は10桁の数字以内で入力してください。'
                 }
             },
             invalidHandler: function() {
@@ -471,6 +477,11 @@ var regist_work = function () {
                     $('#' + tooltip_hidden).css({"top": "-29px", "left": "-202px"});
                     $('#' + tooltip_hidden).find('.tooltip-arrow').css("left", "50%");
                 }
+                var tooltip_hidden = $('input[name=D03_SUM_KINGAKU]').attr('aria-describedby');
+                if (tooltip_hidden != '') {
+                    $('#' + tooltip_hidden).css({"top": "-30px", "left": "948px"});
+                    $('#' + tooltip_hidden).find('.tooltip-arrow').css("left", "80%");
+                }
                 return false;
             }
             $('#modalRegistConfirm').modal();
@@ -507,7 +518,8 @@ var regist_work = function () {
 
     var preview = function () {
         $('#preview').on('click', function () {
-            $('#login_form').attr('action', baseUrl + '/preview2').submit();
+            $('#login_form').attr('action', baseUrl + '/preview2');
+            $('#login_form')[0].submit();
         });
     };
 

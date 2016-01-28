@@ -98,7 +98,7 @@ class SiteController extends WsController
         if ($license_plates != '') {
             $array_source['license_plates'] = $license_plates;
         }
-        $member_info = $api->getMemberInfo($member_card);
+        $member_info = $api->getInfoCardTop($member_card);
         $member_info['type_redirect'] = $type_redirect;
 
         if (! isset($member_info['member_kaiinCd'])) {
@@ -106,13 +106,15 @@ class SiteController extends WsController
         } else {
             $flag1 = $this->equalArray($array_source, $member_info);
             if ($license_plates != '') {
-                $list_info_car = $api->getInfoListCar($member_card);
-                $car_carNo = $list_info_car['car_carNo'];
-                $flag2 = $this->equalNocar($license_plates, $car_carNo);
+                if ($list_info_car = $api->getInfoListCar($member_info['member_kaiinCd'])) {
+                    $car_carNo = $list_info_car['car_carNo'];
+                    $flag2 = $this->equalNocar($license_plates, $car_carNo);
+                } else {
+                    $flag2 = false;
+                }
             }
         }
         if ($flag1 == true && $flag2 == true) {
-            $flag = true;
             $cookie = new Cookie([
                 'name' => 'cus_info',
                 'value' => $member_info
