@@ -21,7 +21,7 @@ class WsController extends Controller
 
         $session = \Yii::$app->session;
         if (! $session->get('login_info')) {
-            $this->redirect(BaseUrl::base(true).'/login.html');
+            $this->redirect(BaseUrl::base(true).'/login');
             return false;
         }
 
@@ -31,7 +31,7 @@ class WsController extends Controller
         }
 
         if (! $session->get('login_info')) {
-            $this->redirect(BaseUrl::base(true).'/timeout.html');
+            $this->redirect(BaseUrl::base(true).'/timeout');
             return false;
         }
 

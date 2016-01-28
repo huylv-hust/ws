@@ -18,7 +18,15 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">状況</label>
-                        <p class="txtValue"></p>
+                        <p class="txtValue">
+                            <?php
+                            if ($post['D03_STATUS'] == 1) {
+                                echo '作業確定';
+                            }
+                            if ($post['D03_STATUS'] == 0) {
+                                echo '作業予約';
+                            } ?>
+                        </p>
                     </div>
                 </div>
             </fieldset>

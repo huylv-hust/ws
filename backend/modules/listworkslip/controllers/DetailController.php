@@ -32,7 +32,7 @@ class DetailController extends WsController
 
         $detail = $obj->getDataSearch($filter);
         if (empty($detail)) {
-            $this->redirect(BaseUrl::base(true) . '/list-workslip.html');
+            $this->redirect(BaseUrl::base(true) . '/list-workslip');
         }
 
         $data['detail'] = $detail[0];
@@ -105,18 +105,18 @@ class DetailController extends WsController
             $den_no = Yii::$app->request->post('den_no');
             $obj = Sdptd03denpyo::findOne($den_no);
             if (!isset($obj)) {
-                return $this->redirect(BaseUrl::base(true) . '/list-workslip.html');
+                return $this->redirect(BaseUrl::base(true) . '/list-workslip');
             }
             $status = $obj['D03_STATUS'];
             $status_update = $status == 0 ? 1 : 0;
             $obj->setData(['D03_STATUS' => $status_update], $den_no);
             if ($obj->saveData()) {
                 Yii::$app->session->setFlash('success', '変更しました。');
-                $url = $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip.html';
+                $url = $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip';
                 return $this->redirect($url);
             }
             Yii::$app->session->setFlash('error', '変更するできません。');
-            return $this->redirect(BaseUrl::base(true) . '/detail-workslip.html?den_no=' . $den_no);
+            return $this->redirect(BaseUrl::base(true) . '/detail-workslip?den_no=' . $den_no);
         }
     }
 
@@ -132,12 +132,12 @@ class DetailController extends WsController
                 $obj = new Sdptd03denpyo();
                 if ($obj->deleteData(['den_no' => $den_no, 'cus_no' => $cus_no, 'car_no' => $car_no])) {
                     Yii::$app->session->setFlash('success', '伝票No.' . $den_no . 'を削除しました。');
-                    $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip.html';
+                    $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip';
                     return $this->redirect($url);
                 }
             }
             Yii::$app->session->setFlash('error', '削除をできません。');
-            return $this->redirect(BaseUrl::base(true) . '/detail-workslip.html?den_no=' . $den_no);
+            return $this->redirect(BaseUrl::base(true) . '/detail-workslip?den_no=' . $den_no);
         }
     }
 
@@ -161,7 +161,7 @@ class DetailController extends WsController
 
         $detail = $obj->getDataSearch($filter);
         if (empty($detail)) {
-            $this->redirect(BaseUrl::base(true) . '/list-workslip.html');
+            $this->redirect(BaseUrl::base(true) . '/list-workslip');
         }
 
         $data['detail'] = $detail[0];

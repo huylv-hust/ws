@@ -28,7 +28,7 @@
             $form = \yii\widgets\ActiveForm::begin([
                 'id' => 'usappynumberchange',
                 'options' => ['name' => 'frmLogin'],
-                'action'  => 'usappy-number-change-confirm.html'
+                'action'  => 'usappy-number-change-confirm'
             ])
             ?>
                 <div id="frmCardNumber">
@@ -67,7 +67,7 @@
 </main>
 <footer id="footer">
     <div class="toolbar">
-        <a href="<?php echo \yii\helpers\BaseUrl::base(true); ?>/menu.html" class="btnBack">戻る</a>
+        <a href="<?php echo \yii\helpers\BaseUrl::base(true); ?>/menu" class="btnBack">戻る</a>
         <a href="#" id="btnCardNumberVerify" class="btnNext">確認</a>
     </div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
@@ -75,9 +75,9 @@
 <script type="text/javascript" src="js/module/usappynumberchange.js"></script>
 <script type="text/javascript">
     $(function(){
-        history.pushState(null, null, 'usappy-number-change.html');
+        history.pushState(null, null, 'usappy-number-change');
         window.addEventListener('popstate', function(event) {
-            history.pushState(null, null, 'usappy-number-change.html');
+            history.pushState(null, null, 'usappy-number-change');
         });
     });
 </script>

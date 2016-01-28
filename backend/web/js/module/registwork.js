@@ -367,7 +367,7 @@ var regist_work = function () {
             return true;
         }, '終了時間は開始時間より入力してください。');
 
-        $('#login_form').validate({
+        var validator = $('#login_form').validate({
             ignore: "",
             rules: {
                 M08_NAME_MEI_M08_NAME_SEI: {
@@ -507,7 +507,29 @@ var regist_work = function () {
 
     var preview = function () {
         $('#preview').on('click', function () {
-            $('#login_form').attr('action', baseUrl + '/preview2.html').submit();
+            $('#login_form').attr('action', baseUrl + '/preview2').submit();
+        });
+    };
+
+    var get_addr_from_zipcode = function() {
+        $('#btn_get_address').off('click').on('click',function(){
+            var zipcode = $('#D01_YUBIN_BANGO').val();
+            if(zipcode.length != 7) return;
+            var request = $.ajax({
+                type: 'post',
+                data: {
+                    zipcode : zipcode
+                },
+                url: baseUrl + '/registworkslip/search/address'
+            });
+            var response = request.done(function (data) {
+                var html = '';
+                if(data != false) {
+                    html = data[0].prefecture + ' ' + data[0].city + ' ' + data[0].town;
+                }
+
+                $('#D01_ADDR').val(html);
+            });
         });
     };
 
@@ -523,6 +545,7 @@ var regist_work = function () {
             submit_registWork();
             click_label_modal_customer();
             preview();
+            get_addr_from_zipcode();
         }
     };
 }();

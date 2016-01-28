@@ -6,8 +6,8 @@
         <p class="mt50 centering">項目を選択してください。</p>
         <nav class="navBasic">
             <ul class="ulNavMainte">
-                <li><a class="btnNavBasic iconList" href="<?php echo \yii\helpers\BaseUrl::base(true)?>/list-staff.html">作業者一覧</a></li>
-                <li><a class="btnNavBasic iconXls" href="<?php echo \yii\helpers\BaseUrl::base(true)?>/update-commodity.html">商品情報更新</a></li>
+                <li><a class="btnNavBasic iconList" href="<?php echo \yii\helpers\BaseUrl::base(true)?>/list-staff">作業者一覧</a></li>
+                <li><a class="btnNavBasic iconXls" href="<?php echo \yii\helpers\BaseUrl::base(true)?>/update-commodity">商品情報更新</a></li>
             </ul>
         </nav>
     </article>

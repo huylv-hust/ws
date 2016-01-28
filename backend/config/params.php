@@ -20,6 +20,9 @@ return [
                 'url_member_list'   => $_API_URL_UPS.'getmembers',
                 'url_update_member' => $_API_URL_UPS.'updmemberbasic',
             ],
+            'zipcode' => [
+                'url_addr' => $_API_URL_USAPPY.'zipcode'
+            ],
             'secret' => $_API_SECRET,
         ],
         'd02SyakenCycle' => [

@@ -89,14 +89,14 @@
 </main>
 <footer id="footer">
     <?php
-        $url = Yii::$app->session->has('url_list_staff') ? Yii::$app->session->get('url_list_staff') : \yii\helpers\BaseUrl::base().'/list-staff.html';
+        $url = Yii::$app->session->has('url_list_staff') ? Yii::$app->session->get('url_list_staff') : \yii\helpers\BaseUrl::base().'/list-staff';
     ?>
     <div class="toolbar">
         <a class="btnBack" href="<?php echo $url;?>">戻る</a>
         <?php if($action == 'edit') {?>
         <div class="btnSet one"><a data-toggle="modal" class="btnTool" href="#modalRemoveStaffConfirm">削除</a></div>
         <?php }?>
-        <button type="submit" class="btnSubmit" href="edit-staff.html">更新</button>
+        <button type="submit" class="btnSubmit" href="edit-staff">更新</button>
     </div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>

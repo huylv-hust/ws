@@ -48,7 +48,7 @@
     $form = \yii\widgets\ActiveForm::begin([
         'id' => 'usappy_number_change_confirm',
         'options' => ['name' => 'frmLogin'],
-        'action'  => 'usappy-number-change-complete.html'
+        'action'  => 'usappy-number-change-complete'
     ])
     ?>
     <?= \yii\helpers\Html::input('hidden', 'kaiinCd', isset($data) ? $data['kaiinCd'] : '', []) ?>
@@ -69,9 +69,9 @@
 <script type="text/javascript" src="js/module/usappynumberchange.js"></script>
 <script type="text/javascript">
     $(function(){
-        history.pushState(null, null, 'usappy-number-change-confirm.html');
+        history.pushState(null, null, 'usappy-number-change-confirm');
         window.addEventListener('popstate', function(event) {
-            history.pushState(null, null, 'usappy-number-change-confirm.html');
+            history.pushState(null, null, 'usappy-number-change-confirm');
         });
     });
 </script>

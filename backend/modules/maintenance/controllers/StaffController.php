@@ -38,7 +38,7 @@ class StaffController extends WsController
             )
             : $filters;
 
-        Yii::$app->session->set('url_list_staff', BaseUrl::base().'/list-staff.html'.$query_string);
+        Yii::$app->session->set('url_list_staff', BaseUrl::base().'/list-staff'.$query_string);
         $data['all_ss_search'] = array('' => '') + $this->processGetss($data['filters']['M08_HAN_CD'], $ss);
         $obj = new Sdptm08sagyosya();
 
@@ -112,12 +112,12 @@ class StaffController extends WsController
             );
             $data['model'] = Sdptm08sagyosya::findOne($primary);
             if (!$data['model']) {
-                return $this->redirect(BaseUrl::base().'/list-staff.html');
+                return $this->redirect(BaseUrl::base().'/list-staff');
             }
             $data['action'] = 'edit';
             $all_ss = $this->processGetss($data['model']->M08_HAN_CD, $data['api']);
             Yii::$app->session->set('url_edit_staff', BaseUrl::base(true)
-            .'/edit-staff.html?branch='.$primary['M08_HAN_CD']
+            .'/edit-staff?branch='.$primary['M08_HAN_CD']
             .'&ss='.$primary['M08_SS_CD']).'&cd='.$primary['M08_JYUG_CD'];
             Yii::$app->view->title = '作業者編集';
         } else {
@@ -135,7 +135,7 @@ class StaffController extends WsController
                 Yii::$app->session->setFlash('success', 'success');
                 $key = $data['model']->getPrimaryKeyAfterSave();
                 return $this->redirect(BaseUrl::base()
-                    .'/edit-staff.html?branch='.$key['M08_HAN_CD'].'&ss='.$key['M08_SS_CD'].'&cd='.$key['M08_JYUG_CD']);
+                    .'/edit-staff?branch='.$key['M08_HAN_CD'].'&ss='.$key['M08_SS_CD'].'&cd='.$key['M08_JYUG_CD']);
             }
             Yii::$app->session->setFlash('error', 'error');
         }
@@ -157,14 +157,14 @@ class StaffController extends WsController
                 Yii::$app->session->setFlash('success', '削除を完了しました。');
                 $url = Yii::$app->session->has('url_list_staff')
                     ? Yii::$app->session->get('url_list_staff')
-                    : BaseUrl::base(true).'/list-staff.html';
+                    : BaseUrl::base(true).'/list-staff';
                 return $this->redirect($url);
             }
 
             Yii::$app->session->setFlash('error', '削除が失敗しました。');
             $url = (Yii::$app->session->has('url_edit_staff'))
                 ? Yii::$app->session->get('url_edit_staff')
-                : BaseUrl::base(true).'/list-staff.html';
+                : BaseUrl::base(true).'/list-staff';
             return $this->redirect($url);
         }
     }

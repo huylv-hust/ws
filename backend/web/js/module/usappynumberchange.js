@@ -52,7 +52,7 @@ var usappynumberchange = function(){
 
     var back = function() {
         $('#btnBackCardNumberConfirm').click(function(){
-            $('#usappy_number_change_confirm').attr('action','usappy-number-change.html');
+            $('#usappy_number_change_confirm').attr('action','usappy-number-change');
             $('#usappy_number_change_confirm').submit();
             });
     };

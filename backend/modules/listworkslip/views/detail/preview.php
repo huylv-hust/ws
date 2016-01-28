@@ -21,13 +21,10 @@
                         <p class="txtValue">
                             <?php
                             if ($detail['D03_STATUS'] == 1) {
-                                echo $status[2];
+                                echo '作業確定';
                             }
-                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ymd')) {
-                                echo $status[0];
-                            }
-                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ymd')) {
-                                echo $status[1];
+                            if ($detail['D03_STATUS'] == 0) {
+                                echo '作業予約';
                             } ?>
                         </p>
                     </div>

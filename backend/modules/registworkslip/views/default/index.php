@@ -1,5 +1,5 @@
 <form id="login_form" method="post"
-      action="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip.html?denpyo_no=<?= (int)$d03DenNo ?>"
+      action="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip?denpyo_no=<?= (int)$d03DenNo ?>"
       class="form-horizontal">
     <main id="contents">
         <section class="readme">
@@ -870,7 +870,7 @@
     <footer id="footer">
         <div class="toolbar">
             <a class="btnBack"
-               href="<?php echo isset($d03DenNo) ? yii\helpers\BaseUrl::base(true) . '/detail-workslip.html?den_no=' . $d03DenNo : yii\helpers\BaseUrl::base(true); ?>">戻る</a>
+               href="<?php echo isset($d03DenNo) ? yii\helpers\BaseUrl::base(true) . '/detail-workslip?den_no=' . $d03DenNo : yii\helpers\BaseUrl::base(true); ?>">戻る</a>
             <?php if ($d03DenNo == 0) { ?>
                 <div class="btnSet" style="width:150px;">
                     <a class="btnTool" href="javascript:void(0)" id="preview">作業指示書</a>
@@ -885,13 +885,13 @@
 <div class="sidr left" id="sidr">
     <div class="closeSideMenu"><a id="sidrClose" href="#">Close</a></div>
     <ul>
-        <li><a href="menu.html">SSサポートサイトTOP</a></li>
+        <li><a href="menu">SSサポートサイトTOP</a></li>
     </ul>
 </div>
 <div class="sidr left" id="sidr">
     <div class="closeSideMenu"><a id="sidrClose" href="#">Close</a></div>
     <ul>
-        <li><a href="menu.html">SSサポートサイトTOP</a></li>
+        <li><a href="menu">SSサポートサイトTOP</a></li>
     </ul>
 </div>
 <!-- BEGIN InfoCus -->
@@ -934,9 +934,9 @@
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">郵便番号</label>
-                                    <input maxlength="7" type="text" value="1400002" name="D01_YUBIN_BANGO"
+                                    <input maxlength="7" type="text" value="" name="D01_YUBIN_BANGO"
                                            class="textForm" id="D01_YUBIN_BANGO">
-                                    <a class="btnFormTool" href="#">住所検索</a></div>
+                                    <a id="btn_get_address" class="btnFormTool" href="javascript:void(0)">住所検索</a></div>
                                 <div class="formItem">
                                     <label class="titleLabel">ご住所</label>
                                     <input type="text" value="<?= $cus['D01_ADDR'] ?>" name="D01_ADDR" id="D01_ADDR"
@@ -1658,10 +1658,10 @@
                             setTimeout(function () {
                                 $("#modalEditCustomer").modal('hide');
                                 if (data.custNo) {
-                                    window.location.href = "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip.html?custNo=" + data.custNo;
+                                    window.location.href = "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip?custNo=" + data.custNo;
                                 }
                                 else
-                                    window.location.href = "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip.html";
+                                    window.location.href = "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip";
                                 /*window.location.reload();*/
                             }, 1000);
 

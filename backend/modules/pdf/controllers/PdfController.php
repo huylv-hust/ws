@@ -21,7 +21,7 @@ class PdfController
 	 */
 	public function exportBill($info_warranty = array(), $info_car = array(), $info_bill = array(), $info_ss = array(),$denpyoNo, $savetype = null, $watermark = null)
     {
-		$data = [
+        $data = [
             'info_warranty' => $info_warranty,
             'info_car' => $info_car,
             'info_bill' => $info_bill,
@@ -38,8 +38,7 @@ class PdfController
         }
         utilities::createFolder('data/pdf');//Create folder data/pdf
         if ($savetype == 'save') {
-
-			if (file_exists('data/pdf/'.$denpyoNo.'.pdf')) {
+            if (file_exists('data/pdf/'.$denpyoNo.'.pdf')) {
                 return false;
             }
             $pdf->Output('data/pdf/'.$denpyoNo.'.pdf', 'F');
@@ -48,11 +47,12 @@ class PdfController
             }
         } else {
             $pdf->Output('data/pdf/review.pdf', 'F');
-			return 'data/pdf/review.pdf';
+            return 'data/pdf/review.pdf';
         }
 
     }
-	public function checkExists($denpyoNo) {
-		return file_exists('data/pdf/'.$denpyoNo.'.pdf');
-	}
+    public function checkExists($denpyoNo)
+    {
+        return file_exists('data/pdf/'.$denpyoNo.'.pdf');
+    }
 }

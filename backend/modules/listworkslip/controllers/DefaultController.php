@@ -32,7 +32,7 @@ class DefaultController extends WsController
         $filters = Yii::$app->request->get();
 
         $query_string = empty($filters) ? '' : '?' . http_build_query($filters);
-        Yii::$app->session->set('url_list_workslip', BaseUrl::base() . '/list-workslip.html' . $query_string);
+        Yii::$app->session->set('url_list_workslip', BaseUrl::base() . '/list-workslip' . $query_string);
 
         if (empty($filters)) {
             $filters['start_time'] = date('Ymd');

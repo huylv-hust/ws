@@ -33,7 +33,7 @@ class DefaultController extends WsController {
 				$this->savePdf($rs, $denpyoDataPost, false);
 				$this->saveCsv($denpyoDataPost);
 				confirm::writeconfirm($denpyoDataPost);
-				$this->redirect(\yii\helpers\BaseUrl::base(true) . '/detail-workslip.html?den_no=' . $rs);
+				$this->redirect(\yii\helpers\BaseUrl::base(true) . '/detail-workslip?den_no=' . $rs);
 			} elseif ($rs === 0) {
 				$data['notExitCus'] = true;
 			} else {

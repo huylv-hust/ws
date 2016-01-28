@@ -1,6 +1,6 @@
 //GLOBAR var
-var url_usappy_number_change = base_url+'/usappy-number-change.html';
-var url_regist_workslip = base_url+'/regist-workslip.html';
+var url_usappy_number_change = base_url+'/usappy-number-change';
+var url_regist_workslip = base_url+'/regist-workslip';
 var type_usappy = '1';
 var type_receivable = '2';
 var type_other = '3';

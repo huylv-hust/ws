@@ -72,7 +72,7 @@
                         <tr>
                             <td><?php echo $i++; ?></td>
                             <td>
-                                <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/detail-workslip.html?den_no=<?php echo $v['D03_DEN_NO']; ?>"><?php echo $v['D03_DEN_NO']; ?></a>
+                                <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/detail-workslip?den_no=<?php echo $v['D03_DEN_NO']; ?>"><?php echo $v['D03_DEN_NO']; ?></a>
                             </td>
                             <td><?php echo $v['D03_SS_CD']; ?></td>
                             <td><?php
@@ -107,7 +107,7 @@
                                 ?>
                             </td>
                             <td><a class="iconPreview" target="_blank"
-                                   href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview.html?den_no=<?php echo $v['D03_DEN_NO']; ?>"></a>
+                                   href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview?den_no=<?php echo $v['D03_DEN_NO']; ?>"></a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -124,7 +124,7 @@
     </article>
 </main>
 <footer id="footer">
-    <div class="toolbar"><a href="<?php echo \yii\helpers\BaseUrl::base(true) . '/menu.html'; ?>" class="btnBack">戻る</a>
+    <div class="toolbar"><a href="<?php echo \yii\helpers\BaseUrl::base(true) . '/menu'; ?>" class="btnBack">戻る</a>
     </div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>

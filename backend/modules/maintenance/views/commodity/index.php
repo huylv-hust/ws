@@ -35,7 +35,7 @@
     </article>
 </main>
 <footer id="footer">
-    <div class="toolbar"><a class="btnBack" href="<?php echo \yii\helpers\BaseUrl::base()?>/maintenance.html">戻る</a><button type="submit" class="btnSubmit">インポート</button></div>
+    <div class="toolbar"><a class="btnBack" href="<?php echo \yii\helpers\BaseUrl::base()?>/maintenance">戻る</a><button type="submit" class="btnSubmit">インポート</button></div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>
 </form>

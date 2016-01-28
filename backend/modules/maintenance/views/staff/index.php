@@ -53,7 +53,7 @@
                     <td><?php echo $staff['M08_ORDER'];?></td>
                     <td><?php echo $staff['M08_JYUG_CD'];?></td>
                     <td>
-                        <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/edit-staff.html?branch=<?php echo $staff['M08_HAN_CD'];?>&ss=<?php echo $staff['M08_SS_CD']?>&cd=<?php echo $staff['M08_JYUG_CD']?>">
+                        <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/edit-staff?branch=<?php echo $staff['M08_HAN_CD'];?>&ss=<?php echo $staff['M08_SS_CD']?>&cd=<?php echo $staff['M08_JYUG_CD']?>">
                             <?php echo $staff['M08_NAME_MEI'].$staff['M08_NAME_SEI'];?>
                         </a>
                     </td>
@@ -77,6 +77,6 @@
 </main>
 <footer id="footer">
     <div class="toolbar"><a class="btnBack" href="<?php echo \yii\helpers\BaseUrl::base(true) ?>">戻る</a><a
-            class="btnSubmit" href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/regist-staff.html">新規登録</a></div>
+            class="btnSubmit" href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/regist-staff">新規登録</a></div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>

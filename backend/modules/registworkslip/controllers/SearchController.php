@@ -3,6 +3,7 @@
 namespace backend\modules\registworkslip\controllers;
 
 use app\models\Sdptm05com;
+use backend\components\api;
 use Yii;
 use backend\controllers\WsController;
 use yii\data\Pagination;
@@ -18,7 +19,7 @@ class SearchController extends WsController
             $data['filters'][$condition] = $request->post('value');
             $data['count'] = $obj->coutData($data['filters']);
             $data['pagination'] = new Pagination([
-                'totalCount'      => $data['count'],
+                'totalCount' => $data['count'],
                 'defaultPageSize' => 10,
                 'page' => $request->post('page')
             ]);
@@ -29,6 +30,20 @@ class SearchController extends WsController
             $data['product'] = $obj->getData($data['filters']);
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
             return $data;
+        }
+    }
+
+    public function actionAddress()
+    {
+        $request = Yii::$app->request;
+        $api = new api();
+        if ($request->isAjax) {
+            $info = $api->getAddrFromZipcode($request->post('zipcode'));
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            if (count($info) > 1) {
+                $info = false;
+            }
+            return $info;
         }
     }
 }

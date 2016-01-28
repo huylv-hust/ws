@@ -53,7 +53,7 @@ class DefaultController extends WsController
         $cus_info = $cookie->getValue('cus_info', '0');
         $api = new api();
         if (! $data = \Yii::$app->request->post()) {
-            return $this->redirect(BaseUrl::base(true).'/usappy-number-change.html');
+            return $this->redirect(BaseUrl::base(true).'/usappy-number-change');
         }
         $info_card = $api->getInfoListCard($cus_info['member_kaiinCd']);
         //card_cardBangou
@@ -83,7 +83,7 @@ class DefaultController extends WsController
     public function actionComplete()
     {
         if (! $data = \Yii::$app->request->post()) {
-            return $this->redirect(BaseUrl::base(true).'/usappy-number-change.html');
+            return $this->redirect(BaseUrl::base(true).'/usappy-number-change');
         }
         $memberKaiinName = $data['memberKaiinName'];
         $infoCard = json_decode($data['infoCard'], true);

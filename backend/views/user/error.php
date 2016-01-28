@@ -8,6 +8,6 @@
     </article>
 </main>
 <footer id="footer">
-    <div class="toolbar"><a href="<?php echo \yii\helpers\BaseUrl::base(true); ?>/menu.html" class="btnBack">メニュー</a></div>
+    <div class="toolbar"><a href="<?php echo \yii\helpers\BaseUrl::base(true); ?>/menu" class="btnBack">メニュー</a></div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>

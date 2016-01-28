@@ -29,13 +29,10 @@
                         <p class="txtValue">
                             <?php
                             if ($detail['D03_STATUS'] == 1) {
-                                echo $status[2];
+                                echo '作業確定';
                             }
-                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] <= date('Ymd')) {
-                                echo $status[0];
-                            }
-                            if ($detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && $detail['D03_SEKOU_YMD'] > date('Ymd')) {
-                                echo $status[1];
+                            if ($detail['D03_STATUS'] == 0) {
+                                echo '作業予約';
                             } ?>
                         </p>
                     </div>
@@ -159,11 +156,11 @@
                         <p class="txtValue">
                             <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? $detail['D03_AZU_BEGIN_HH'] : '00'; ?>
                             ：
-                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? $detail['D03_AZU_BEGIN_MI'] : '0'; ?>
+                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? $detail['D03_AZU_BEGIN_MI'] : '00'; ?>
                             ～
                             <?php echo isset($detail['D03_AZU_END_HH']) ? $detail['D03_AZU_END_HH'] : '00'; ?>
                             ：
-                            <?php echo isset($detail['D03_AZU_END_MI']) ? $detail['D03_AZU_END_MI'] : '0'; ?>
+                            <?php echo isset($detail['D03_AZU_END_MI']) ? $detail['D03_AZU_END_MI'] : '00'; ?>
                         </p>
                     </div>
                 </div>
@@ -625,19 +622,19 @@
 </main>
 
 <footer id="footer">
-    <div class="toolbar"><a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/menu.html" class="btnBack">メニュー</a>
+    <div class="toolbar"><a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/menu" class="btnBack">メニュー</a>
         <div class="btnSet">
             <?php
-            $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip.html';
+            $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip';
             ?>
             <a href="<?php echo $url; ?>" class="btnTool">情報検索</a>
 
-            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview.html?den_no=<?php echo $detail['D03_DEN_NO']; ?>"
+            <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview?den_no=<?php echo $detail['D03_DEN_NO']; ?>"
                class="btnTool" target="_blank">作業確認</a>
 
             <span id="pdf" class="btnTool <?php if ($check_file == 0) {echo 'off';}?>" style="cursor: pointer; <?php if ($check_file == 0) {echo 'pointer-events: none';}?>">保証書を表示</span>
 
-            <a href="<?php echo \yii\helpers\BaseUrl::base(true).'/regist-workslip.html?denpyo_no='.$detail['D03_DEN_NO']?>" class="btnTool">編集</a>
+            <a href="<?php echo \yii\helpers\BaseUrl::base(true).'/regist-workslip?denpyo_no='.$detail['D03_DEN_NO']?>" class="btnTool">編集</a>
 
             <a href="#modalRemoveConfirm" class="btnTool" data-toggle="modal">削除</a>
         </div>
@@ -653,7 +650,7 @@
 <div id="sidr" class="sidr">
     <div class="closeSideMenu"><a href="#" id="sidrClose">Close</a></div>
     <ul>
-        <li><a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/menu.html">SSサポートサイトTOP</a></li>
+        <li><a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/menu">SSサポートサイトTOP</a></li>
     </ul>
 </div>
 <!-- /sidemenu -->

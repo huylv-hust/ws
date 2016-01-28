@@ -71,7 +71,7 @@ class CommodityController extends WsController
                 Yii::$app->session->setFlash('error', $error);
             }
 
-            return $this->redirect(BaseUrl::base(true).'/update-commodity.html');
+            return $this->redirect(BaseUrl::base(true).'/update-commodity');
 
         }
     }

@@ -34,7 +34,7 @@ AppAsset::register($this);
 <div id="sidr" class="sidr">
     <div class="closeSideMenu"><a href="#" id="sidrClose">Close</a></div>
     <ul>
-        <li><a href="<?php echo \yii\helpers\BaseUrl::base(true); ?>/menu.html">SSサポートサイトTOP</a></li>
+        <li><a href="<?php echo \yii\helpers\BaseUrl::base(true); ?>/menu">SSサポートサイトTOP</a></li>
     </ul>
 </div>
 <?php $this->endBody() ?>
