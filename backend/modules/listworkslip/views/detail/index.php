@@ -66,7 +66,7 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
-                        <p><?php echo $detail['D01_NOTE']; ?></p>
+                        <p><?php echo nl2br($detail['D01_NOTE']); ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -163,13 +163,13 @@
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
                         <p class="txtValue">
-                            <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? $detail['D03_AZU_BEGIN_HH'] : '00'; ?>
+                            <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? str_pad($detail['D03_AZU_BEGIN_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                             ：
-                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? $detail['D03_AZU_BEGIN_MI'] : '00'; ?>
+                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? str_pad($detail['D03_AZU_BEGIN_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                             ～
-                            <?php echo isset($detail['D03_AZU_END_HH']) ? $detail['D03_AZU_END_HH'] : '00'; ?>
+                            <?php echo isset($detail['D03_AZU_END_HH']) ? str_pad($detail['D03_AZU_END_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                             ：
-                            <?php echo isset($detail['D03_AZU_END_MI']) ? $detail['D03_AZU_END_MI'] : '00'; ?>
+                            <?php echo isset($detail['D03_AZU_END_MI']) ? str_pad($detail['D03_AZU_END_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                         </p>
                     </div>
                 </div>
@@ -185,11 +185,11 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
-                        <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] . '' . $detail['D03_TANTO_MEI']; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_TANTO_MEI'] .''. $detail['D03_TANTO_SEI']; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">確認者</label>
-                        <p class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] . '' . $detail['D03_KAKUNIN_MEI']; ?></p>
+                        <p class="txtValue"><?php echo  $detail['D03_KAKUNIN_MEI'] .''.$detail['D03_KAKUNIN_SEI']; ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -457,7 +457,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">備考</label>
-                        <p class="txtValue"><?php echo $detail['D03_NOTE']; ?></p>
+                        <p class="txtValue"><?php echo nl2br($detail['D03_NOTE']); ?></p>
                     </div>
                 </div>
             </fieldset>

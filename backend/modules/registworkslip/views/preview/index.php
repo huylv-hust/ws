@@ -14,7 +14,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">受付日</label>
-                        <p class="txtValue"><?php echo isset($post['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($post['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
+                        <p class="txtValue"><?php echo isset($post['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($post['D03_UPD_DATE'], 'yyyy/MM/dd') : date('Y/m/d'); ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">状況</label>
@@ -161,13 +161,13 @@
                     <div class="formItem">
                         <label class="titleLabel">お預かり時間</label>
                         <p class="txtValue">
-                            <?php echo isset($post['D03_AZU_BEGIN_HH']) ? $post['D03_AZU_BEGIN_HH'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_BEGIN_HH']) ? str_pad($post['D03_AZU_BEGIN_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT) ?>
                             ：
-                            <?php echo isset($post['D03_AZU_BEGIN_MI']) ? $post['D03_AZU_BEGIN_MI'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_BEGIN_MI']) ? str_pad($post['D03_AZU_BEGIN_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                             ～
-                            <?php echo isset($post['D03_AZU_END_HH']) ? $post['D03_AZU_END_HH'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_END_HH']) ? str_pad($post['D03_AZU_END_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                             ：
-                            <?php echo isset($post['D03_AZU_END_MI']) ? $post['D03_AZU_END_MI'] : '00'; ?>
+                            <?php echo isset($post['D03_AZU_END_MI']) ? str_pad($post['D03_AZU_END_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                         </p>
                     </div>
                     <div class="formItem">
@@ -181,11 +181,11 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
-                        <p class="txtValue"><?php echo $post['D03_TANTO_MEI_D03_TANTO_SEI']; ?></p>
+                        <p class="txtValue"><?php echo isset($post['tanto']) ? $post['tanto'] : ''; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">確認者</label>
-                        <p class="txtValue"><?php echo $post['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']; ?></p>
+                        <p class="txtValue"><?php echo isset($post['kakunin']) ? $post['kakunin'] : ''; ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -549,10 +549,10 @@
                     </tr>
                     <tr>
                         <td class="vMiddle"><p
-                                class="txtValue"><?php echo $post['D03_TANTO_MEI_D03_TANTO_SEI']; ?></p>
+                                class="txtValue"><?php echo isset($post['tanto']) ? $post['tanto'] : ''; ?></p>
                         </td>
                         <td class="vMiddle"><p
-                                class="txtValue"><?php echo $post['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']; ?></p>
+                                class="txtValue"><?php echo isset($post['kakunin']) ? $post['kakunin'] : ''; ?></p>
                         </td>
                     </tr>
                 </table>

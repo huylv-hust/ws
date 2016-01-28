@@ -296,6 +296,13 @@ var card = function(){
             }).form();
         });
     };
+
+    var zen2han = function() {
+        $('#form_card_number_auth').on('change', function () {
+            utility.zen2han(this);
+        });
+    };
+
     var submit = function(){
         $('#card_usappy #moveTypeReceivable').click(function() {
             $('.box-alert').html('');
@@ -335,6 +342,7 @@ var card = function(){
     return{
         init: function(){
             ready();
+            zen2han();
             validate();
             submit();
         }

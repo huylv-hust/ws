@@ -19,7 +19,7 @@
                                 <label for="cardType">掛カード番号</label>
                             </div>
                             <div class="cell bgGrayTrans">
-                                <input class="borderGreen borderRadius" name="card_number" id="form_card_number" type="text">
+                                <input class="borderGreen borderRadius" name="card_number" id="form_card_number_auth" type="text">
                             </div>
                         </div>
                     </div>

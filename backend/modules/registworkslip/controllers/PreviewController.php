@@ -36,13 +36,24 @@ class PreviewController extends WsController
             $data['job'] = $job;
             $data['status'] = \Yii::$app->params['status'];
 
+
+            $tanto = explode('[]', $data['post']['D03_TANTO_MEI_D03_TANTO_SEI']);
+            if (!empty($tanto[0]) && !empty($tanto[1])) {
+                $data['post']['tanto'] = $tanto[0] . $tanto[1];
+            }
+
+            $kakunin = explode('[]', $data['post']['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']);
+            if (!empty($kakunin[0]) && !empty($kakunin[1])) {
+                $data['post']['kakunin'] = $kakunin[0] . $kakunin[1];
+            }
+
             $this->layout = '@app/views/layouts/print';
             \Yii::$app->view->title = '作業確認書';
             \Yii::$app->params['titlePage'] = '作業確認書';
-
+            //var_dump($data['post']);die;
             return $this->render('index', $data);
         }
-        return $this->redirect(BaseUrl::base(true).'/regist-workslip');
+        return $this->redirect(BaseUrl::base(true) . '/regist-workslip');
     }
 
 }

@@ -6,7 +6,7 @@
             <h2 class="titleContent">作業伝票作成</h2>
             <p class="rightside">受付日 <?php echo date('Y年m月d日'); ?></p>
         </section>
-
+        <input type="hidden" id="url_action" value="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip?denpyo_no=<?= (int)$d03DenNo ?>">
         <input type="hidden" name="D03_DEN_NO" id="D03_DEN_NO" value="<?= $d03DenNo ?>"/>
         <input type="hidden" name="D01_CUST_NO" value="<?= $cus['D01_CUST_NO'] ?>" id="D01_CUST_NO"/>
         <input type="hidden" name="WARRANTY_CUST_NAMEN" value="<?= $cus['D01_CUST_NAMEN'] ?>" id="D01_CUST_NAMEN"/>
@@ -232,10 +232,10 @@
                                     if ($i == $selected) {
                                         ?>
                                         <option selected="selected"
-                                                value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                                value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                     <?php } else { ?>
                                         <option
-                                            value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                            value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                         <?php
                                     }
                                 }
@@ -248,13 +248,13 @@
                                 $mi = (int)date('i') - (int)date('i') % 10;
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_BEGIN_MI'] : $mi;
                                 for ($i = 0; $i < 60; $i = $i + 10) {
-                                    if ($i == $mi) {
+                                    if ($i == $selected) {
                                         ?>
                                         <option selected="selected"
-                                                value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                                value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                     <?php } else { ?>
                                         <option
-                                            value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                            value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                     <?php }
                                 }
                                 ?>
@@ -268,10 +268,10 @@
                                     if ($i == $selected) {
                                         ?>
                                         <option selected="selected"
-                                                value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                                value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                     <?php } else { ?>
                                         <option
-                                            value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                            value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                         <?php
                                     }
                                 }
@@ -286,10 +286,10 @@
                                     if ($i == $selected) {
                                         ?>
                                         <option selected="selected"
-                                                value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                                value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                     <?php } else { ?>
                                         <option
-                                            value="<?= $i ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+                                            value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
                                         <?php
                                     }
                                 }
@@ -702,7 +702,7 @@
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">備考</label>
-                            <textarea class="textarea" name="D03_NOTE"><?= nl2br($denpyo['D03_NOTE']) ?></textarea>
+                            <textarea class="textarea" name="D03_NOTE"><?= $denpyo['D03_NOTE'] ?></textarea>
                         </div>
                     </div>
                 </fieldset>
@@ -877,11 +877,11 @@
         <div class="toolbar">
             <a class="btnBack"
                href="<?php echo isset($d03DenNo) ? yii\helpers\BaseUrl::base(true) . '/detail-workslip?den_no=' . $d03DenNo : yii\helpers\BaseUrl::base(true); ?>">戻る</a>
-            <?php if ($d03DenNo == 0) { ?>
+
                 <div class="btnSet" style="width:150px;">
                     <a class="btnTool" href="javascript:void(0)" id="preview">作業指示書</a>
                 </div>
-            <?php } ?>
+
 
             <a class="btnSubmit" id="btnRegistWorkSlip">登録</a>
         </div>
@@ -1195,6 +1195,7 @@
 <!-- END InfoCar -->
 <!-- BEGIN CodeSearchProduct -->
 <div id="modalCodeSearch" class="modal fade ">
+    <input type="hidden" value="" id="condition">
     <div class="modal-dialog widthS">
         <div class="modal-content">
             <div class="modal-header">
@@ -1238,7 +1239,13 @@
 
                 use yii\data\Pagination; ?>
                 <nav class="paging">
-                    <?php echo yii\widgets\LinkPager::widget(['pagination' => $pagination]) ?>
+                    <?php echo yii\widgets\LinkPager::widget([
+                        'pagination' => $pagination,
+                        'nextPageLabel' => '&gt;',
+                        'prevPageLabel' => '&lt;',
+                        'firstPageLabel' => '&laquo;',
+                        'lastPageLabel' => '&raquo;',
+                    ]) ?>
                 </nav>
                 <input type="hidden" value="" id="searchProduct"/>
                 <table class="tableList">
@@ -1276,7 +1283,13 @@
                 </table>
                 <nav class="paging">
                     <ul class="ulPaging">
-                        <?php echo yii\widgets\LinkPager::widget(['pagination' => $pagination]) ?>
+                        <?php echo yii\widgets\LinkPager::widget([
+                            'pagination' => $pagination,
+                            'nextPageLabel' => '&gt;',
+                            'prevPageLabel' => '&lt;',
+                            'firstPageLabel' => '&laquo;',
+                            'lastPageLabel' => '&raquo;',
+                        ]) ?>
                     </ul>
                 </nav>
             </div>
@@ -1454,8 +1467,13 @@
     });
 </script>
 <script type="text/javascript">
-    function closePop() {
-        $("#modalCodeSearch").modal('hide');
+    function closePop()
+    {
+        if($('input[name="M05_COM_CD.M05_NST_CD"]').is(':checked')) {
+            $("#modalCodeSearch").modal('hide');
+        } else {
+            alert('商品を選択してください');
+        }
     }
     $('.openSearchCodeProduct').click(function () {
         $("#searchProduct").val($(this).attr('rel'));
@@ -1664,15 +1682,15 @@
             if ($("#agreeCheck").val()) {
                 $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/cus',
                     {
-                        'D01_CUST_NO': $("input[name = D01_CUST_NO]").val(),
-                        'D01_CUST_NAMEN': $("input[name = D01_CUST_NAMEN]").val(),
-                        'D01_CUST_NAMEK': $("input[name = D01_CUST_NAMEK]").val(),
-                        'D01_KAKE_CARD_NO': $("input[name = D01_KAKE_CARD_NO]").val(),
-                        'D01_ADDR': $("input[name = D01_ADDR]").val(),
-                        'D01_TEL_NO': $("input[name = D01_TEL_NO]").val(),
-                        'D01_MOBTEL_NO': $("input[name = D01_MOBTEL_NO]").val(),
-                        'D01_NOTE': $("#D01_NOTE").val(),
-                        'D01_KAIIN_CD': $("input[name = D01_KAIIN_CD]").val()
+                        'D01_CUST_NO': $("#modalEditCustomer input[name = D01_CUST_NO]").val(),
+                        'D01_CUST_NAMEN': $("#modalEditCustomer input[name = D01_CUST_NAMEN]").val(),
+                        'D01_CUST_NAMEK': $("#modalEditCustomer input[name = D01_CUST_NAMEK]").val(),
+                        'D01_KAKE_CARD_NO': $("#modalEditCustomer input[name = D01_KAKE_CARD_NO]").val(),
+                        'D01_ADDR': $("#modalEditCustomer input[name = D01_ADDR]").val(),
+                        'D01_TEL_NO': $("#modalEditCustomer input[name = D01_TEL_NO]").val(),
+                        'D01_MOBTEL_NO': $("#modalEditCustomer input[name = D01_MOBTEL_NO]").val(),
+                        'D01_NOTE': $("#modalEditCustomer #D01_NOTE").val(),
+                        'D01_KAIIN_CD': $("#modalEditCustomer input[name = D01_KAIIN_CD]").val()
                     },
                     function (data) {
                         if (data.result_api == '1' && data.result_db == '1') {

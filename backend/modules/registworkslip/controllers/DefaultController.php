@@ -171,16 +171,22 @@ class DefaultController extends WsController
         }
 
         $dataDenpyo['D03_SS_CD'] = $dataTemp['D01_SS_CD'];
-        if ($dataTemp['D03_TANTO_MEI_D03_TANTO_SEI']) {
+        if ($dataTemp['D03_TANTO_MEI_D03_TANTO_SEI'] != '') {
             $temTantoMeiSei = explode('[]', $dataTemp['D03_TANTO_MEI_D03_TANTO_SEI']);
             $dataDenpyo['D03_TANTO_MEI'] = $temTantoMeiSei['0'];
             $dataDenpyo['D03_TANTO_SEI'] = $temTantoMeiSei['1'];
+        } else {
+            $dataDenpyo['D03_TANTO_MEI'] = '';
+            $dataDenpyo['D03_TANTO_SEI'] = '';
         }
 
-        if ($dataTemp['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']) {
+        if ($dataTemp['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI'] != '') {
             $temKakuninMeiSei = explode('[]', $dataTemp['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']);
             $dataDenpyo['D03_KAKUNIN_MEI'] = $temKakuninMeiSei['0'];
             $dataDenpyo['D03_KAKUNIN_SEI'] = $temKakuninMeiSei['1'];
+        } else {
+            $dataDenpyo['D03_KAKUNIN_MEI'] = '';
+            $dataDenpyo['D03_KAKUNIN_SEI'] = '';
         }
 
         unset($dataDenpyo['D03_TANTO_MEI_D03_TANTO_SEI']);

@@ -1,12 +1,12 @@
 var regist_work = function () {
 
     var removeHrefPaging = function () {
-        $('#modalCodeSearch .paging a').attr('href', '#');
+        $('#modalCodeSearch .paging a').attr('href', 'javascript:void(0)');
     };
 
     var paging = function () {
         $('#modalCodeSearch .paging').on('click', 'a', function () {
-            var condition = $('#modalCodeSearch .labelRadios.checked').parent().find('input').attr('id'),
+            var condition = $('#condition').val(),
                 value = $('#code_search_value').val(),
                 page = $(this).attr('data-page'),
                 url = baseUrl + '/registworkslip/search/index',
@@ -43,6 +43,8 @@ var regist_work = function () {
 
                 $('#modalCodeSearch .tableList tbody').html(tr);
                 $('nav.paging').html(html_paging(data.count, page, 10));
+                $('#modalCodeSearch .radioGroup.itemFlex label').removeClass('checked');
+                $('#' + condition).parent().find('label').addClass('checked');
             });
         });
     };
@@ -85,6 +87,7 @@ var regist_work = function () {
                 });
                 $('#modalCodeSearch .tableList tbody').html(tr);
                 $('nav.paging').html(html_paging(data.count, page, 10));
+                $('#condition').val(condition);
             });
         });
     };
@@ -95,21 +98,29 @@ var regist_work = function () {
             prev,
             next,
             start,
-            end;
+            end,
+            first,
+            last;
         if(count_data <= per_page) total_page = 1;
         else {
             total_page = count_data % per_page > 0 ? parseInt(count_data / per_page) + 1 : count_data / per_page;
         }
         if (current_page == 0) {
-            prev = '<li class="prev disabled"><span>«</span></li>';
-            next = '<li class="next"><a data-page="' + (parseInt(current_page) + 1) + '" href="#">»</a></li>';
+            first = '<li class="first disabled"><span>«</span></li>';
+            last = '<li class="last"><a data-page="' + (parseInt(total_page) - 1) + '" href="javascript:void(0)">»</a></li>';
+            prev = '<li class="prev disabled"><span><</span></li>';
+            next = '<li class="next"><a data-page="' + (parseInt(current_page) + 1) + '" href="javascript:void(0)">></a></li>';
         }
         else if (current_page == total_page - 1) {
-            prev = '<li class="prev"><a data-page="' + (parseInt(current_page) - 1) + '" href="#">«</a></li>';
-            next = '<li class="next"><span>»</span></li>';
+            first = '<li class="first"><a data-page="0" href="javascript:void(0)">«</a></li>';
+            last = '<li class="last disabled"><span>»</span></li>';
+            prev = '<li class="prev"><a data-page="' + (parseInt(current_page) - 1) + '" href="javascript:void(0)"><</a></li>';
+            next = '<li class="next"><span>></span></li>';
         } else {
-            prev = '<li class="prev"><a data-page="' + (parseInt(current_page) - 1) + '" href="#">«</a></li>';
-            next = '<li class="next"><a data-page="' + (parseInt(current_page) + 1) + '" href="#">»</a></li>';
+            first = '<li class="first"><a data-page="0" href="javascript:void(0)">«</a></li>';
+            last = '<li class="last"><a data-page="' + (parseInt(total_page) - 1) + '" href="javascript:void(0)">»</a></li>';
+            prev = '<li class="prev"><a data-page="' + (parseInt(current_page) - 1) + '" href="javascript:void(0)"><</a></li>';
+            next = '<li class="next"><a data-page="' + (parseInt(current_page) + 1) + '" href="javascript:void(0)">></a></li>';
         }
 
         if (total_page < 10) {
@@ -129,16 +140,16 @@ var regist_work = function () {
                 }
             }
         }
-        var html = '<ul class="pagination">' + prev;
+        var html = '<ul class="pagination">' + first + prev;
         for (var i = start; i < end; i++) {
             var display = i + 1;
             if (i == current_page)
-                html += '<li class="active"><a data-page="' + i + '" href="#">' + display + '</a></li>';
+                html += '<li class="active"><a data-page="' + i + '" href="javascript:void(0)">' + display + '</a></li>';
             else
-                html += '<li><a data-page="' + i + '" href="#">' + display + '</a></li>';
+                html += '<li><a data-page="' + i + '" href="javascript:void(0)">' + display + '</a></li>';
         }
 
-        html += next + '</ul>';
+        html += next + last + '</ul>';
         return html;
     };
 
@@ -516,6 +527,7 @@ var regist_work = function () {
         $('#btnRegistWorkSlip').on('click', function () {
             var form = $(this).closest('form'),
                 valid = form.valid();
+            form.removeAttr('target').attr('action', $('#url_action').val());
             if (valid == false) {
                 var tooltip_hidden = $('input[name=D03_KAKUNIN]').attr('aria-describedby');
                 if (tooltip_hidden != '') {
@@ -548,6 +560,10 @@ var regist_work = function () {
         $('[name=date_1] , [name=date_2], [name=date_3], [name=pressure_front], [name=pressure_behind], [name=km]').on('change', function () {
             utility.zen2han(this);
         });
+        $('.codeSearchProduct').on('change', function () {
+            utility.zen2han(this);
+        });
+        
     };
 
     var click_label_modal_customer = function () {
@@ -566,7 +582,7 @@ var regist_work = function () {
 
     var preview = function () {
         $('#preview').on('click', function () {
-            $('#login_form').attr('action', baseUrl + '/preview2');
+            $('#login_form').attr('action', baseUrl + '/preview2').attr('target', '_blank');
             $('#login_form')[0].submit();
         });
     };

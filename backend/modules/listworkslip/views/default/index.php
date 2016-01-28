@@ -47,6 +47,10 @@
                     <?php
                     echo yii\widgets\LinkPager::widget([
                         'pagination' => $pagination,
+                        'nextPageLabel' => '&gt;',
+                        'prevPageLabel' => '&lt;',
+                        'firstPageLabel' => '&laquo;',
+                        'lastPageLabel' => '&raquo;',
                     ]);
                     ?>
                 </nav>
@@ -116,6 +120,10 @@
                     <?php
                     echo yii\widgets\LinkPager::widget([
                         'pagination' => $pagination,
+                        'nextPageLabel' => '&gt;',
+                        'prevPageLabel' => '&lt;',
+                        'firstPageLabel' => '&laquo;',
+                        'lastPageLabel' => '&raquo;',
                     ]);
                     ?>
                 </nav>

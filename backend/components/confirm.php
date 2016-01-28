@@ -11,6 +11,10 @@ class confirm
         if ($confirm['status'] == 1) {
             $post['status'] = 1;
         }
+		if (isset($post['date_1']) && isset($post['date_2']) && isset($post['date_3'])) {
+			$post['date'] = str_pad($post['date_1'], 4, '0', STR_PAD_LEFT).str_pad($post['date_2'], 2, '0', STR_PAD_LEFT).str_pad($post['date_3'], 2, '0', STR_PAD_LEFT);
+		}
+
         $data[0] = array(
             'タイヤ交換図1',
             'タイヤ交換図2',
