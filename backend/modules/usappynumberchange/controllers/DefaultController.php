@@ -51,6 +51,9 @@ class DefaultController extends WsController
     {
         $cookie = \Yii::$app->request->cookies;
         $cus_info = $cookie->getValue('cus_info', '0');
+        if ($cus_info == 0) {
+            return $this->goHome();
+        }
         $api = new api();
         if (! $data = \Yii::$app->request->post()) {
             return $this->redirect(BaseUrl::base(true).'/usappy-number-change');
@@ -85,6 +88,7 @@ class DefaultController extends WsController
         if (! $data = \Yii::$app->request->post()) {
             return $this->redirect(BaseUrl::base(true).'/usappy-number-change');
         }
+
         $memberKaiinName = $data['memberKaiinName'];
         $infoCard = json_decode($data['infoCard'], true);
         $oldCardNumber = $data['oldCardNumber'];

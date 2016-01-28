@@ -17,6 +17,10 @@ class UserController extends Controller
 {
     public function actionLogin()
     {
+        $session = \Yii::$app->session;
+        if ($session->get('login_info')) {
+            $this->goHome();
+        }
         $user = new Tm50ssuser();
         if (Yii::$app->request->post()) {
             $isLogin = $user->checkLogin(Yii::$app->request->post());

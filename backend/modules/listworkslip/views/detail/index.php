@@ -13,6 +13,15 @@
             <?php
         }
         ?>
+        <?php
+        if (Yii::$app->session->hasFlash('success')) {
+            ?>
+            <div class="alert alert-danger"><?php echo Yii::$app->session->getFlash('success') ?>
+                <button class="close" data-dismiss="alert">&times;</button>
+            </div>
+            <?php
+        }
+        ?>
         <section class="bgContent">
             <fieldset class="fieldsetRegist">
                 <div class="formGroup">

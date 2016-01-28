@@ -185,7 +185,7 @@
                             <label class="titleLabel">精算方法</label>
                             <div class="radioGroup">
                                 <div class="radioItem">
-                                    <input type="radio" value="0" name="D03_SEISAN" id="pays1" class="radios">
+                                    <input type="radio" value="0" name="D03_SEISAN" id="pays1" class="radios" checked>
                                     <label
                                         class="labelRadios <?php if ($d03DenNo == 0 || $denpyo['D03_SEISAN'] == 0) echo ' checked' ?>"
                                         for="pays1">現金</label>
@@ -515,11 +515,11 @@
                                     <p class="txtValue">
                                         <input min="0" type="number" class="textFormConf"
                                                value="<?php echo ($confirm['date']) ? substr($confirm['date'], 0, 4) : '' ?>"
-                                               maxlength="4" style="width:4em;" name="date_1">
+                                                style="width:4em;" name="date_1">
                                         <span class="txtUnit">年</span>
                                         <input min="0" type="number" class="textFormConf"
                                                value="<?php echo ($confirm['date']) ? substr($confirm['date'], 4, 2) : '' ?>"
-                                               maxlength="2" style="width:2em;" name="date_2">
+                                                style="width:2em;" name="date_2">
                                         <span class="txtUnit">月</span>
                                         <input min="0" type="number" class="textFormConf"
                                                value="<?php echo ($confirm['date']) ? substr($confirm['date'], 6, 2) : '' ?>"
@@ -581,14 +581,19 @@
                     <?php
                     $k = 1;
                     $showWarranty = false;
-
+                    $disabled = '';
+                    if(file_exists('data/pdf/'.$d03DenNo.'.pdf')) {
+                        $disabled = 'disabled';
+                    }
                     foreach ($listDenpyoCom as $com) {
 
                         if (in_array((int)$com['D05_COM_CD'], range(42000, 42999))) {
                             $showWarranty = true;
                             $isTaisa = true;
+
                         } else {
                             $isTaisa = false;
+
                         }
 
                         ?>
@@ -609,11 +614,11 @@
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">商品・荷姿コード</label>
-                                    <input rel="<?= $k ?>" type="text" name="code_search<?= $k ?>"
+                                    <input <?= $disabled?> rel="<?= $k ?>" type="text" name="code_search<?= $k ?>"
                                            id="code_search<?= $k ?>"
                                            maxlength="9" value="<?= $com['D05_COM_CD'] . $com['D05_NST_CD'] ?>"
                                            class="textForm codeSearchProduct">
-                                    <a onclick="codeSearch(<?= $k ?>);" class="btnFormTool openSearchCodeProduct"
+                                    <a onclick="<?php echo ($disabled == '') ? 'codeSearch('.$k.');' : ''?>" class="btnFormTool openSearchCodeProduct"
                                        style="cursor: pointer" rel="<?= $k ?>">コード一覧から選択</a></div>
                                 <div class="formItem">
                                     <label class="titleLabel">品名</label>

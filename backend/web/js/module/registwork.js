@@ -91,11 +91,15 @@ var regist_work = function () {
 
     var html_paging = function (count_data, current_page, per_page) {
         if (count_data / per_page <= 1) return '';
-        var total_page = count_data % per_page > 0 ? parseInt(count_data / per_page) + 1 : 0,
+        var total_page,
             prev,
             next,
             start,
             end;
+        if(count_data <= per_page) total_page = 1;
+        else {
+            total_page = count_data % per_page > 0 ? parseInt(count_data / per_page) + 1 : count_data / per_page;
+        }
         if (current_page == 0) {
             prev = '<li class="prev disabled"><span>«</span></li>';
             next = '<li class="next"><a data-page="' + (parseInt(current_page) + 1) + '" href="#">»</a></li>';
@@ -125,7 +129,6 @@ var regist_work = function () {
                 }
             }
         }
-
         var html = '<ul class="pagination">' + prev;
         for (var i = start; i < end; i++) {
             var display = i + 1;
@@ -400,6 +403,27 @@ var regist_work = function () {
                 },
                 D03_SUM_KINGAKU: {
                     maxlength: 10
+                },
+                date_1: {
+                    maxlength: 4,
+                    min:0
+                },
+                date_2: {
+                    maxlength: 2,
+                    min:0
+                },
+                date_3: {
+                    maxlength: 2,
+                    min:0
+                },
+                pressure_front: {
+                    min:0
+                },
+                pressure_behind: {
+                    min:0
+                },
+                km: {
+                    min:0
                 }
             },
             messages: {
@@ -427,6 +451,27 @@ var regist_work = function () {
                 },
                 D03_SUM_KINGAKU: {
                     maxlength: '合計金額は10桁の数字以内で入力してください。'
+                },
+                date_1: {
+                    maxlength: '年は4桁の数字以内で入力してください。',
+                    min:'年は0桁の数字以外で入力してください'
+                },
+                date_2: {
+                    maxlength: '月は2桁の数字以内で入力してください。',
+                    min:'月は0桁の数字以外で入力してください'
+                },
+                date_3: {
+                    maxlength: '日は2桁の数字以内で入力してください。',
+                    min:'日は0桁の数字以外で入力してください。'
+                },
+                pressure_front: {
+                    min:'前は0桁の数字以外で入力してください。'
+                },
+                pressure_behind: {
+                    min:'後は0桁の数字以外で入力してください。'
+                },
+                km: {
+                    min:'kmは0桁の数字以外で入力してください。'
                 }
             },
             invalidHandler: function() {
@@ -498,6 +543,9 @@ var regist_work = function () {
         });
 
         $('[name=D03_SEKOU_YMD] , [name=D01_SS_CD], [name=D03_POS_DEN_NO], .noProduct, .priceProduct, .totalPriceProduct').on('change', function () {
+            utility.zen2han(this);
+        });
+        $('[name=date_1] , [name=date_2], [name=date_3], [name=pressure_front], [name=pressure_behind], [name=km]').on('change', function () {
             utility.zen2han(this);
         });
     };
