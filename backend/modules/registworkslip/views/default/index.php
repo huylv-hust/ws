@@ -1,3 +1,37 @@
+
+<?php $request = Yii::$app->request->post()?>
+<?php
+
+if(count($request)) {
+    foreach ($cus as $key => $val)
+    {
+        if(isset($request[$key])) {
+            if($key != 'D01_CUST_NAMEN' && $key != 'D01_CUST_NAMEK' && $key != 'D01_NOTE')
+                $cus[$key] = $request[$key];
+        }
+
+    }
+
+    foreach ($confirm as $k => $v) {
+        if(isset($request[$k])) {
+            $confirm[$k] = $request[$k];
+        }
+    }
+
+    foreach ($denpyo as $k => $v) {
+        if(isset($request[$k])) {
+            $denpyo[$k] = $request[$k];
+        }
+    }
+
+    foreach ($car as $k => $v) {
+        if(isset($request[$k])) {
+            $car[$k] = $request[$k];
+        }
+    }
+}
+
+?>
 <form id="login_form" method="post"
       action="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip?denpyo_no=<?= (int)$d03DenNo ?>"
       class="form-horizontal">
@@ -29,7 +63,7 @@
                     <div class="formGroup">
                         <div class="formItem">
                             <label class="titleLabel">受付担当者<span class="must">*</span></label>
-                            <?= \yii\helpers\Html::dropDownList('M08_NAME_MEI_M08_NAME_SEI', $cus['D01_UKE_JYUG_CD'], $ssUer, array('class' => 'selectForm D01_UKE_JYUG_CD', 'id' => 'D01_UKE_JYUG_CD')) ?>
+                            <?= \yii\helpers\Html::dropDownList('M08_NAME_MEI_M08_NAME_SEI', isset($request['M08_NAME_MEI_M08_NAME_SEI']) ? $request['M08_NAME_MEI_M08_NAME_SEI'] : $cus['D01_UKE_JYUG_CD'], $ssUer, array('class' => 'selectForm D01_UKE_JYUG_CD', 'id' => 'D01_UKE_JYUG_CD')) ?>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">SSコード<span class="must">*</span></label>
@@ -153,13 +187,13 @@
                             <label class="titleLabel">貴重品</label>
                             <div class="radioGroup">
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_KITYOHIN" value="1" id="valuables1" class="radios">
+                                    <input type="radio" name="D03_KITYOHIN" value="1" id="valuables1" class="radios" <?php if ($denpyo['D03_KITYOHIN'] == 1) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_KITYOHIN'] == 1) echo ' checked' ?>"
                                            for="valuables1">有り</label>
                                 </div>
                                 <div class="radioItem">
                                     <input type="radio" name="D03_KITYOHIN" value="0" id="valuables2"
-                                           class="radios" <?php if ($d03DenNo == 0) echo 'checked="checked"'; ?>>
+                                           class="radios" <?php if ($d03DenNo == 0 || $denpyo['D03_KITYOHIN'] == 0) echo 'checked="checked"'; ?>>
                                     <label
                                         class="labelRadios<?php if ($d03DenNo == 0 || $denpyo['D03_KITYOHIN'] == 0) echo ' checked' ?>"
                                         for="valuables2">無し</label>
@@ -185,23 +219,23 @@
                             <label class="titleLabel">精算方法</label>
                             <div class="radioGroup">
                                 <div class="radioItem">
-                                    <input type="radio" value="0" name="D03_SEISAN" id="pays1" class="radios" checked>
+                                    <input type="radio" value="0" name="D03_SEISAN" id="pays1" class="radios" <?php if(!isset($denpyo['D03_SEISAN']) || ($d03DenNo == 0 || $denpyo['D03_SEISAN'] == 0)) echo 'checked' ?>>
                                     <label
                                         class="labelRadios <?php if ($d03DenNo == 0 || $denpyo['D03_SEISAN'] == 0) echo ' checked' ?>"
                                         for="pays1">現金</label>
                                 </div>
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_SEISAN" value="1" id="pays2" class="radios">
+                                    <input type="radio" name="D03_SEISAN" value="1" id="pays2" class="radios" <?php if ($denpyo['D03_SEISAN'] == 1) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_SEISAN'] == 1) echo ' checked' ?>"
                                            for="pays2">プリカ</label>
                                 </div>
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_SEISAN" value="2" id="pays3" class="radios">
+                                    <input type="radio" name="D03_SEISAN" value="2" id="pays3" class="radios" <?php if ($denpyo['D03_SEISAN'] == 2) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_SEISAN'] == 2) echo ' checked' ?>"
                                            for="pays3">クレジット</label>
                                 </div>
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_SEISAN" value="3" id="pays4" class="radios">
+                                    <input type="radio" name="D03_SEISAN" value="3" id="pays4" class="radios" <?php if ($denpyo['D03_SEISAN'] == 3) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_SEISAN'] == 3) echo ' checked' ?>"
                                            for="pays4">掛</label>
                                 </div>
@@ -217,7 +251,7 @@
                     <div class="formGroup">
                         <div class="formItem">
                             <label class="titleLabel">施行日（予約日）<span class="must">*</span></label>
-                            <input maxlength="8" type="text" value="<?= $denpyo['D03_SEKOU_YMD'] ?>"
+                            <input maxlength="8" type="text" value="<?php if(isset($_POST['D03_SEKOU_YMD'])) echo $_POST['D03_SEKOU_YMD']; else echo $denpyo['D03_SEKOU_YMD'];?>"
                                    name="D03_SEKOU_YMD"
                                    class="textForm">
                             <span class="txtExample">例)2013年1月30日→20130130</span></div>
@@ -228,6 +262,7 @@
                                 <?php
                                 $hour = (int)date('H');
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_BEGIN_HH'] : $hour;
+                                if(isset($request['D03_AZU_BEGIN_HH'])) $selected = $request['D03_AZU_BEGIN_HH'];
                                 for ($i = 0; $i < 24; ++$i) {
                                     if ($i == $selected) {
                                         ?>
@@ -247,6 +282,7 @@
                                 <?php
                                 $mi = (int)date('i') - (int)date('i') % 10;
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_BEGIN_MI'] : $mi;
+                                if(isset($request['D03_AZU_BEGIN_MI'])) $selected = $request['D03_AZU_BEGIN_MI'];
                                 for ($i = 0; $i < 60; $i = $i + 10) {
                                     if ($i == $selected) {
                                         ?>
@@ -264,6 +300,8 @@
                                 <?php
                                 $hour = (int)date('H');
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_END_HH'] : ($hour + 1);
+                                if(isset($request['D03_AZU_END_HH'])) $selected = $request['D03_AZU_END_HH'];
+                                if($denpyo['D03_AZU_END_HH']) $selected = $denpyo['D03_AZU_END_HH'];
                                 for ($i = 0; $i < 24; ++$i) {
                                     if ($i == $selected) {
                                         ?>
@@ -282,6 +320,7 @@
                                 <?php
                                 $mi = (int)date('i') - (int)date('i') % 10;
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_END_MI'] : $mi;
+                                if(isset($request['D03_AZU_END_MI'])) $selected = $request['D03_AZU_END_MI'];
                                 for ($i = 0; $i < 60; $i = $i + 10) {
                                     if ($i == $selected) {
                                         ?>
@@ -300,18 +339,18 @@
                     <div class="formGroup">
                         <div class="formItem">
                             <label class="titleLabel">予約内容</label>
-                            <?= \yii\helpers\Html::dropDownList('D03_YOYAKU_SAGYO_NO', $denpyo['D03_YOYAKU_SAGYO_NO'], Yii::$app->params['d03YoyakuSagyoNo'], array('class' => 'selectForm', 'id' => 'D03_YOYAKU_SAGYO_NO')) ?>
+                            <?= \yii\helpers\Html::dropDownList('D03_YOYAKU_SAGYO_NO', isset($request['D03_YOYAKU_SAGYO_NO']) ? $request['D03_YOYAKU_SAGYO_NO'] : $denpyo['D03_YOYAKU_SAGYO_NO'], Yii::$app->params['d03YoyakuSagyoNo'], array('class' => 'selectForm', 'id' => 'D03_YOYAKU_SAGYO_NO')) ?>
                         </div>
                         <div class="formItem">
                             <label
                                 class="titleLabel">作業者<?php //echo $denpyo['D03_TANTO_MEI'].$denpyo['D03_TANTO_SEI']; ?></label>
-                            <?= \yii\helpers\Html::dropDownList('D03_TANTO_MEI_D03_TANTO_SEI', $denpyo['D03_TANTO_MEI'] . '[]' . $denpyo['D03_TANTO_SEI'], $ssUerDenpyo, array('class' => 'selectForm D03_TANTO_MEI_D03_TANTO_SEI', 'id' => 'D03_TANTO_MEI_D03_TANTO_SEI')) ?>
+                            <?= \yii\helpers\Html::dropDownList('D03_TANTO_MEI_D03_TANTO_SEI', isset($request['D03_TANTO_MEI_D03_TANTO_SEI']) ? $request['D03_TANTO_MEI_D03_TANTO_SEI'] : $denpyo['D03_TANTO_MEI'] . '[]' . $denpyo['D03_TANTO_SEI'], $ssUerDenpyo, array('class' => 'selectForm D03_TANTO_MEI_D03_TANTO_SEI', 'id' => 'D03_TANTO_MEI_D03_TANTO_SEI')) ?>
 
                         </div>
                         <div class="formItem">
                             <label
                                 class="titleLabel">確認者<?php //echo $denpyo['D03_KAKUNIN_MEI'].$denpyo['D03_KAKUNIN_SEI'] ?></label>
-                            <?= \yii\helpers\Html::dropDownList('D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', $denpyo['D03_KAKUNIN_MEI'] . '[]' . $denpyo['D03_KAKUNIN_SEI'], $ssUerDenpyo, array('class' => 'selectForm D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', 'id' => 'D03_KAKUNIN_MEI_D03_KAKUNIN_SEI')) ?>
+                            <?= \yii\helpers\Html::dropDownList('D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', isset($request['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']) ? $request['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI'] :$denpyo['D03_KAKUNIN_MEI'] . '[]' . $denpyo['D03_KAKUNIN_SEI'], $ssUerDenpyo, array('class' => 'selectForm D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', 'id' => 'D03_KAKUNIN_MEI_D03_KAKUNIN_SEI')) ?>
                         </div>
                     </div>
                 </fieldset>
@@ -325,7 +364,7 @@
                                 <?php
                                 $k = 1;
                                 foreach ($tm01Sagyo as $work) {
-                                    if (in_array($work['M01_SAGYO_NO'], $sagyoCheck))
+                                    if ((isset($request['M01_SAGYO_NO']) && in_array($work['M01_SAGYO_NO'], $request['M01_SAGYO_NO'])) || in_array($work['M01_SAGYO_NO'], $sagyoCheck))
                                         $ck = 'checked="checked"';
                                     else
                                         $ck = '';
@@ -347,7 +386,7 @@
                         <div class="formItem">
                             <label class="titleLabel">その他作業内容</label>
 							<textarea maxlength="1000" class="textarea"
-                                      name="D03_SAGYO_OTHER"><?= $denpyo['D03_SAGYO_OTHER'] ?></textarea>
+                                      name="D03_SAGYO_OTHER"><?= isset($request['D03_SAGYO_OTHER']) ? $request['D03_SAGYO_OTHER'] : $denpyo['D03_SAGYO_OTHER'] ?></textarea>
                         </div>
                     </div>
                 </fieldset>
@@ -368,28 +407,28 @@
                                     <div class="itemPrintCheck FR">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" <?php echo ($confirm['tire_1']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox" value="1" <?php echo ($confirm['tire_1']) == 1 ? 'checked' : '' ?>
                                                 name="tire_1">
                                         </label>
                                     </div>
                                     <div class="itemPrintCheck FL">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" <?php echo ($confirm['tire_2']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox" value="1" <?php echo ($confirm['tire_2']) == 1 ? 'checked' : '' ?>
                                                 name="tire_2">
                                         </label>
                                     </div>
                                     <div class="itemPrintCheck RR">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" <?php echo ($confirm['tire_3']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox" value="1" <?php echo ($confirm['tire_3']) == 1 ? 'checked' : '' ?>
                                                 name="tire_3">
                                         </label>
                                     </div>
                                     <div class="itemPrintCheck RL">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" <?php echo ($confirm['tire_4']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox" value="1" <?php echo ($confirm['tire_4']) == 1 ? 'checked' : '' ?>
                                                 name="tire_4">
                                         </label>
                                     </div>
@@ -401,7 +440,7 @@
                                         <p class="txtValue"><span class="txtUnit">前</span><span class="spcValue"><input
                                                     min="0"
                                                     type="number" class="textFormConf"
-                                                    value="<?php echo $confirm['pressure_front'] ?>"
+                                                    value="<?php echo (isset($request['pressure_front'])) ? $request['pressure_front'] : $confirm['pressure_front'] ?>"
                                                     name="pressure_front"></span><span
                                                 class="txtUnit">kpa</span></p>
                                     </div>
@@ -409,7 +448,7 @@
                                         <p class="txtValue"><span class="txtUnit">後</span><span class="spcValue"><input
                                                     min="0"
                                                     type="number" class="textFormConf"
-                                                    value="<?php echo $confirm['pressure_behind'] ?>"
+                                                    value="<?php echo (isset($request['pressure_behind'])) ? $request['pressure_behind'] : $confirm['pressure_behind'] ?>"
                                                     name="pressure_behind"></span><span
                                                 class="txtUnit">kpa</span></p>
                                     </div>
@@ -421,7 +460,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input type="checkbox"
-                                               value="1" <?php echo ($confirm['rim']) == 1 ? 'checked' : '' ?>
+                                               value="1" <?php echo $confirm['rim'] ? 'checked' : '' ?>
                                                name="rim">
                                         確認</label>
                                 </div>
@@ -430,7 +469,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input type="checkbox"
-                                               value="1" <?php echo ($confirm['rim']) ? 'checked' : '' ?> name="torque">
+                                               value="1" <?php echo $confirm['torque'] ? 'checked' : '' ?> name="torque">
                                         締付</label>
                                 </div>
                             </td>
@@ -438,7 +477,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input type="checkbox"
-                                               value="1" <?php echo ($confirm['foil']) == 1 ? 'checked' : '' ?>
+                                               value="1" <?php echo $confirm['foil'] ? 'checked' : '' ?>
                                                name="foil">
                                         取付</label>
                                 </div>
@@ -447,7 +486,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input type="checkbox"
-                                               value="1" <?php echo ($confirm['nut']) == 1 ? 'checked' : '' ?>
+                                               value="1" <?php echo $confirm['nut'] ? 'checked' : '' ?>
                                                name="nut">
                                         確認</label>
                                 </div>
@@ -461,7 +500,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input type="checkbox"
-                                               value="1" <?php echo ($confirm['oil']) == 1 ? 'checked' : '' ?>
+                                               value="1" <?php echo $confirm['oil'] ? 'checked' : '' ?>
                                                name="oil">
                                         確認</label>
                                 </div>
@@ -469,7 +508,7 @@
                             <td><p class="leftside">オイルキャップ</p>
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox"<?php echo ($confirm['oil_cap']) == 1 ? 'checked' : '' ?>
+                                        <input type="checkbox"<?php echo $confirm['oil_cap'] ? 'checked' : '' ?>
                                                value="1" name="oil_cap">
                                         確認</label>
                                 </div>
@@ -477,7 +516,7 @@
                             <td><p class="leftside">レベルゲージ</p>
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" <?php echo ($confirm['level']) == 1 ? 'checked' : '' ?>
+                                        <input type="checkbox" <?php echo $confirm['level'] ? 'checked' : '' ?>
                                                value="1" name="level">
                                         確認</label>
                                 </div>
@@ -486,7 +525,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input
-                                            type="checkbox" <?php echo ($confirm['drain_bolt']) == 1 ? 'checked' : '' ?>
+                                            type="checkbox" <?php echo $confirm['drain_bolt'] ? 'checked' : '' ?>
                                             value="1" name="drain_bolt">
                                         確認</label>
                                 </div>
@@ -496,7 +535,7 @@
                             <td><p class="leftside">パッキン</p>
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
-                                        <input type="checkbox" <?php echo ($confirm['packing']) == 1 ? 'checked' : '' ?>
+                                        <input type="checkbox" <?php echo $confirm['packing'] ? 'checked' : '' ?>
                                                value="1" name="packing">
                                         確認</label>
                                 </div>
@@ -505,7 +544,7 @@
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input
-                                            type="checkbox" <?php echo ($confirm['oil_leak']) == 1 ? 'checked' : '' ?>
+                                            type="checkbox" <?php echo $confirm['oil_leak'] ? 'checked' : '' ?>
                                             value="1" name="oil_leak">
                                         確認</label>
                                 </div>
@@ -514,15 +553,15 @@
                                 <div class="checkPrint">
                                     <p class="txtValue">
                                         <input min="0" type="number" class="textFormConf"
-                                               value="<?php echo ($confirm['date']) ? substr($confirm['date'], 0, 4) : '' ?>"
-                                                style="width:4em;" name="date_1">
+                                               value="<?php echo isset($request['date_1']) ? $request['date_1'] : (($confirm['date']) && (int)substr($confirm['date'], 0, 4) ? substr($confirm['date'], 0, 4) : '') ?>"
+                                               style="width:4em;" name="date_1">
                                         <span class="txtUnit">年</span>
                                         <input min="0" type="number" class="textFormConf"
-                                               value="<?php echo ($confirm['date']) ? substr($confirm['date'], 4, 2) : '' ?>"
-                                                style="width:2em;" name="date_2">
+                                               value="<?php echo isset($request['date_2']) ? $request['date_2'] : (($confirm['date']) && (int)substr($confirm['date'], 4, 2) ? substr($confirm['date'], 4, 2) : '') ?>"
+                                               style="width:2em;" name="date_2">
                                         <span class="txtUnit">月</span>
                                         <input min="0" type="number" class="textFormConf"
-                                               value="<?php echo ($confirm['date']) ? substr($confirm['date'], 6, 2) : '' ?>"
+                                               value="<?php echo isset($request['date_3']) ? $request['date_3'] : (($confirm['date']) && (int)substr($confirm['date'], 6, 2) ? substr($confirm['date'], 6, 2) : '') ?>"
                                                maxlength="2" style="width:2em;" name="date_3">
                                         <span class="txtUnit">日　または、</span>
                                         <input min="0" type="number" class="textFormConf"
@@ -585,6 +624,7 @@
                     if(file_exists('data/pdf/'.$d03DenNo.'.pdf')) {
                         $disabled = 'disabled';
                     }
+                    echo '<input id="check_pdf" type="hidden" value="'.$disabled.'">';
                     foreach ($listDenpyoCom as $com) {
 
                         if (in_array((int)$com['D05_COM_CD'], range(42000, 42999))) {
@@ -600,30 +640,30 @@
                         <div id="commodity<?= $k ?>"
                              class="commodityBox<?php if ($k == 1 || $k < ($totalDenpyoCom + 1)) echo ' on' ?>">
                             <?php if ($k > 1) { ?>
-                                <?php if ($isTaisa == false || $d03DenNo == 0) { ?>
+                                <?php if ($isTaisa == false || $d03DenNo == 0 || $disabled == '') { ?>
                                     <a
                                         class="removeCommodity" href="#">削除</a>
                                 <?php }
                             } ?>
                             <input name="D05_NST_CD<?= $k ?>" id="nstcd<?= $k ?>" type="hidden"
-                                   value="<?= $com['D05_NST_CD'] ?>"/>
-                            <input name="D05_COM_CD<?= $k ?>" id="comcd<?= $k ?>" type="hidden"
-                                   value="<?= $com['D05_COM_CD'] ?>"/>
-                            <input name="D05_COM_SEQ<?= $k ?>" id="comseq<?= $k ?>" type="hidden" value="<?= $k ?>">
-                            <input name="LIST_NAME[<?= $k ?>]" id="list<?= $k ?>" type="hidden" value=""/>
+                                   value="<?= (isset($request['D05_NST_CD'.$k])) ? $request['D05_NST_CD'.$k] : $com['D05_NST_CD'] ?>"/>
+                            <input name="D05_COM_CD<?= $k ?>" id="comcd<?= $k ?>" type="hidden" class="D05_COM_CD"
+                                   value="<?= (isset($request['D05_COM_CD'.$k])) ? $request['D05_COM_CD'.$k] : $com['D05_COM_CD'] ?>"/>
+                            <input name="D05_COM_SEQ<?= $k ?>" id="comseq<?= $k ?>" type="hidden" value="<?= (isset($request['D05_COM_SEQ'.$k])) ? $request['D05_COM_SEQ'.$k] : $k ?>">
+                            <input name="LIST_NAME[<?= $k ?>]" id="list<?= $k ?>" type="hidden" value="<?= (isset($request['LIST_NAME'][$k])) ? $request['LIST_NAME'][$k] : (isset($listTm05Edit[$com['D05_COM_CD']]) ? $listTm05Edit[$com['D05_COM_CD']]['M05_COM_NAMEN'] : '')?>"/>
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">商品・荷姿コード</label>
-                                    <input <?= $disabled?> rel="<?= $k ?>" type="text" name="code_search<?= $k ?>"
-                                           id="code_search<?= $k ?>"
-                                           maxlength="9" value="<?= $com['D05_COM_CD'] . $com['D05_NST_CD'] ?>"
-                                           class="textForm codeSearchProduct">
-                                    <a onclick="<?php echo ($disabled == '') ? 'codeSearch('.$k.');' : ''?>" class="btnFormTool openSearchCodeProduct"
+                                    <input <?php if($disabled == 'disabled' && $isTaisa) echo $disabled?> rel="<?= $k ?>" type="text" name="code_search<?= $k ?>"
+                                                                                                          id="code_search<?= $k ?>"
+                                                                                                          maxlength="9" value="<?= (isset($request['code_search'.$k])) ? $request['code_search'.$k] : $com['D05_COM_CD'] . $com['D05_NST_CD'] ?>"
+                                                                                                          class="textForm codeSearchProduct">
+                                    <a onclick="<?php echo ($disabled == '' || $isTaisa == false) ? 'codeSearch('.$k.');' : ''?>" class="btnFormTool openSearchCodeProduct"
                                        style="cursor: pointer" rel="<?= $k ?>">コード一覧から選択</a></div>
                                 <div class="formItem">
                                     <label class="titleLabel">品名</label>
                                     <p class="txtValue"
-                                       id="txtValueName<?= $k ?>"><?php if (isset($listTm05Edit[$com['D05_COM_CD']])) echo $listTm05Edit[$com['D05_COM_CD']]['M05_COM_NAMEN'] ?></p>
+                                       id="txtValueName<?= $k ?>"><?php echo (isset($request['LIST_NAME'][$k])) ? $request['LIST_NAME'][$k] : (isset($listTm05Edit[$com['D05_COM_CD']]) ? $listTm05Edit[$com['D05_COM_CD']]['M05_COM_NAMEN'] : '') ?></p>
                                 </div>
                                 <div class="formItem">
                                     <label class="titleLabel">参考価格</label>
@@ -634,21 +674,21 @@
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">数量</label>
-                                    <input maxlength="5" type="text" value="<?= $com['D05_SURYO'] ?>"
+                                    <input maxlength="5" type="text" value="<?= (isset($request['D05_SURYO'.$k])) ? $request['D05_SURYO'.$k] : $com['D05_SURYO'] ?>"
                                            name="D05_SURYO<?= $k ?>" rel="<?= $k ?>" id="no_<?= $k ?>"
-                                           class="textForm noProduct">
+                                           class="textForm noProduct <?php if($disabled == 'disabled' && $isTaisa) echo 'no_event'?>">
                                 </div>
                                 <div class="formItem">
                                     <label class="titleLabel">単価</label>
                                     <input maxlength="10" type="text" name="D05_TANKA<?= $k ?>" rel="<?= $k ?>"
-                                           id="price_<?= $k ?>" value="<?= $com['D05_TANKA'] ?>"
-                                           class="textForm priceProduct">
+                                           id="price_<?= $k ?>" value="<?= (isset($request['D05_TANKA'.$k])) ? $request['D05_TANKA'.$k] : $com['D05_TANKA'] ?>"
+                                           class="textForm priceProduct <?php if($disabled == 'disabled' && $isTaisa) echo 'no_event'?>">
                                     <span class="txtUnit">円</span></div>
                                 <div class="formItem">
                                     <label class="titleLabel">金額</label>
 
                                     <input maxlength="10" type="text" name="D05_KINGAKU<?= $k ?>" rel="<?= $k ?>" id="total_<?= $k ?>"
-                                           value="<?= $com['D05_KINGAKU'] ?>" class="textForm totalPriceProduct">
+                                           value="<?= (isset($request['D05_KINGAKU'.$k])) ? $request['D05_KINGAKU'.$k] : $com['D05_KINGAKU'] ?>" class="textForm totalPriceProduct <?php if($disabled == 'disabled' && $isTaisa) echo 'no_event'?>">
                                     <span class="txtUnit">円</span></div>
                             </div>
                         </div>
@@ -661,9 +701,9 @@
                         <div class="flexRight">
                             <label class="titleLabelTotal">合計金額</label>
                             <p class="txtValue" style="position: relative"><strong class="totalPrice"
-                                                        id="totalPrice"><?= $denpyo['D03_SUM_KINGAKU'] ?></strong><span
+                                                                                   id="totalPrice"><?= $denpyo['D03_SUM_KINGAKU'] ?></strong><span
                                     class="txtUnit">円</span>
-                                <input maxlength="10" type="hidden" id="D03_SUM_KINGAKU" name="D03_SUM_KINGAKU"/>
+                                <input maxlength="10" type="hidden" id="D03_SUM_KINGAKU"  value="<?= $denpyo['D03_SUM_KINGAKU'] ?>" name="D03_SUM_KINGAKU"/>
                             </p>
                         </div>
                     </div>
@@ -720,7 +760,7 @@
                                 <div class="checkItem">
                                     <input type="checkbox" name="warranty_check" <?= $ck ?> value="1" id="checkWarranty"
                                            style="display: none;">
-                                    <label class="labelSingleCheck <?= $class ?>" <?= $style1 ?> id="checkWarranty"
+                                    <label class="labelSingleCheck <?= $class ?>" <?= $style1 ?> id="checkWarranty_label"
                                            for="checkWarranty">保証書を作成する</label>
                                 </div>
                             </div>
@@ -728,29 +768,29 @@
                         <div class="formItem">
                             <label class="titleLabel">保証書番号</label>
 
-                            <p class="txtValue toggleWarranty"
+                           <p class="txtValue toggleWarranty"
                                id="warrantyNo" <?= $style ?>><?php echo $csv['M09_WARRANTY_NO'] ?></p>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">購入日</label>
-                            <p class="txtValue toggleWarranty" <?= $style ?>><?php if ($csv['M09_INP_DATE']) echo Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd日');
+                            <p class="txtValue toggleWarranty" <?= $style ?>><?php if ($csv['M09_INP_DATE']) echo Yii::$app->formatter->asDate(date('d-M-y', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd日');
                                 else echo date('Y年m月d日') ?></p>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">保証期間</label>
                             <p class="txtValue toggleWarranty" id="toggleWarranty" <?= $style ?>>
-                                <?php if ($csv['warranty_period']) echo Yii::$app->formatter->asDate(date('d-M-Y', strtotime($csv['warranty_period'])), 'yyyy年MM月dd日');
-                                else echo date('Y年m月d日', mktime(0, 0, 0, date('m', time()) + 6, date('d', time()), date('Y', time()))); ?>
+                                <?php if ($csv['warranty_period']) echo Yii::$app->formatter->asDate(date('d-M-y', strtotime($csv['warranty_period'])), 'yyyy年MM月dd日');
+                                else echo date('Y年m月d日', strtotime('+ 6 month')); ?>
                                 <input type="hidden" value="0" name="checkClickWarranty" id="checkClickWarranty"/>
 
                                 <input type="hidden" name="M09_WARRANTY_NO" id="M09_WARRANTY_NO"
                                        value="<?php echo $csv['M09_WARRANTY_NO'] ?>"/>
                                 <input type="hidden" name="M09_INP_DATE" id="M09_INP_DATE"
                                        value="<?php if ($csv['M09_INP_DATE']) echo $csv['M09_INP_DATE'];
-                                       else echo date('y-M-d') ?>"/>
+                                       else echo date('d-M-y') ?>"/>
                                 <input type="hidden" name="warranty_period" id="warranty_period"
                                        value="<?php if ($csv['warranty_period']) echo $csv['warranty_period'];
-                                       else echo date('y-M-d', mktime(0, 0, 0, date('m', time()) + 6, date('d', time()), date('Y', time()))); ?>"/>
+                                       else echo date('Ymd', strtotime('+ 6 month')); ?>"/>
                             </p>
                         </div>
                     </div>
@@ -775,7 +815,7 @@
                         </div>
                     </div>
                     <?php $warranty_item = ['' => '', 'BS' => 'BS', 'YH' => 'YH', 'DF' => 'DF', 'TY' => 'TY'] ?>
-                    <?php for ($i = 1; $i < 5; ++$i) { ?>
+                    <?php for ($i = 1; $i < 7; ++$i) { ?>
                         <div class="formGroup lineBottom">
                             <div class="formItem">
                                 <p class="txtValue">
@@ -789,6 +829,14 @@
                                     } elseif ($i == 3) {
                                         $name = 'right_behind';
                                         echo '右後';
+                                    }
+                                    elseif ($i == 5) {
+                                        $name = 'other_a';
+                                        echo 'その他A';
+                                    }
+                                    elseif ($i == 6) {
+                                        $name = 'other_b';
+                                        echo 'その他B';
                                     } else {
                                         $name = 'left_behind';
                                         echo '左後';
@@ -798,7 +846,7 @@
                                 </p>
                             </div>
                             <div class="formItem">
-                                <?= \yii\helpers\Html::dropDownList($name . '_manu', $csv[$name . '_manu'], $warranty_item, array('class' => 'selectForm', 'id' => $name . '_manu')) ?>
+                                <?= \yii\helpers\Html::dropDownList($name . '_manu', $csv[$name . '_manu'], $warranty_item, array('class' => 'selectForm select_product', 'id' => $name . '_manu')) ?>
                             </div>
                             <div class="formItem">
                                 <input type="text" value="<?= $csv[$name . '_product'] ?>" class="textForm"
@@ -813,62 +861,11 @@
                                        id="<?= $name . '_serial' ?>" name="<?= $name . '_serial' ?>">
                             </div>
                             <div class="formItem">
-                                <p class="txtValue">1</p>
+                                <p class="txtValue number_product"><?php echo $csv[$name . '_manu']!=''? 1 : 0; ?></p>
                             </div>
                         </div>
                     <?php } ?>
-                    <div class="formGroup lineBottom">
-                        <div class="formItem">
-                            <p class="txtValue">その他A</p>
-                        </div>
-                        <div class="formItem">
-                            <select class="selectForm" name="other_a_manu" id="other_a_manu">
-                                <option selected="" value=""></option>
-                                <option value="BS">BS</option>
-                                <option value="YH">YH</option>
-                                <option value="DF">DF</option>
-                                <option value="TY">TY</option>
-                            </select>
-                        </div>
-                        <div class="formItem">
-                            <input type="text" value="" class="textForm" name="other_a_product" id="other_a_product">
-                        </div>
-                        <div class="formItem">
-                            <input type="text" value="" class="textForm" name="other_a_size" id="other_a_size">
-                        </div>
-                        <div class="formItem">
-                            <input type="text" value="" class="textForm" name="other_a_serial" id="other_a_serial">
-                        </div>
-                        <div class="formItem">
-                            <p class="txtValue"><!-- 1 --></p>
-                        </div>
-                    </div>
-                    <div class="formGroup">
-                        <div class="formItem">
-                            <p class="txtValue">その他B</p>
-                        </div>
-                        <div class="formItem">
-                            <select class="selectForm" name="other_b_manu" id="other_b_manu">
-                                <option selected="" value=""></option>
-                                <option value="BS">BS</option>
-                                <option value="YH">YH</option>
-                                <option value="DF">DF</option>
-                                <option value="TY">TY</option>
-                            </select>
-                        </div>
-                        <div class="formItem">
-                            <input type="text" value="" class="textForm" name="other_b_product" id="other_b_product">
-                        </div>
-                        <div class="formItem">
-                            <input type="text" value="" class="textForm" name="other_b_size" id="other_b_size">
-                        </div>
-                        <div class="formItem">
-                            <input type="text" value="" class="textForm" name="other_b_serial" id="other_b_serial">
-                        </div>
-                        <div class="formItem">
-                            <p class="txtValue"><!-- 1 --></p>
-                        </div>
-                    </div>
+
                 </fieldset>
             </section>
         </article>
@@ -878,9 +875,9 @@
             <a class="btnBack"
                href="<?php echo isset($d03DenNo) ? yii\helpers\BaseUrl::base(true) . '/detail-workslip?den_no=' . $d03DenNo : yii\helpers\BaseUrl::base(true); ?>">戻る</a>
 
-                <div class="btnSet" style="width:150px;">
-                    <a class="btnTool" href="javascript:void(0)" id="preview">作業指示書</a>
-                </div>
+            <div class="btnSet" style="width:150px;">
+                <a class="btnTool" id="preview">作業指示書</a>
+            </div>
 
 
             <a class="btnSubmit" id="btnRegistWorkSlip">登録</a>
@@ -940,7 +937,7 @@
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">郵便番号</label>
-                                    <input maxlength="7" type="text" value="" name="D01_YUBIN_BANGO"
+                                    <input maxlength="7" type="text" value="<?= isset($cus['D01_YUBIN_BANGO']) ? $cus['D01_YUBIN_BANGO'] : '' ?>" name="D01_YUBIN_BANGO"
                                            class="textForm" id="D01_YUBIN_BANGO">
                                     <a id="btn_get_address" class="btnFormTool" href="javascript:void(0)">住所検索</a></div>
                                 <div class="formItem">
@@ -1318,7 +1315,6 @@
 <!-- END CodeSearchProduct -->
 <script type="text/javascript">
     $(".btnSubmitDenpyo").click(function () {
-
         $("#login_form").submit();
     });
     $(".onPreview").click(function () {
@@ -1489,15 +1485,15 @@
         $('#nstcd' + index).val($("#nstcd" + m05ComCD).val());
         $('#comcd' + index).val($("#comcd" + m05ComCD).val());
         $("#code_search" + index).val(m05ComCD);
-        $("#code_search" + index).attr('title', m05ComCD);
-        $("#list" + index).val(m05ComCD);
+        $("#code_search" + index).attr('title1', m05ComCD);
+        $("#list" + index).val($("#name" + m05ComCD).val());
         comCd = parseInt(comCd);
         if (comCd > 41999 && comCd < 43000) {
             $("#warrantyBox").show();
         } else {
             var count = 0;
             $('.commodityBox.on').each(function () {
-                var value = parseInt($(this).find('[name=D05_COM_CD1]').val());
+                var value = parseInt($(this).find('.D05_COM_CD').val());
                 if (value > 41999 && value < 43000) {
                     count++;
                 }
@@ -1508,12 +1504,21 @@
         }
     }
 
+
+
+
     $(function () {
-        $("#checkWarranty").click(function () {
+        if (!$('#checkWarranty_label').hasClass('checked')) {
+            $('.toggleWarranty').hide();
+        }
+
+        $("#checkWarranty_label").click(function () {
             var check = $("#checkClickWarranty").val();
             $("#checkWarranty").attr('checked', 'checked');
-            if (check == '1')
+            ($(this)).addClass('checked')
+            if (check == '1') {
                 return;
+            }
             $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/warranty',
                 {
                     'ss_cd': $("#D01_SS_CD").val()
@@ -1525,8 +1530,8 @@
 
                 }
             );
-
         });
+
         $(".codeSearchProduct").change(function () {
             var item = $(this);
             var index = $(this).attr('rel');
@@ -1534,16 +1539,19 @@
 
             if (code.length < 9) {
                 var count = 0;
-                $('.codeSearchProduct').each(function () {
-                    var value = $(this).val(),
-                        title = $(this).attr('title');
-                    if (value == title) {
+                $('.commodityBox.on').each(function () {
+                    var value = parseInt($(this).find('.D05_COM_CD').val());
+                    if (value > 41999 && value < 43000) {
                         count++;
                     }
                 });
                 if (count == 0) {
                     $("#warrantyBox").hide();
                 }
+                $('#nstcd'+index).val('');
+                $('#comcd'+index).val('');
+                $('#comseq'+index).val('');
+                $('#list'+index).val('');
                 return;
             }
             $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/search',
@@ -1555,9 +1563,19 @@
                     $("#txtValuePrice" + index).html(data.M05_LIST_PRICE);
                     $('#nstcd' + index).val(data.M05_NST_CD);
                     $('#comcd' + index).val(data.M05_COM_CD);
-                    $(item).attr('title', (data.M05_COM_CD + data.M05_NST_CD));
+                    $(item).attr('title1', (data.M05_COM_CD + data.M05_NST_CD));
                     if (data.M05_COM_CD > 41999 && data.M05_COM_CD < 43000) {
                         $("#warrantyBox").show();
+                    }
+                    var count = 0;
+                    $('.commodityBox.on').each(function () {
+                        var value = parseInt($(this).find('.D05_COM_CD').val());
+                        if (value > 41999 && value < 43000) {
+                            count++;
+                        }
+                    });
+                    if (count == 0) {
+                        $("#warrantyBox").hide();
                     }
                 });
         });
@@ -1613,6 +1631,7 @@
             var total = 0;
             var totalPrice = 0;
 
+            utility.zen2han(this);
             if ($("#no_" + index).val() != null && $("#price_" + index).val() != null && Number.isInteger(parseInt($("#no_" + index).val())) && Number.isInteger(parseInt($("#price_" + index).val()))) {
                 total = parseInt($("#no_" + index).val()) * parseInt($("#price_" + index).val());
                 if (Number.isInteger(total)) {
@@ -1690,19 +1709,26 @@
                         'D01_TEL_NO': $("#modalEditCustomer input[name = D01_TEL_NO]").val(),
                         'D01_MOBTEL_NO': $("#modalEditCustomer input[name = D01_MOBTEL_NO]").val(),
                         'D01_NOTE': $("#modalEditCustomer #D01_NOTE").val(),
-                        'D01_KAIIN_CD': $("#modalEditCustomer input[name = D01_KAIIN_CD]").val()
+                        'D01_KAIIN_CD': $("#modalEditCustomer input[name = D01_KAIIN_CD]").val(),
+                        'D01_YUBIN_BANGO': $("#modalEditCustomer input[name = D01_YUBIN_BANGO]").val(),
                     },
                     function (data) {
+                        if(data.kake_card_no_exist == 1)
+                        {
+                            $("#updateInfo").html('<div class="alert alert-danger">入力掛カードが存在されてしまいました。</div>');
+                            return;
+                        }
                         if (data.result_api == '1' && data.result_db == '1') {
                             $("#updateInfo").html('<div class="alert alert-success">編集が成功しました。</div>');
                             setTimeout(function () {
                                 $("#modalEditCustomer").modal('hide');
                                 if (data.custNo) {
-                                    window.location.href = "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip?custNo=" + data.custNo;
+                                    $("#D01_CUST_NO").val(data.custNo);
+                                    $("#login_form").attr('action',"<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip?addCust=true&custNo=" + data.custNo)['0'].submit();
                                 }
                                 else
-                                    window.location.href = "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip";
-                                /*window.location.reload();*/
+                                    window.location.reload(true);
+
                             }, 1000);
 
                         }
@@ -1786,8 +1812,8 @@
     if ($d03DenNo && file_exists('data/pdf/' . $d03DenNo . '.pdf')) {
     ?>
     $(function () {
-        $("#warrantyBox").find("input,select").attr('disabled', true);
-    })
+        $("#warrantyBox").find("input,select").addClass('no_event');
+    });
     <?php } ?>
 </script>
 <script src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/js/module/registwork.js"></script>

@@ -33,6 +33,7 @@ class DefaultController extends WsController
     {
         $cookie = \Yii::$app->request->cookies;
         $cus_info = $cookie->getValue('cus_info', '0');
+
         if ($cus_info == 0) {
             return $this->goHome();
         }
@@ -63,6 +64,8 @@ class DefaultController extends WsController
         if (! $card_cardBangou = $this->equalCardNumber($data['oldCardNumber'], $data['newCardNumber'], $info_card['card_cardBangou'])) {
             \Yii::$app->session->setFlash('error', '旧Usappyカード番号が登録されていません');
             $data['cus_info'] = $cus_info;
+            \Yii::$app->view->title = 'Usappyカード変更';
+            \Yii::$app->params['titlePage'] = 'Usappyカード変更';
             return $this->render('index', $data);
         }
         $info_card['card_cardBangou'] = $card_cardBangou;
@@ -120,12 +123,14 @@ class DefaultController extends WsController
     public function actionTestapi()
     {
         $api = new api();
-        $member_info = $api->getMemberInfo('336915000145');
-        $infocar = $api->getInfoListCar('336915000145');
-        $infocard = $api->getInfoListCard('336915000145');
+        $memem = $api->getInfoCardTop('4035607000500000');
+
+        $member_info = $api->getMemberInfo($memem['member_kaiinCd']);
+        $infocard = $api->getInfoListCard($memem['member_kaiinCd']);
+
         echo '<pre>';
+        var_dump($memem);
         var_dump($member_info);
-        var_dump($infocar);
         var_dump($infocard);
         echo '</pre>';
         die;

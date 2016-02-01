@@ -75,6 +75,7 @@ class SiteController extends WsController
         $flag = false;
         $flag1 = false;
         $flag2 = true;
+        $flag3 = false;
         $array_source = array();
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
@@ -82,7 +83,7 @@ class SiteController extends WsController
 
         $member_card = Yii::$app->request->post('card_number', '');
         $member_birthday = Yii::$app->request->post('member_birthday', '');
-        $member_kaiinKana = Yii::$app->request->post('member_kaiinKana', '');
+        $member_kaiinKana = preg_replace('/\s+/', '', Yii::$app->request->post('member_kaiinKana', ''));
         $member_tel = Yii::$app->request->post('member_tel', '');
         $license_plates = Yii::$app->request->post('license_plates', '');
 
@@ -100,7 +101,6 @@ class SiteController extends WsController
         }
         $member_info = $api->getInfoCardTop($member_card);
         $member_info['type_redirect'] = $type_redirect;
-
         if (! isset($member_info['member_kaiinCd'])) {
             $flag = false;
         } else {
@@ -113,13 +113,19 @@ class SiteController extends WsController
                     $flag2 = false;
                 }
             }
+            $member_api = $api->getMemberInfo($member_info['member_kaiinCd']);
+            $member_info = $member_info + $member_api;
+            if (isset($member_info['member_kaiinCd'])) {
+                $flag3 = true;
+            }
         }
-        if ($flag1 == true && $flag2 == true) {
+
+        if ($flag1 == true && $flag2 == true && $flag3 == true) {
             $cookie = new Cookie([
                 'name' => 'cus_info',
                 'value' => $member_info
             ]);
-            \Yii::$app->response->cookies->add($cookie);
+            Yii::$app->response->cookies->add($cookie);
             $flag = true;
         }
 
@@ -139,7 +145,7 @@ class SiteController extends WsController
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
         $type_redirect = Yii::$app->request->post('type_redirect');
-        $member_card = Yii::$app->request->post('card_number');
+        $member_card = Yii::$app->request->post('card_number_auth');
         $customer = new Sdptd01customer();
         $member_info = $customer->getData(['D01_KAKE_CARD_NO' => $member_card]);
         if (count($member_info) == 1) {

@@ -126,10 +126,10 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お客様確認</label>
-                        <?php if (isset($post['D03_KAKUNIN']) && $post['D03_KAKUNIN'] == 0) {
-                            echo '<p class="txtValue">未了承</p>';
-                        } else {
+                        <?php if (isset($post['D03_KAKUNIN'])) {
                             echo '<p class="txtValue">了承済</p>';
+                        } else {
+                            echo '<p class="txtValue">未了承</p>';
                         } ?>
                     </div>
                     <div class="formItem">
@@ -229,17 +229,17 @@
                         if ($post['D05_COM_CD'.$k]) {
                         ?>
                         <tr class="mini">
-                            <td class="tdLeft"><?php echo $post['D05_COM_CD'.$k]. $post['D05_NST_CD'.$k]; ?></td>
+                            <td class="tdLeft"><?php echo $post['D05_COM_CD'.$k]; ?></td>
                             <td class="tdLeft"><?php echo $post['M05_COM_NAMEN'.$k]; ?></td>
-                            <td><?php echo $post['D05_SURYO'.$k]; ?>円</td>
-                            <td><?php echo $post['D05_TANKA'.$k]; ?>円</td>
-                            <td><?php echo $post['D05_KINGAKU'.$k]; ?>円</td>
+                            <td><?php echo $post['D05_SURYO'.$k]; ?></td>
+                            <td><?php echo number_format($post['D05_TANKA'.$k]); ?>円</td>
+                            <td><?php echo number_format($post['D05_KINGAKU'.$k]); ?>円</td>
                         </tr>
                     <?php }} ?>
                     <tr class="mini">
                         <td colspan="3"></td>
                         <th>合計</th>
-                        <td><?php echo $post['D03_SUM_KINGAKU']; ?>円</td>
+                        <td><?php echo number_format($post['D03_SUM_KINGAKU']); ?>円</td>
                     </tr>
                 </table>
                 <div class="formGroup">
@@ -277,12 +277,6 @@
                     <div class="formItem">
                         <label class="titleLabel">ボルト・ナット</label>
                         <p class="txtValue">OK ・ NG</p>
-                    </div>
-                </div>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel pFlLeft">備考</label>
-                        <p class="txtValue"></p>
                     </div>
                 </div>
             </fieldset>
@@ -325,12 +319,12 @@
                             <div class="areaAirCheck">
                                 <div class="itemPrintAir">
                                     <p class="txtValue"><span class="txtUnit">前</span><span class="spcValue"><input
-                                                type="number" class="textFormConf" value="<?php echo  $post['pressure_front'] ?>" disabled name="pressure_front"></span><span
+                                                type="text" class="textFormConf" value="<?php echo  $post['pressure_front'] ?>" disabled name="pressure_front"></span><span
                                             class="txtUnit">kpa</span></p>
                                 </div>
                                 <div class="itemPrintAir">
                                     <p class="txtValue"><span class="txtUnit">後</span><span class="spcValue"><input
-                                                type="number" class="textFormConf" value="<?php echo  $post['pressure_behind'] ?>" disabled name="pressure_behind"></span><span
+                                                type="text" class="textFormConf" value="<?php echo  $post['pressure_behind'] ?>" disabled name="pressure_behind"></span><span
                                             class="txtUnit">kpa</span></p>
                                 </div>
                             </div>
@@ -417,13 +411,13 @@
                         <td colspan="2"><p class="leftside">次回交換目安</p>
                             <div class="checkPrint">
                                 <p class="txtValue">
-                                    <input type="number" class="textFormConf" value="<?php echo $post['date_1'] ?>" disabled maxlength="4" style="width:4em;" name="date_1">
+                                    <input type="text" class="textFormConf" value="<?php echo $post['date_1'] ?>" disabled maxlength="4" style="width:4em;" name="date_1">
                                     <span class="txtUnit">年</span>
-                                    <input type="number" class="textFormConf" value="<?php echo $post['date_2']?>" disabled maxlength="2" style="width:2em;" name="date_2">
+                                    <input type="text" class="textFormConf" value="<?php echo $post['date_2']?>" disabled maxlength="2" style="width:2em;" name="date_2">
                                     <span class="txtUnit">月</span>
-                                    <input type="number" class="textFormConf" value="<?php echo $post['date_3']?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
+                                    <input type="text" class="textFormConf" value="<?php echo $post['date_3']?>" disabled="" maxlength="2" style="width:2em;" name="date_3">
                                     <span class="txtUnit">日　または、</span>
-                                    <input type="number" class="textFormConf" value="<?php echo $post['km'] ?>" disabled name="km">
+                                    <input type="text" class="textFormConf" value="<?php echo $post['km'] ?>" disabled name="km">
                                     <span class="txtUnit">km</span>
                                 </p>
                             </div>
@@ -508,31 +502,10 @@
                         <td><p class="txtValue">OK ・ NG</p></td>
                     </tr>
                     <tr>
-                        <td colspan="6"><p class="leftside">備考</p>
-                            <p class="txtValue"></p></td>
-                    </tr>
-                    <tr>
                         <th colspan="6">備考</th>
                     </tr>
                     <tr class="mini">
-                        <td colspan="3"></td>
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr class="mini">
-                        <td colspan="3"></td>
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr class="mini">
-                        <td colspan="3"></td>
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr class="mini">
-                        <td colspan="3"></td>
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr class="mini">
-                        <td colspan="3"></td>
-                        <td colspan="3"></td>
+                        <td class="pNotesAlll" colspan="6"></td>
                     </tr>
                 </table>
                 <p class="txtSub mb5">※ドレーンボルト・ホイールナット等はトルクレンチ等を使用して確実な締付けを行っております。<br>
@@ -540,9 +513,9 @@
                     ※本控えはお客様のお買い物記録として、車検証・保険証共に大切に保管してください。</p>
                 <table class="tablePrint">
                     <tr class="mini">
-                        <th class="vMiddle">作業者</th>
-                        <th class="vMiddle">点検確認者</th>
-                        <td class="tdLeft" rowspan="2"><p class="leftSide">店名</p>
+                        <th class="vMiddle wd30">作業者</th>
+                        <th class="vMiddle wd35" colspan="2">点検確認者</th>
+                        <td class="tdLeft wd35" rowspan="2"><p class="leftSide">店名</p>
                             <p><?php echo $ss; ?><br>
                                 <?php echo $address ?><br>
                                 <?php echo $tel ?></p></td>
@@ -553,6 +526,9 @@
                         </td>
                         <td class="vMiddle"><p
                                 class="txtValue"><?php echo isset($post['kakunin']) ? $post['kakunin'] : ''; ?></p>
+                        </td>
+                        <td class="vMiddle"><p
+                                class="txtValue"><?php echo ''; ?></p>
                         </td>
                     </tr>
                 </table>

@@ -106,7 +106,7 @@
                                 foreach ($job_no as $key => $val) {
                                     $job_name .= $job[$val] . '、';
                                 }
-                                $job_name = trim($job_name, '、');
+                                $job_name = preg_replace('/、$/', '', $job_name);
                                 echo $job_name;
                                 ?>
                             </td>

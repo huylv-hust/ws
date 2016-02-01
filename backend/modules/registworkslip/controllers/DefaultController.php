@@ -32,14 +32,17 @@ class DefaultController extends WsController
             $rs = $this->saveDataDenpyo($d03DenNo, $denpyoDataPost);
 
             if ($rs) {
-                $this->savePdf($rs, $denpyoDataPost, false);
+                if (isset($denpyoDataPost['checkClickWarranty']) && $denpyoDataPost['checkClickWarranty'] == 1) {
+                    $pdf = $this->savePdf($rs, $denpyoDataPost, false);
+                }
                 $this->saveCsv($denpyoDataPost);
-                $denpyoDataPost['date'] = $denpyoDataPost['date_1'].$denpyoDataPost['date_2'].$denpyoDataPost['date_3'];
                 confirm::writeconfirm($denpyoDataPost);
                 Yii::$app->session->setFlash('success', '作業伝票の登録が完了しました。');
                 $this->redirect(\yii\helpers\BaseUrl::base(true) . '/detail-workslip?den_no=' . $rs);
             } elseif ($rs === 0) {
-                $data['notExitCus'] = true;
+                if (!Yii::$app->request->get('addCust')) {
+                    $data['notExitCus'] = true;
+                }
             } else {
                 $data['errorEditInsert'] = true;
             }
@@ -151,13 +154,12 @@ class DefaultController extends WsController
         $data['tm01Sagyo'] = $tm01Sagyo;
         $data['listDenpyoCom'] = $listDenpyoCom;
         \Yii::$app->view->title = '作業伝票作成';
+        \Yii::$app->params['titlePage'] = '作業伝票作成';
         return $this->render('index', $data);
     }
 
     public function saveDataDenpyo($denpyoNo, &$denpyoDataPost)
     {
-
-
         $login_info = Yii::$app->session->get('login_info');
         $uDenpyo = new Udenpyo();
         $denpyo = new Sdptd03denpyo();
@@ -207,6 +209,7 @@ class DefaultController extends WsController
             $dataDenpyo['D03_METER_KM'] = $dataTemp['D02_METER_KM_' . $seqCar];
             $dataDenpyo['D03_CAR_NAMEN'] = $dataTemp['D02_CAR_NAMEN_' . $seqCar];
             $dataDenpyo['D03_HIRA'] = $dataTemp['D02_HIRA_' . $seqCar];
+            $dataDenpyo['D03_RIKUUN_NAMEN'] = $dataTemp['D02_RIKUUN_NAMEN_' . $seqCar];
             $dataDenpyo['D03_JIKAI_SHAKEN_YM'] = $dataTemp['D02_JIKAI_SHAKEN_YM_' . $seqCar];
         }
 
@@ -438,11 +441,17 @@ class DefaultController extends WsController
             $result = ['result_api' => (int)$res, 'result_db' => $resDb, 'custNo' => 0];
         } else { // guest insert db or update
             $data = Yii::$app->request->post();
-            $cusObj->setData($data, $data['D01_CUST_NO']);
-            $res = $cusObj->saveData();
-            $memberInfo = $cusObj->getData(['D01_CUST_NO' => $data['D01_CUST_NO']]);
-            $memberInfo['type_redirect'] = 3;
-            $result = ['result_db' => $res, 'result_api' => 1, 'custNo' => $data['D01_CUST_NO']];
+
+            if ($data['D01_KAKE_CARD_NO'] != '' && (int)$data['D01_CUST_NO'] == 0 && count($cusObj->getData(['D01_KAKE_CARD_NO' => $data['D01_KAKE_CARD_NO']])) > 0) {
+                $result = ['kake_card_no_exist' => '1'];
+                $memberInfo['type_redirect'] = 3;
+            } else {
+                $cusObj->setData($data, $data['D01_CUST_NO']);
+                $res = $cusObj->saveData();
+                $memberInfo = $cusObj->getData(['D01_CUST_NO' => $data['D01_CUST_NO']]);
+                $memberInfo['type_redirect'] = 3;
+                $result = ['result_db' => $res, 'result_api' => 1, 'custNo' => $data['D01_CUST_NO']];
+            }
         }
 
         $cookie = new Cookie([
@@ -455,7 +464,6 @@ class DefaultController extends WsController
 
     public function actionSearch()
     {
-
         $code = \Yii::$app->request->post('code');
         $uDenpyo = new Udenpyo();
         $tm05Com = $uDenpyo->getTm05Com(['M05_COM_CD' => substr($code, 0, 6), 'M05_NST_CD' => substr($code, 6, 3)]);
@@ -486,8 +494,6 @@ class DefaultController extends WsController
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $uDenpyo = new Udenpyo();
         $tm09Warranty = new \app\models\Sdptm09warrantyno();
-        //$login_info = Yii::$app->session->get('login_info');
-        //$ssCd = $login_info['M50_SS_CD'];
         $ssCd = Yii::$app->request->post('ss_cd');
         $tm09WarrantyNo = $uDenpyo->getTm09WarrantyNo(['M09_SS_CD' => $ssCd]);
         if (count($tm09WarrantyNo) == 0) {
@@ -523,24 +529,22 @@ class DefaultController extends WsController
 
     public function savePdf($denpyoNo, $postData, $isView = false)
     {
-
         $api = new api();
         $uDenpyo = new Udenpyo();
 
         if ($isView == false) {
             $creat_warranty = false;
             for ($i = 1; $i < 11; ++$i) {
-                if (isset($postData['warranty_check']) && (int)$postData['D05_COM_CD' . $i] && in_array((int)$postData['D05_COM_CD' . $i], range(42000, 42999))) {
+                if (isset($postData['checkClickWarranty']) && $postData['checkClickWarranty'] == 1 && in_array((int)$postData['D05_COM_CD' . $i], range(42000, 42999))) {
                     $creat_warranty = true;
                     break;
                 }
             }
 
             if (!$creat_warranty) {
-                return -1;
+                return false;
             }
         }
-
 
         $denpyo = $uDenpyo->setDefaultDataObj('denpyo');
         if ($denpyoNo) {
@@ -621,23 +625,20 @@ class DefaultController extends WsController
 
         $pdf_export = new PdfController();
         if ($isView == true) {
-            $lock = 1;
-            if ($postData['M09_WARRANTY_NO'])
-                $lock = 0;
-            $res = $pdf_export->exportBill($info_warranty, $info_car, $info_bill, $info_ss, $denpyo['D03_DEN_NO'], null, $lock);
-        } else
+            $res = $pdf_export->exportBill($info_warranty, $info_car, $info_bill, $info_ss, $denpyo['D03_DEN_NO'], null, 1);
+        } else {
             $res = $pdf_export->exportBill($info_warranty, $info_car, $info_bill, $info_ss, $denpyo['D03_DEN_NO'], 'save', 0);
+        }
+
         return $res;
     }
 
     public function saveCsv($postData)
     {
-
-        $postData['D05_SURYO'] = 1;
         $totalTaisa = 0;
         for ($i = 1; $i < 11; ++$i) {
             if ((int)$postData['D05_COM_CD' . $i] && in_array((int)$postData['D05_COM_CD' . $i], range(42000, 42999))) {
-                $totalTaisa = $totalTaisa + 1;
+                $totalTaisa += $postData['D05_SURYO'. $i];
             }
         }
 

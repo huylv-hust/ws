@@ -14,3 +14,7 @@ label.error {
 #contents .breadcrumb{
     padding: 0 0;
 }
+
+.no_event {
+    pointer-events: none;
+}

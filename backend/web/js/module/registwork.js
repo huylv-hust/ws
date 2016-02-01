@@ -370,6 +370,16 @@ var regist_work = function () {
             return false;
         }, 'POS伝票番号はカンマ区切りの4文字の数字で入力してください');
 
+        jQuery.validator.addMethod("check_taisa", function (value, element) {
+            var rel = $(element).attr('rel'),
+                val = $('#comcd'+rel).val();
+            if ($('#check_pdf').val() == 'disabled' && Number.isInteger(parseInt(val)) && parseInt(val) >= 42000 && parseInt(val) <= 42999) {
+                return false
+            }
+
+            return true;
+        });
+
         jQuery.validator.addMethod("check_date_order", function (value, element) {
             var start_h = parseInt($('[name=D03_AZU_BEGIN_HH]').val()),
                 start_m = parseInt($('[name=D03_AZU_BEGIN_MI]').val()),
@@ -515,12 +525,23 @@ var regist_work = function () {
             $(this).rules("add", {
                 digits: true,
                 totalPriceProduct: true,
+                maxlength:10,
                 messages: {
                     digits: '金額は数字で入力してください',
-                    totalPriceProduct: '伝票作業データを更新できませんでした'
+                    totalPriceProduct: '伝票作業データを更新できませんでした',
+                    maxlength: '金額は10桁の数字以内で入力してください。'
                 }
             });
         });
+
+        $('.codeSearchProduct').each(function () {
+            $(this).rules("add", {
+                check_taisa: true,
+                messages: {
+                    check_taisa: 'タイヤの商品（042000~042999）を入力しないでください'
+                }
+            });
+        })
     };
 
     var submit_registWork = function () {
@@ -563,7 +584,7 @@ var regist_work = function () {
         $('.codeSearchProduct').on('change', function () {
             utility.zen2han(this);
         });
-        
+
     };
 
     var click_label_modal_customer = function () {
@@ -609,6 +630,15 @@ var regist_work = function () {
         });
     };
 
+    //select product_number
+    var change_number_product = function (){
+        $('.select_product').on('change', function(){
+            var number = 0;
+            if ($(this).val())  number = 1;
+            $(this).closest('.lineBottom').find('.number_product').html(number);
+        });
+    };
+
     return {
         init: function () {
             removeHrefPaging();
@@ -622,6 +652,7 @@ var regist_work = function () {
             click_label_modal_customer();
             preview();
             get_addr_from_zipcode();
+            change_number_product();
         }
     };
 }();

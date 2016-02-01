@@ -7,8 +7,6 @@
                     <h4 class="modal-title">掛カード会員</h4>
                 </div>
                 <div class="modal-body">
-<!--                    <input type="hidden" class="card_url_redirect" value="">-->
-<!--                    <input type="hidden" class="card_type_redirect" value="2">-->
                     <div class="box-alert">
 
                     </div>
@@ -19,7 +17,7 @@
                                 <label for="cardType">掛カード番号</label>
                             </div>
                             <div class="cell bgGrayTrans">
-                                <input class="borderGreen borderRadius" name="card_number" id="form_card_number_auth" type="text">
+                                <input class="borderGreen borderRadius" name="card_number_auth" id="form_card_number_auth" type="text">
                             </div>
                         </div>
                     </div>
