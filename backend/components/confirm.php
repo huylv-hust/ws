@@ -11,9 +11,9 @@ class confirm
         if ($confirm['status'] == 1) {
             $post['status'] = 1;
         }
-		if (isset($post['date_1']) && isset($post['date_2']) && isset($post['date_3'])) {
-			$post['date'] = str_pad($post['date_1'], 4, '0', STR_PAD_LEFT).str_pad($post['date_2'], 2, '0', STR_PAD_LEFT).str_pad($post['date_3'], 2, '0', STR_PAD_LEFT);
-		}
+        if (isset($post['date_1']) && isset($post['date_2']) && isset($post['date_3'])) {
+            $post['date'] = str_pad($post['date_1'], 4, '0', STR_PAD_LEFT) . str_pad($post['date_2'], 2, '0', STR_PAD_LEFT) . str_pad($post['date_3'], 2, '0', STR_PAD_LEFT);
+        }
 
         $data[0] = array(
             'タイヤ交換図1',
@@ -67,7 +67,7 @@ class confirm
             'status' => isset($post['status']) && $post['status'] ? $post['status'] : 0,
         );
 
-
+        utilities::createFolder('data/confirm/');
         $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {
@@ -143,7 +143,7 @@ class confirm
             'oil_leak' => '',
             'date' => '',
             'km' => '',
-            'terminal' =>' ',
+            'terminal' => ' ',
             'stay' => '',
             'backup' => '',
             'startup' => '',

@@ -111,6 +111,7 @@ class csv
             'D03_DEN_NO' => isset($post['D03_DEN_NO']) ? $post['D03_DEN_NO'] : '',
         );
 
+        utilities::createFolder('data/csv/');
         $fp = fopen(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {
@@ -193,6 +194,7 @@ class csv
         }
         return self::defaultcsv();
     }
+
     public function defaultcsv()
     {
         $result = array(
