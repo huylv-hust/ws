@@ -636,14 +636,16 @@ class DefaultController extends WsController
     public function saveCsv($postData)
     {
         $totalTaisa = 0;
+        $totalSuryo = 0;
         for ($i = 1; $i < 11; ++$i) {
             if ((int)$postData['D05_COM_CD' . $i] && in_array((int)$postData['D05_COM_CD' . $i], range(42000, 42999))) {
-                $totalTaisa += $postData['D05_SURYO'. $i];
+                $totalSuryo += $postData['D05_SURYO'. $i];
+                $totalTaisa = $totalTaisa +1;
             }
         }
 
         if ($totalTaisa) {
-            $postData['D05_SURYO'] = $totalTaisa;
+            $postData['D05_SURYO'] = $totalSuryo;
             return \backend\components\csv::writecsv($postData);
         }
 
