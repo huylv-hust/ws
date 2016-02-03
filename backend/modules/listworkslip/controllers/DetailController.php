@@ -22,7 +22,6 @@ class DetailController extends WsController
     public function actionIndex()
     {
         $api = new api();
-        $data = array();
         $filter['detail_no'] = Yii::$app->request->get('den_no');
         $obj = new Sdptd03denpyo();
         $obj_job = new Sdptm01sagyo();
@@ -161,9 +160,11 @@ class DetailController extends WsController
         $address = $branch['ss_address'];
         $tel = $branch['ss_tel'];
 
+        $api = new api();
         $filter['detail_no'] = \Yii::$app->request->get('den_no');
         $obj = new Sdptd03denpyo();
         $obj_job = new Sdptm01sagyo();
+        $cus = new Sdptd01customer();
 
         $job[''] = '';
         $all_job = $obj_job->getData();
@@ -177,6 +178,14 @@ class DetailController extends WsController
         }
 
         $data['detail'] = $detail[0];
+
+        $cus_infor = $cus->findOne($data['detail']['D03_CUST_NO']);
+        if (isset($cus_infor['D01_KAIIN_CD'])) {
+            $infor = $api->getMemberInfo($cus_infor['D01_KAIIN_CD']);
+            $data['detail']['D01_CUST_NAMEN'] = $infor['member_kaiinName'];
+            $data['detail']['D01_CUST_NAMEK'] = $infor['member_kaiinKana'];
+        }
+
         $data['ss'] = isset($ss[$data['detail']['D03_SS_CD']]) ? $ss[$data['detail']['D03_SS_CD']] : '';
         $data['address'] = isset($address[$data['detail']['D03_SS_CD']]) ? $address[$data['detail']['D03_SS_CD']] : '';
         $data['tel'] = isset($tel[$data['detail']['D03_SS_CD']]) ? $tel[$data['detail']['D03_SS_CD']] : '';
