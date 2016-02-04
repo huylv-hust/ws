@@ -400,6 +400,8 @@ td.tdLeft {
 	width: 90%;
 }
 .selectForm {
+	-webkit-appearance:none;
+	appearance:none;
 	-moz-appearance: none;
 	background: #fff url("../img/select_arrow.png") no-repeat scroll right center / auto 100%;
 	border: 2px solid #008321;
@@ -412,7 +414,7 @@ td.tdLeft {
 	vertical-align: middle;
 }
 .formWidthXXS {
-	width: 22px;
+	width: 30px;
 }
 .formWidthXS {
 	width: 68px;
@@ -1266,6 +1268,7 @@ li:last-child .btnPaging {
 	body {
 		font-size: 10px !important;
 		line-height: 1.05 !important;
+		-webkit-print-color-adjust:exact;
 	}
 	.printNone {
 		display: none;

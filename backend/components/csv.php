@@ -4,12 +4,24 @@ namespace backend\components;
 
 class csv
 {
+
     public static function writecsv($post = array())
     {
+
         $branch = utilities::getAllBranch();
         $branch_code = isset($branch['all_ss_branch'][$post['D01_SS_CD']]) ? $branch['all_ss_branch'][$post['D01_SS_CD']] : '';
         $branch_name = isset($branch['all_branch'][$branch_code]) ? $branch['all_branch'][$branch_code] : '';
         $ss_name = isset($branch['all_ss'][$post['D01_SS_CD']]) ? $branch['all_ss'][$post['D01_SS_CD']] : '';
+
+        if ($post['D01_MOBTEL_NO'] != '' && $post['D01_TEL_NO'] != '') {
+            $post['TEL_NUMBER'] = $post['D01_TEL_NO'] . ',' . $post['D01_MOBTEL_NO'];
+        }
+        if ($post['D01_MOBTEL_NO'] != '' && $post['D01_TEL_NO'] == '') {
+            $post['TEL_NUMBER'] = $post['D01_MOBTEL_NO'];
+        }
+        if ($post['D01_MOBTEL_NO'] == '' && $post['D01_TEL_NO'] != '') {
+            $post['TEL_NUMBER'] = $post['D01_TEL_NO'];
+        }
 
         $data[0] = array(
             '保証書番号',
@@ -61,6 +73,7 @@ class csv
             '作業伝票番号',
         );
 
+
         $data[1] = array(
             'warranty_card_number' => isset($post['M09_WARRANTY_NO']) ? $post['M09_WARRANTY_NO'] : '',
             'warranty_period' => isset($post['warranty_period']) ? $post['warranty_period'] : '',
@@ -70,9 +83,9 @@ class csv
             'D01_CUST_NAMEK' => isset($post['D01_CUST_NAMEK']) ? $post['D01_CUST_NAMEK'] : '',
             'D01_YUBIN_BANGO' => isset($post['D01_YUBIN_BANGO']) ? $post['D01_YUBIN_BANGO'] : '',
             'D01_ADDR' => isset($post['D01_ADDR']) ? $post['D01_ADDR'] : '',
-            'D01_TEL_NO' => isset($post['D01_TEL_NO']) ? $post['D01_TEL_NO'] : '',
-            'D02_MODEL_CD' => isset($post['D02_MODEL_CD']) ? $post['D02_MODEL_CD'] : '',
-            'D02_CAR_NO' => isset($post['D02_CAR_NO']) ? $post['D02_CAR_NO'] : '',
+            'TEL_NUMBER' => isset($post['TEL_NUMBER']) ? $post['TEL_NUMBER'] : '',
+            'D02_MODEL_CD' => isset($post['D02_CAR_NAMEN_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_CAR_NAMEN_' . $post['D02_CAR_SEQ_SELECT']] : '',
+            'D02_CAR_NO' => isset($post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']] : '',
             'right_front_manu' => isset($post['right_front_manu']) ? $post['right_front_manu'] : '',
             'right_front_product' => isset($post['right_front_product']) ? $post['right_front_product'] : '',
             'right_front_size' => isset($post['right_front_size']) ? $post['right_front_size'] : '',
@@ -106,19 +119,18 @@ class csv
             'D03_POS_DEN_NO' => isset($post['D03_POS_DEN_NO']) ? $post['D03_POS_DEN_NO'] : '',
             'branch_code' => $branch_code,
             'branch_name' => $branch_name,
-            'ss_name' => $ss_name,
             'D01_SS_CD' => isset($post['D01_SS_CD']) ? $post['D01_SS_CD'] : '',
+            'ss_name' => $ss_name,
             'D03_DEN_NO' => isset($post['D03_DEN_NO']) ? $post['D03_DEN_NO'] : '',
         );
-
         utilities::createFolder('data/csv/');
         $fp = fopen(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {
             fputcsv($fp, $value);
         }
-        fclose($fp);
 
+        fclose($fp);
     }
 
     public static function readcsv($post = array())
@@ -150,7 +162,7 @@ class csv
                 'D01_CUST_NAMEK' => $data['5'],
                 'D01_YUBIN_BANGO' => $data['6'],
                 'D01_ADDR' => $data['7'],
-                'D01_TEL_NO' => $data['8'],
+                'TEL_NUMBER' => $data['8'],
                 'D02_MODEL_CD' => $data['9'],
                 'D02_CAR_NO' => $data['10'],
                 'right_front_manu' => $data['11'],
@@ -186,13 +198,21 @@ class csv
                 'D03_POS_DEN_NO' => $data['41'],
                 'branch_code' => $data['42'],
                 'branch_name' => $data['43'],
-                'ss_name' => $data['44'],
-                'D01_SS_CD' => $data['45'],
+                'D01_SS_CD' => $data['44'],
+                'ss_name' => $data['45'],
                 'D03_DEN_NO' => $data['46'],
             );
             return $result;
         }
         return self::defaultcsv();
+    }
+
+    public static function deletecsv($post = array())
+    {
+        if (isset($post['D03_DEN_NO']) && file_exists('data/csv/' . $post['D03_DEN_NO'] . '.csv')) {
+            return unlink('data/csv/' . $post['D03_DEN_NO'] . '.csv');
+        }
+        return true;
     }
 
     public function defaultcsv()
@@ -206,7 +226,7 @@ class csv
             'D01_CUST_NAMEK' => '',
             'D01_YUBIN_BANGO' => '',
             'D01_ADDR' => '',
-            'D01_TEL_NO' => '',
+            'TEL_NUMBER' => '',
             'D02_MODEL_CD' => '',
             'D02_CAR_NO' => '',
             'right_front_manu' => '',
@@ -242,12 +262,11 @@ class csv
             'D03_POS_DEN_NO' => '',
             'branch_code' => '',
             'branch_name' => '',
-            'ss_name' => '',
             'D01_SS_CD' => '',
+            'ss_name' => '',
             'D03_DEN_NO' => '',
         );
         return $result;
     }
-
 
 }

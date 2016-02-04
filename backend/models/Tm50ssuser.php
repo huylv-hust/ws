@@ -60,6 +60,7 @@ class Tm50ssuser extends \yii\db\ActiveRecord
             'M50_UPD_YMDHMS' => 'M50  Upd  Ymdhms',
         ];
     }
+
     /*
      * Check login
      * */
@@ -67,12 +68,12 @@ class Tm50ssuser extends \yii\db\ActiveRecord
     {
         $sql = array();
         $flag = false;
-        if (! isset($dataUser['ssid']) || ! isset($dataUser['password'])) {
+        if (!isset($dataUser['ssid']) || !isset($dataUser['password'])) {
             $flag = false;
         } else {
-            $password = md5($dataUser['password'].md5('12345'.$dataUser['password']));
+            $password = md5($dataUser['password'] . md5('12345' . $dataUser['password']));
             $sql = (new Query())
-                ->select(['M50_USER_ID','M50_SS_CD','M50_USER_NAME'])
+                ->select(['M50_USER_ID', 'M50_SS_CD', 'M50_USER_NAME'])
                 ->from(self::tableName())
                 ->where('M50_USER_ID = :ssid', [':ssid' => $dataUser['ssid']])
                 ->andWhere('M50_PASSWORD = :password', [':password' => $password])
@@ -83,6 +84,6 @@ class Tm50ssuser extends \yii\db\ActiveRecord
                 $flag = true;
             }
         }
-        return ['flag' => $flag,'sql' => $sql];
+        return ['flag' => $flag, 'sql' => $sql];
     }
 }

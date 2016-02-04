@@ -24,7 +24,7 @@ class CommodityController extends WsController
     public function createDataExport()
     {
         $obj = new Sdptm05com();
-        $product = $obj->getData(array(), 'M05_COM_CD, M05_NST_CD, M05_KIND_DM_NO, M05_COM_NAMEN, M05_LIST_PRICE');
+        $product = $obj->getData(array(), 'M05_COM_CD, M05_NST_CD, M05_KIND_COM_NO, M05_LARGE_COM_NO, M05_MIDDLE_COM_NO, M05_KIND_DM_NO, M05_COM_NAMEN, M05_LIST_PRICE, M05_ORDER, M05_MEMO');
         return $product;
     }
 
@@ -33,15 +33,16 @@ class CommodityController extends WsController
      */
     public function actionExport()
     {
-        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Type: text/csv; charset=Shift_JIS');
         header('Content-Disposition: attachment; filename=commodity_'.date('Ymd').'.csv');
         $fp = fopen('php://output', 'w');
-        fputs($fp, $bom = (chr(0xEF).chr(0xBB).chr(0xBF)));
         $obj = new Sdptm05com();
-        fputcsv($fp, $obj->header);
+        $header = mb_convert_encoding(implode(',', $obj->header), 'SJIS');
+        fputcsv($fp, explode(',', $header));
         $data = $this->createDataExport();
         foreach ($data as $k => $v) {
-            fputcsv($fp, $v);
+            $v = mb_convert_encoding(implode(',', $v), 'SJIS');
+            fputcsv($fp, explode(',', $v));
         }
 
         fclose($fp);

@@ -180,7 +180,8 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
     {
         if (!isset($primaryKey['M08_HAN_CD'])
             || !isset($primaryKey['M08_SS_CD'])
-            || !isset($primaryKey['M08_JYUG_CD1'])) {
+            || !isset($primaryKey['M08_JYUG_CD1'])
+        ) {
             if ($obj = static::findOne($primaryKey)) {
                 return $obj->delete();
             }

@@ -58,7 +58,7 @@
                     <td><?php echo $staff['M08_JYUG_CD'];?></td>
                     <td>
                         <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/edit-staff?branch=<?php echo $staff['M08_HAN_CD'];?>&ss=<?php echo $staff['M08_SS_CD']?>&cd=<?php echo $staff['M08_JYUG_CD']?>">
-                            <?php echo $staff['M08_NAME_MEI'].$staff['M08_NAME_SEI'];?>
+                            <?php echo $staff['M08_NAME_SEI'].$staff['M08_NAME_MEI'];?>
                         </a>
                     </td>
                 </tr>

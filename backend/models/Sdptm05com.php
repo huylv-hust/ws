@@ -130,6 +130,18 @@ class Sdptm05com extends \yii\db\ActiveRecord
                 $this->error_import[] = $this->setMessageRequire($line, '荷姿コード');
             }
 
+            if ($data[2] == '') {
+                $this->error_import[] = $this->setMessageRequire($line, 'M05_KIND_COM_NO');
+            }
+
+            if ($data[3] == '') {
+                $this->error_import[] = $this->setMessageRequire($line, 'M05_LARGE_COM_NO');
+            }
+
+            if ($data[4] == '') {
+                $this->error_import[] = $this->setMessageRequire($line, 'M05_MIDDLE_COM_NO');
+            }
+
             if (mb_strlen($data[0]) > 0 && !preg_match('/^[0-9]{6}$/', $data[0])) {
                 $this->error_import[] = $this->setMessageEqualLength($line, '商品コード', 6);
             }
@@ -138,35 +150,35 @@ class Sdptm05com extends \yii\db\ActiveRecord
                 $this->error_import[] = $this->setMessageEqualLength($line, '荷姿コード', 3);
             }
 
-            if (mb_strlen($data[2]) > 0 && mb_strlen($data[2]) > 3 && !preg_match('/^[0-9]+$/', $data[5])) {
+            if (mb_strlen($data[2]) > 3 || (mb_strlen($data[2]) > 0 && !preg_match('/^[0-9]+$/', $data[2]))) {
                 $this->error_import[] = $this->setMessageOverLength($line, 'M05_KIND_COM_NO', 3);
             }
 
-            if (mb_strlen($data[3]) > 0 && mb_strlen($data[3]) > 3 && !preg_match('/^[0-9]+$/', $data[5])) {
+            if (mb_strlen($data[3]) > 3 || (mb_strlen($data[3]) > 0 && !preg_match('/^[0-9]+$/', $data[3]))) {
                 $this->error_import[] = $this->setMessageOverLength($line, 'M05_LARGE_COM_NO', 3);
             }
 
-            if (mb_strlen($data[4]) > 0 && mb_strlen($data[4]) > 3 && !preg_match('/^[0-9]+$/', $data[5])) {
-                $this->error_import[] = $this->setMessageOverLength($line, 'DM分類コード', 3);
+            if (mb_strlen($data[4]) > 3 || (mb_strlen($data[4]) > 0 && !preg_match('/^[0-9]+$/', $data[4]))) {
+                $this->error_import[] = $this->setMessageOverLength($line, 'M05_MIDDLE_COM_NO', 3);
             }
 
-            if (mb_strlen($data[5]) > 0 && mb_strlen($data[5]) > 3 && !preg_match('/^[0-9]+$/', $data[5])) {
-                $this->error_import[] = $this->setMessageOverLength($line, 'M05_MIDDLE_COM_NO', 3);
+            if (mb_strlen($data[5]) > 3 || (mb_strlen($data[5]) > 0 && !preg_match('/^[0-9]+$/', $data[5]))) {
+                $this->error_import[] = $this->setMessageOverLength($line, 'DM分類コード', 3);
             }
 
             if (mb_strlen($data[6]) > 0 && mb_strlen($data[6]) > 50) {
                 $this->error_import[] = $this->setMessageOverLength($line, '商品名', 50);
             }
 
-            if (mb_strlen($data[7]) > 0 && mb_strlen($data[7]) > 10) {
+            if ((mb_strlen($data[7]) > 0 && !preg_match('/^[0-9]+$/', $data[7])) || mb_strlen($data[7]) > 10) {
                 $this->error_import[] = $this->setMessageOverLength($line, '参考価格', 10);
             }
 
-            if (mb_strlen($data[8]) > 0 && mb_strlen($data[8]) > 3 && !preg_match('/^[0-9]+$/', $data[8])) {
+            if (mb_strlen($data[8]) > 3 || (mb_strlen($data[8]) > 0 && !preg_match('/^[0-9]+$/', $data[8]))) {
                 $this->error_import[] = $this->setMessageOverLength($line, 'M05_ORDER', 3);
             }
 
-            if (mb_strlen($data[9]) > 0 && mb_strlen($data[9]) > 250) {
+            if (mb_strlen($data[9]) > 250) {
                 $this->error_import[] = $this->setMessageOverLength($line, 'M05_MEMO', 250);
             }
         }
@@ -195,82 +207,103 @@ class Sdptm05com extends \yii\db\ActiveRecord
      */
     public function saveImport($file)
     {
+        ini_set('memory_limit', '256M');
         $login_info = Yii::$app->session->get('login_info');
         $header = fgetcsv($file);
+        if (count($header) != 10) {
+            $this->error_import[] = '1行目:CSVファイルのフォーマットが正しくありません';
+        }
         $line = 2;
         $insert_data = array();
+        $count_error_update = 0;
+        $count_error_insert = 0;
+        //update
+        $update_data['update'] = " M05_KIND_COM_NO=:M05_KIND_COM_NO, M05_LARGE_COM_NO=:M05_LARGE_COM_NO"
+            . ", M05_MIDDLE_COM_NO=:M05_MIDDLE_COM_NO, M05_KIND_DM_NO=:M05_KIND_DM_NO"
+            . ", M05_COM_NAMEN=:M05_COM_NAMEN, M05_LIST_PRICE=:M05_LIST_PRICE"
+            . ", M05_ORDER=:M05_ORDER, M05_MEMO=:M05_MEMO, M05_UPD_DATE=:M05_UPD_DATE"
+            . ", M05_UPD_USER_ID=:M05_UPD_USER_ID";
+        $update_data['where'] = " M05_COM_CD=:M05_COM_CD and M05_NST_CD=:M05_NST_CD";
+        $query = 'update ' . self::tableName() . ' set' . $update_data['update'] . ' where ' . $update_data['where'];
+        $update = Yii::$app->db->createCommand($query);
 
-        $update = array();
+        //insert
+        $insert_data['data'] = ":M05_COM_CD,:M05_NST_CD,:M05_KIND_COM_NO,:M05_LARGE_COM_NO,:M05_MIDDLE_COM_NO,:M05_KIND_DM_NO"
+            . ",:M05_COM_NAMEN,:M05_LIST_PRICE,:M05_ORDER,:M05_MEMO,:M05_INP_DATE,:M05_INP_USER_ID"
+            . ",:M05_UPD_DATE,:M05_UPD_USER_ID";
+        $query = "insert into " . self::tableName() . " values (" . $insert_data['data'] . ")";
+        $insert = Yii::$app->db->createCommand($query);
+
+        $savedTraceLevel = Yii::$app->log->traceLevel;
+        Yii::$app->log->traceLevel = 0;
+
         $transaction = $this->getDb()->beginTransaction();
         try {
             while (($data = fgetcsv($file)) !== false) {
                 $this->validateImport($line, $data);
-                $update_data = array();
                 if (count($data) == 10) {
                     if ($obj = self::findOne(array('M05_COM_CD' => $data[0], 'M05_NST_CD' => $data[1]))) {
-                        $update_data['update'] = " M05_KIND_COM_NO=:M05_KIND_COM_NO, M05_LARGE_COM_NO=:M05_LARGE_COM_NO"
-                            . ", M05_MIDDLE_COM_NO=:M05_MIDDLE_COM_NO, M05_KIND_DM_NO=:M05_KIND_DM_NO"
-                            . ", M05_COM_NAMEN=:M05_COM_NAMEN, M05_LIST_PRICE=:M05_LIST_PRICE"
-                            . ", M05_ORDER=:M05_ORDER, M05_MEMO=:M05_MEMO, M05_UPD_DATE=:M05_UPD_DATE"
-                            . ", M05_UPD_USER_ID=:M05_UPD_USER_ID";
-                        $update_data['where'] = " M05_COM_CD=:M05_COM_CD and M05_NST_CD=:M05_NST_CD";
-                        //$update[] = 'update ' . self::tableName() . ' set' . $update_data['update'] . ' where' . $update_data['where'];
-                        $update = 'update ' . self::tableName() . ' set' . $update_data['update'] . ' where ' . $update_data['where'];
-                        $update1 = Yii::$app->db->createCommand($update)
-                            ->bindValue(':M05_KIND_COM_NO', $data[2])
-                            ->bindValue(':M05_LARGE_COM_NO', $data[3])
-                            ->bindValue(':M05_MIDDLE_COM_NO', $data[4])
-                            ->bindValue(':M05_KIND_DM_NO', $data[5])
-                            ->bindValue(':M05_COM_NAMEN', $data[6])
-                            ->bindValue(':M05_LIST_PRICE', $data[7])
-                            ->bindValue(':M05_ORDER', $data[8])
-                            ->bindValue(':M05_MEMO', $data[9])
-                            ->bindValue(':M05_UPD_DATE', date('y-M-d'))
-                            ->bindValue(':M05_UPD_USER_ID', $login_info['M50_USER_ID'])
-                            ->bindValue(':M05_COM_CD', $data[0])
-                            ->bindValue(':M05_NST_CD', $data[1])
+                        $result = $update
+                            ->bindParam(':M05_KIND_COM_NO', $data[2])
+                            ->bindParam(':M05_LARGE_COM_NO', $data[3])
+                            ->bindParam(':M05_MIDDLE_COM_NO', $data[4])
+                            ->bindParam(':M05_KIND_DM_NO', $data[5])
+                            ->bindParam(':M05_COM_NAMEN', $data[6])
+                            ->bindParam(':M05_LIST_PRICE', $data[7])
+                            ->bindParam(':M05_ORDER', $data[8])
+                            ->bindParam(':M05_MEMO', $data[9])
+                            ->bindParam(':M05_UPD_DATE', date('y-M-d'))
+                            ->bindParam(':M05_UPD_USER_ID', $login_info['M50_USER_ID'])
+                            ->bindParam(':M05_COM_CD', $data[0])
+                            ->bindParam(':M05_NST_CD', $data[1])
                             ->execute();
-                        if (!$update1) {
-                            $transaction->rollback();
-                            return array('insert' => false, 'error' => $this->error_import);
+                        if (!$result) {
+                            $count_error_update++;
                         }
 
                     } else {
-                        $data[] = date('y-M-d');
-                        $data[] = $login_info['M50_USER_ID'];
-                        $data[] = date('y-M-d');
-                        $data[] = $login_info['M50_USER_ID'];
-                        $insert_data[$data[0] . $data[1]] = $this->setData($data);
+                        $result = $insert
+                            ->bindParam(':M05_COM_CD', $data[0])
+                            ->bindParam(':M05_NST_CD', $data[1])
+                            ->bindParam(':M05_KIND_COM_NO', $data[2])
+                            ->bindParam(':M05_LARGE_COM_NO', $data[3])
+                            ->bindParam(':M05_MIDDLE_COM_NO', $data[4])
+                            ->bindParam(':M05_KIND_DM_NO', $data[5])
+                            ->bindParam(':M05_COM_NAMEN', $data[6])
+                            ->bindParam(':M05_LIST_PRICE', $data[7])
+                            ->bindParam(':M05_ORDER', $data[8])
+                            ->bindParam(':M05_MEMO', $data[9])
+                            ->bindParam(':M05_INP_DATE', date('y-M-d'))
+                            ->bindParam(':M05_INP_USER_ID', $login_info['M50_USER_ID'])
+                            ->bindParam(':M05_UPD_DATE', date('y-M-d'))
+                            ->bindParam(':M05_UPD_USER_ID', $login_info['M50_USER_ID'])
+                            ->execute();
+                        if (!$result) {
+                            $count_error_insert++;
+                        }
                     }
                 }
-
+                $line++;
             }
 
-            $columnNameArray = array('M05_COM_CD', 'M05_NST_CD', 'M05_KIND_COM_NO', 'M05_LARGE_COM_NO', 'M05_MIDDLE_COM_NO',
-                'M05_KIND_DM_NO', 'M05_COM_NAMEN', 'M05_LIST_PRICE', 'M05_ORDER', 'M05_MEMO', 'M05_INP_DATE',
-                'M05_INP_USER_ID', 'M05_UPD_DATE', 'M05_UPD_USER_ID');
-
-            if (!empty($this->error_import)) {
+            if ($count_error_update > 0 || $count_error_insert > 0) {
+                $transaction->rollBack();
                 return array('insert' => false, 'error' => $this->error_import);
             }
 
-
-            if (!empty($insert_data)) {
-                $insert = Yii::$app->db->createCommand()
-                    ->batchInsert(self::tableName(), $columnNameArray, array_values($insert_data))
-                    ->execute();
-                if (!isset($insert)) {
-                    $transaction->rollback();
-                    return array('insert' => false, 'error' => $this->error_import);
-                }
+            if (!empty($this->error_import)) {
+                $transaction->rollBack();
+                return array('insert' => false, 'error' => $this->error_import);
             }
 
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollback();
-            $this->error_import[] = 'exception';
+            $this->error_import[] = 'インポートができません';
             return array('insert' => false, 'error' => $this->error_import);
         }
+
+        Yii::$app->log->traceLevel = $savedTraceLevel;
 
         return array('insert' => true, 'error' => $this->error_import);
     }

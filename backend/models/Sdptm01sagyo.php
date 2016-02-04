@@ -1,5 +1,6 @@
 <?php
 namespace app\models;
+
 use yii\db\Query;
 use Yii;
 
@@ -79,28 +80,30 @@ class Sdptm01sagyo extends \yii\db\ActiveRecord
         $query = $this->getWhere($filters, $select);
         return $query->all();
     }
-	public function saveData()
+
+    public function saveData()
     {
         return $this->obj->save();
     }
 
-	public function setData($data = array(), $id = null)
+    public function setData($data = array(), $id = null)
     {
         $obj = new Sdptd04denpyosagyo();
-        if($id) {
-			$obj = static::findOne($id);
-		}
+        if ($id) {
+            $obj = static::findOne($id);
+        }
 
-		$obj->attributes = $data;
-        foreach($obj->attributes as $k => $v){
+        $obj->attributes = $data;
+        foreach ($obj->attributes as $k => $v) {
             $obj->{$k} = trim($v) != '' ? trim($v) : null;
         }
 
         $this->obj = $obj;
     }
 
-	public function coutData($filters) {
-		$query = $this->getWhere($filters);
-		return $query->count();
-	}
+    public function coutData($filters)
+    {
+        $query = $this->getWhere($filters);
+        return $query->count();
+    }
 }

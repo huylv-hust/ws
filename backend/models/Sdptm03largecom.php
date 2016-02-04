@@ -1,5 +1,6 @@
 <?php
 namespace app\models;
+
 use yii\db\Query;
 use Yii;
 
@@ -61,57 +62,59 @@ class Sdptm03largecom extends \yii\db\ActiveRecord
             'M03_UPD_USER_ID' => 'M03  Upd  User  ID',
         ];
     }
-	private function getWhere($filters = array(), $select = '*')
+
+    private function getWhere($filters = array(), $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
-		if(count($filters)) {
+        if (count($filters)) {
 
-			foreach($filters as $field => $val) {
-				if($field != 'offset' && $field != 'limit')
-				{
-					$query->andwhere($field.' = '.$val);
-				}
-			}
-		}
+            foreach ($filters as $field => $val) {
+                if ($field != 'offset' && $field != 'limit') {
+                    $query->andwhere($field . ' = ' . $val);
+                }
+            }
+        }
         //$query->where('status=:status', [':status' => $status]);
-        if(isset($filters['offset']) && $filters['offset'])
+        if (isset($filters['offset']) && $filters['offset'])
             $query->offset($filters['offset']);
 
-        if(isset($filters['limit']) && $filters['limit'])
+        if (isset($filters['limit']) && $filters['limit'])
             $query->limit($filters['limit']);
 
         return $query;
     }
-	public function saveData()
+
+    public function saveData()
     {
         return $this->obj->save();
     }
 
-	public function setData($data = array(), $id = null)
+    public function setData($data = array(), $id = null)
     {
         $obj = new Sdptd04denpyosagyo();
-        if($id) {
-			$obj = static::findOne($id);
-		}
+        if ($id) {
+            $obj = static::findOne($id);
+        }
 
-		$obj->attributes = $data;
-        foreach($obj->attributes as $k => $v){
+        $obj->attributes = $data;
+        foreach ($obj->attributes as $k => $v) {
             $obj->{$k} = trim($v) != '' ? trim($v) : null;
         }
 
         $this->obj = $obj;
     }
 
-	public function getData($filters = array(), $select = '*')
+    public function getData($filters = array(), $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('M03_KIND_COM_NO ASC');
         return $query->all();
     }
 
-	public function coutData($filters) {
-		$query = $this->getWhere($filters);
-		return $query->count();
-	}
+    public function coutData($filters)
+    {
+        $query = $this->getWhere($filters);
+        return $query->count();
+    }
 }

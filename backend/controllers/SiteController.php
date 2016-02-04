@@ -83,7 +83,7 @@ class SiteController extends WsController
 
         $member_card = Yii::$app->request->post('card_number', '');
         $member_birthday = Yii::$app->request->post('member_birthday', '');
-        $member_kaiinKana = preg_replace('/\s+/', '', Yii::$app->request->post('member_kaiinKana', ''));
+        $member_kaiinKana =  preg_replace(array('/\s/', '/\s+/'), '', Yii::$app->request->post('member_kaiinKana', ''));
         $member_tel = Yii::$app->request->post('member_tel', '');
         $license_plates = Yii::$app->request->post('license_plates', '');
 
@@ -104,6 +104,7 @@ class SiteController extends WsController
         if (! isset($member_info['member_kaiinCd'])) {
             $flag = false;
         } else {
+            $member_info['member_kaiinKana'] = preg_replace(array('/\s/', '/\s+/'), '', $member_info['member_kaiinKana']);//trim whitespace in kaiinKana
             $flag1 = $this->equalArray($array_source, $member_info);
             if ($license_plates != '') {
                 if ($list_info_car = $api->getInfoListCar($member_info['member_kaiinCd'])) {

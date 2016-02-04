@@ -1,5 +1,6 @@
 <?php
 namespace app\models;
+
 use Yii;
 use yii\db\Query;
 
@@ -65,7 +66,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
         ];
     }
 
-	private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = array(), $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -84,6 +85,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
 
         return $query;
     }
+
     public function saveData()
     {
         return $this->obj->save();
@@ -108,9 +110,10 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('D05_COM_SEQ ASC');
-		return $query->all();
+        return $query->all();
     }
-	public function saveDataMuti($insertData)
+
+    public function saveDataMuti($insertData)
     {
 
         $columnNameArray = array_keys(current($insertData));
@@ -126,17 +129,17 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
         return $insertCount;
     }
 
-	public function setDataDefault() {
-		$attri = $this->attributeLabels();
-		$data = array();
-		foreach($attri as $key => $val)
-		{
-			$data[$key] = null;
-		}
-		return $data;
-	}
+    public function setDataDefault()
+    {
+        $attri = $this->attributeLabels();
+        $data = array();
+        foreach ($attri as $key => $val) {
+            $data[$key] = null;
+        }
+        return $data;
+    }
 
-	public function deleteData($where)
+    public function deleteData($where)
     {
         if ($where) {
             return Sdptd05denpyocom::deleteAll($where);

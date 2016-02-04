@@ -66,7 +66,6 @@ class confirm
             'startup' => isset($post['startup']) && $post['startup'] ? 1 : 0,
             'status' => isset($post['status']) && $post['status'] ? $post['status'] : 0,
         );
-
         utilities::createFolder('data/confirm/');
         $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));

@@ -3,12 +3,11 @@
         border: 2px solid #000000;
         padding: 5px 10px;
         /*font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro",Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;*/
-        /*font-family: 'Meiryo UI','メイリオ',Verdana,'ＭＳ Ｐゴシック',sans-serif;*/
+        /*font-family: MSGothic;*/
         font-size: 11px!important;
         line-height: 13px;
         letter-spacing: 0px;
         word-spacing: 0px;
-        /*font-size: 12px;*/
     }
     .color-red{
         color: red;
@@ -53,7 +52,7 @@
     }
 </style>
 <div class="box-container">
-    <h2 class="h2 text-center">イヤパンク保証サービス保証書＞</h2>
+    <h2 class="h2 text-center">＜タイヤパンク保証サービス保証書＞</h2>
     <div class="box-border-1">
         <div>【サービス概要】</div>
         <div>宇佐美グループ各販売店で購入されたタイヤが本保証書記載のサービス期間中に所定の損害を被った場合、下記の「宇佐美タイヤパンク保証サービス約款」に基づき、所定

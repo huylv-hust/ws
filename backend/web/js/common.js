@@ -298,8 +298,6 @@ function fncMakeWarranty(){
 }
 
 jQuery.validator.addMethod("hiragana", function(value,element) {
-    return true;
-
     if(value == '') return true;
     if(value.match(/^[あ-ん]+$/)){
         return true;

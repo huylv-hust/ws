@@ -73,9 +73,9 @@
                     <div class="formItem">
                         <label class="titleLabel">作業者名<span class="must">*</span></label>
                         <span class="txtUnit">姓&nbsp;</span>
-                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_SEI', ['class' => 'textForm', 'maxlength' => 30]); ?>
+                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_SEI', ['class' => 'textForm', 'maxlength' => 15]); ?>
                         &nbsp;<span class="txtUnit">名&nbsp;</span>
-                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_MEI', ['class' => 'textForm', 'maxlength' => 30]); ?>
+                        <?= \yii\helpers\Html::activeTextInput($model, 'M08_NAME_MEI', ['class' => 'textForm', 'maxlength' => 15]); ?>
                         <label id="name-error" class="error" for="name"></label>
                     </div>
                     <div class="formItem">

@@ -2,6 +2,7 @@
 
 namespace backend\modules\registworkslip\controllers;
 
+use app\models\Sdptd01customer;
 use Yii;
 use backend\controllers\WsController;
 use backend\components\api;
@@ -21,21 +22,32 @@ class DefaultController extends WsController
 
         $api = new api();
         $uDenpyo = new Udenpyo();
+        $cusObj = new Sdptd01customer();
         $login_info = Yii::$app->session->get('login_info');
         $cookie = \Yii::$app->request->cookies; // get info cus from cookie
         $cusInfo = $cookie->getValue('cus_info', ['type_redirect' => 3]);
+        if ($cusInfo['type_redirect'] == 1) {
+            //Insert db
+            if (count($cusObj->getData(['D01_KAIIN_CD' => $cusInfo['member_kaiinCd']])) == 0) {
+                $dataInsert = $uDenpyo->convertKeyApiDB($cusInfo);
+                $cusObj->setData($dataInsert);
+                $cusObj->saveData();
+            }
+        }
         $custNo = (int)Yii::$app->request->get('custNo');
         $d03DenNo = Yii::$app->request->get('denpyo_no');
+        $addCus = Yii::$app->request->get('addCust');
         $data['d03DenNo'] = $d03DenNo;
-        if (Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost && !$addCus) {
             $denpyoDataPost = [];
             $rs = $this->saveDataDenpyo($d03DenNo, $denpyoDataPost);
 
             if ($rs) {
+                $this->saveCsv($denpyoDataPost);
                 if (isset($denpyoDataPost['checkClickWarranty']) && $denpyoDataPost['checkClickWarranty'] == 1) {
                     $pdf = $this->savePdf($rs, $denpyoDataPost, false);
                 }
-                $this->saveCsv($denpyoDataPost);
+
                 confirm::writeconfirm($denpyoDataPost);
                 Yii::$app->session->setFlash('success', '作業伝票の登録が完了しました。');
                 $this->redirect(\yii\helpers\BaseUrl::base(true) . '/detail-workslip?den_no=' . $rs);
@@ -122,6 +134,7 @@ class DefaultController extends WsController
                 $car = array_pad($car, 5, $carDefault);
             }
         }
+
         $cusInfo['D01_SS_CD'] = $login_info['M50_SS_CD'];
         $data['sagyoCheck'] = $sagyoCheck;
         $ssUser = ['' => ''];
@@ -129,12 +142,10 @@ class DefaultController extends WsController
         $tm08Sagyosya = $uDenpyo->getTm08Sagyosya(['M08_SS_CD' => $d03DenNo ? $denpyo['D03_SS_CD'] : $login_info['M50_SS_CD']]); // 277426 Is login
         if (count($tm08Sagyosya)) {
             foreach ($tm08Sagyosya as $tmp) {
-                $ssUser[$tmp['M08_JYUG_CD']] = $tmp['M08_NAME_MEI'] . $tmp['M08_NAME_SEI'];
+                $ssUser[$tmp['M08_JYUG_CD']] = $tmp['M08_NAME_SEI'] . $tmp['M08_NAME_MEI'];
+                $ssUserDenpyo[$tmp['M08_NAME_SEI'] . '[]' . $tmp['M08_NAME_MEI']] = $tmp['M08_NAME_SEI'] . $tmp['M08_NAME_MEI'];
             }
 
-            foreach ($tm08Sagyosya as $tmp) {
-                $ssUserDenpyo[$tmp['M08_NAME_MEI'] . '[]' . $tmp['M08_NAME_SEI']] = $tmp['M08_NAME_MEI'] . $tmp['M08_NAME_SEI'];
-            }
         }
         $data['pagination'] = new Pagination([
             'totalCount' => $uDenpyo->countDataRecord('tm05Com', []),
@@ -148,7 +159,6 @@ class DefaultController extends WsController
         $data['totalCarOfCus'] = $totalCarOfCus;
         $data['car'] = $car;
         $data['denpyo'] = $denpyo;
-        $data['carSeqUse'] = $uDenpyo->getSeqCarUsed($custNo ? $custNo : $cusInfo['D01_CUST_NO']);
         $data['ssUer'] = $ssUser;
         $data['ssUerDenpyo'] = $ssUserDenpyo;
         $data['tm01Sagyo'] = $tm01Sagyo;
@@ -175,8 +185,8 @@ class DefaultController extends WsController
         $dataDenpyo['D03_SS_CD'] = $dataTemp['D01_SS_CD'];
         if ($dataTemp['D03_TANTO_MEI_D03_TANTO_SEI'] != '') {
             $temTantoMeiSei = explode('[]', $dataTemp['D03_TANTO_MEI_D03_TANTO_SEI']);
-            $dataDenpyo['D03_TANTO_MEI'] = $temTantoMeiSei['0'];
-            $dataDenpyo['D03_TANTO_SEI'] = $temTantoMeiSei['1'];
+            $dataDenpyo['D03_TANTO_SEI'] = $temTantoMeiSei['0'];
+            $dataDenpyo['D03_TANTO_MEI'] = $temTantoMeiSei['1'];
         } else {
             $dataDenpyo['D03_TANTO_MEI'] = '';
             $dataDenpyo['D03_TANTO_SEI'] = '';
@@ -184,8 +194,8 @@ class DefaultController extends WsController
 
         if ($dataTemp['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI'] != '') {
             $temKakuninMeiSei = explode('[]', $dataTemp['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']);
-            $dataDenpyo['D03_KAKUNIN_MEI'] = $temKakuninMeiSei['0'];
-            $dataDenpyo['D03_KAKUNIN_SEI'] = $temKakuninMeiSei['1'];
+            $dataDenpyo['D03_KAKUNIN_SEI'] = $temKakuninMeiSei['0'];
+            $dataDenpyo['D03_KAKUNIN_MEI'] = $temKakuninMeiSei['1'];
         } else {
             $dataDenpyo['D03_KAKUNIN_MEI'] = '';
             $dataDenpyo['D03_KAKUNIN_SEI'] = '';
@@ -261,14 +271,12 @@ class DefaultController extends WsController
 
                 /* Get input date, input user id of denpyo com */
                 $listDenpyoCom = $denpyoCom->getData(['D05_DEN_NO' => $denpyoNo]);
-                if (count($listDenpyoCom)) {
-                    if (count($dataDenpyoCom)) {
-                        foreach ($dataDenpyoCom as $index => $temp) {
-                            foreach ($listDenpyoCom as $index1 => $temp1) {
-                                if ($temp['D05_COM_CD'] == $temp1['D05_COM_CD'] && $temp['D05_NST_CD'] == $temp1['D05_NST_CD'] && $temp['D05_COM_SEQ'] == $temp1['D05_COM_SEQ']) {
-                                    $dataDenpyoCom[$index]['D05_INP_DATE'] = $temp1['D05_INP_DATE'];
-                                    $dataDenpyoCom[$index]['D05_INP_USER_ID'] = $temp1['D05_INP_USER_ID'];
-                                }
+                if (count($listDenpyoCom) && count($dataDenpyoCom)) {
+                    foreach ($dataDenpyoCom as $index => $temp) {
+                        foreach ($listDenpyoCom as $index1 => $temp1) {
+                            if ($temp['D05_COM_CD'] == $temp1['D05_COM_CD'] && $temp['D05_NST_CD'] == $temp1['D05_NST_CD'] && $temp['D05_COM_SEQ'] == $temp1['D05_COM_SEQ']) {
+                                $dataDenpyoCom[$index]['D05_INP_DATE'] = $temp1['D05_INP_DATE'];
+                                $dataDenpyoCom[$index]['D05_INP_USER_ID'] = $temp1['D05_INP_USER_ID'];
                             }
                         }
                     }
@@ -313,11 +321,15 @@ class DefaultController extends WsController
                 $dataApi[$i] = json_decode(base64_decode($tmp['dataCarApiField']), true);
                 $dataApi[$i]['car_gradeNamen'] = isset($tmp['car_gradeNamen']) ? $tmp['car_gradeNamen'] : null;
                 $dataApi[$i]['car_typeNamen'] = isset($tmp['car_typeNamen']) ? $tmp['car_typeNamen'] : null;
-                $dataApi[$i]['car_typeCd'] = isset($tmp['car_typeCd']) ? $tmp['car_typeCd'] : '';
-                $dataApi[$i]['car_gradeCd'] = isset($tmp['car_gradeCd']) ? $tmp['car_gradeCd'] : '';
+                $dataApi[$i]['car_typeCd'] = isset($tmp['D02_TYPE_CD']) ? $tmp['D02_TYPE_CD'] : '';
+                $dataApi[$i]['car_gradeCd'] = isset($tmp['D02_GRADE_CD']) ? $tmp['D02_GRADE_CD'] : '';
                 $dataApi[$i]['car_makerNamen'] = $tmp['car_makerNamen'];
                 $dataApi[$i]['car_modelNamen'] = $tmp['car_modelNamen'];
-                $dataApi[$i]['car_syoNendoInsYmd'] = isset($tmp['car_syoNendoInsYmd']) ? $tmp['car_syoNendoInsYmd'] : '000000';
+                if (isset($tmp['MAKER_CD_OTHER'])) {
+                    $dataApi[$i]['car_carName'] = $tmp['MAKER_CD_OTHER'];
+                }
+
+                $dataApi[$i]['car_syoNendoInsYmd'] = (isset($tmp['D02_SHONENDO_YM']) && $tmp['D02_SHONENDO_YM'] != '') ? $tmp['D02_SHONENDO_YM'] : '000000';
                 $carApi[$i] = $uDenpyo->dbCarApi($tmp);
                 $carApi[$i] = array_merge($carApi[$i], $dataApi[$i]);
                 $carApi[$i]['car_carSeq'] = (string)$i;
@@ -345,14 +357,20 @@ class DefaultController extends WsController
                             $dataInsert[$index][$key] = $val;
                             $dataInsert[$index]['D02_CAR_SEQ'] = ($index + 1);
                         }
+
+                        if ($tmp['D02_MAKER_CD'] == '-1' && isset($tmp['MAKER_CD_OTHER']))
+                            $dataInsert[$index]['D02_CAR_NAMEN'] = $tmp['MAKER_CD_OTHER'];
                     }
                 }
 
-                return $uDenpyo->updateCar($custNo, $dataInsert);
+                return ['result' => (int)$uDenpyo->updateCar($custNo, $dataInsert)];
             }
         }
     }
 
+    /**
+     * @return array
+     */
     public function actionMaker()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -385,12 +403,6 @@ class DefaultController extends WsController
 
         if ($maker_code && $model_code && $level == 2) {
             $list_year = $api::getListYearMonth($maker_code, $model_code);
-            $option = '<option value="0">初度登録年を選択して下さい</option>';
-            if (!isset($list_year['result'])) {
-                $option = str_replace('<option value="0"></option>', '<option value="0">初度登録年を選択して下さい</option>', \Constants::array_to_option($list_year, 'year', 'year'));
-            }
-
-            return new \Response($option, 200, array());
         }
 
         if ($maker_code && $level == 1) {
@@ -404,6 +416,9 @@ class DefaultController extends WsController
         }
     }
 
+    /**
+     * @return array
+     */
     public function actionCus()
     {
 
@@ -415,14 +430,25 @@ class DefaultController extends WsController
         $infoLogin = Yii::$app->session->get('login_info');
         $cusInfo = $cookie->getValue('cus_info', ['type_redirect' => 3]);
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $cusDd = $cusObj->getData(['D01_KAKE_CARD_NO' => $data['D01_KAKE_CARD_NO']]);
+        $usappyId = $request->post('D01_KAIIN_CD');
+        $check = count($cusDd);
+        if ($data['D01_KAKE_CARD_NO'] != '' && $check > 0) {
+            $cusDb = current($cusDd);
+            if ($cusDb['D01_KAIIN_CD'] != $usappyId) {
+                $result = ['kake_card_no_exist' => '1'];
+                return $result;
+            }
+        }
         if ($cusInfo['type_redirect'] == 1) { // Is member
-            $usappyId = $request->post('D01_KAIIN_CD');
             $dataCsApi = array(
                 'member_kaiinName' => $request->post('D01_CUST_NAMEN'),
                 'member_kaiinKana' => $request->post('D01_CUST_NAMEK'),
                 'member_telNo1' => $request->post('D01_TEL_NO'),
                 'member_telNo2' => $request->post('D01_MOBTEL_NO'),
                 'member_address' => $request->post('D01_ADDR'),
+                'member_yuubinBangou' => $request->post('D01_YUBIN_BANGO'),
             );
 
             $res = $api->updateMemberBasic($usappyId, $dataCsApi);
@@ -440,18 +466,12 @@ class DefaultController extends WsController
             $memberInfo['type_redirect'] = 1;
             $result = ['result_api' => (int)$res, 'result_db' => $resDb, 'custNo' => 0];
         } else { // guest insert db or update
-            $data = Yii::$app->request->post();
 
-            if ($data['D01_KAKE_CARD_NO'] != '' && (int)$data['D01_CUST_NO'] == 0 && count($cusObj->getData(['D01_KAKE_CARD_NO' => $data['D01_KAKE_CARD_NO']])) > 0) {
-                $result = ['kake_card_no_exist' => '1'];
-                $memberInfo['type_redirect'] = 3;
-            } else {
-                $cusObj->setData($data, $data['D01_CUST_NO']);
-                $res = $cusObj->saveData();
-                $memberInfo = $cusObj->getData(['D01_CUST_NO' => $data['D01_CUST_NO']]);
-                $memberInfo['type_redirect'] = 3;
-                $result = ['result_db' => $res, 'result_api' => 1, 'custNo' => $data['D01_CUST_NO']];
-            }
+            $cusObj->setData($data, $data['D01_CUST_NO']);
+            $res = $cusObj->saveData();
+            $memberInfo = $cusObj->getData(['D01_CUST_NO' => $data['D01_CUST_NO']]);
+            $memberInfo['type_redirect'] = 3;
+            $result = ['result_db' => $res, 'result_api' => 1, 'custNo' => $data['D01_CUST_NO']];
         }
 
         $cookie = new Cookie([
@@ -480,8 +500,8 @@ class DefaultController extends WsController
         $ssUser['1'] = [];
         if (count($tm08Sagyosya)) {
             foreach ($tm08Sagyosya as $tmp) {
-                $ssUser['0'][$tmp['M08_JYUG_CD']] = $tmp['M08_NAME_MEI'] . $tmp['M08_NAME_SEI'];
-                $ssUser['1'][$tmp['M08_NAME_MEI'] . '[]' . $tmp['M08_NAME_SEI']] = $tmp['M08_NAME_MEI'] . $tmp['M08_NAME_SEI'];
+                $ssUser['0'][$tmp['M08_JYUG_CD']] = $tmp['M08_NAME_SEI'] . $tmp['M08_NAME_MEI'];
+                $ssUser['1'][$tmp['M08_NAME_SEI'] . '[]' . $tmp['M08_NAME_MEI']] = $tmp['M08_NAME_SEI'] . $tmp['M08_NAME_MEI'];
             }
         }
 
@@ -514,6 +534,9 @@ class DefaultController extends WsController
             $dataWarranty['M09_WARRANTY_NO'] = $dataWarranty['M09_WARRANTY_NO'] + 1;
             $dataWarranty['M09_UPD_DATE'] = date('d-M-y');
             $dataWarranty['M09_UPD_USER_ID'] = 'SCRADMIN';
+            if ($dataWarranty['M09_WARRANTY_NO'] == 10000) {
+                $dataWarranty['M09_WARRANTY_NO'] = 1;
+            }
             $tm09Warranty->setData($dataWarranty, $ssCd);
             $res = $tm09Warranty->saveData();
             return ['numberWarrantyNo' => $ssCd . str_pad($dataWarranty['M09_WARRANTY_NO'], 4, '0', STR_PAD_LEFT)];
@@ -635,12 +658,14 @@ class DefaultController extends WsController
 
     public function saveCsv($postData)
     {
+        if (file_exists(getcwd() . '/data/pdf/' . $postData['D03_DEN_NO'] . '.pdf'))
+            return true;
         $totalTaisa = 0;
         $totalSuryo = 0;
         for ($i = 1; $i < 11; ++$i) {
             if ((int)$postData['D05_COM_CD' . $i] && in_array((int)$postData['D05_COM_CD' . $i], range(42000, 42999))) {
-                $totalSuryo += $postData['D05_SURYO'. $i];
-                $totalTaisa = $totalTaisa +1;
+                $totalSuryo += $postData['D05_SURYO' . $i];
+                $totalTaisa = $totalTaisa + 1;
             }
         }
 
@@ -649,7 +674,7 @@ class DefaultController extends WsController
             return \backend\components\csv::writecsv($postData);
         }
 
-        return -1;
+        return \backend\components\csv::deletecsv($postData);
     }
 
 }

@@ -22,7 +22,7 @@
                                 <label for="cardType">カード番号<span class="must">*</span></label>
                             </div>
                             <div class="cell bgGrayTrans">
-                                <input class="borderGreen borderRadius" name="card_number" id="form_card_number" type="text" valid="true">
+                                <input class="borderGreen borderRadius" name="card_number" id="form_card_number" type="text" valid="true" maxlength="16">
                             </div>
                         </div>
                         <div class="row">
@@ -30,7 +30,7 @@
                                 <label for="birthday">生年月日</label>
                             </div>
                             <div class="cell bgGrayTrans">
-                                <input class="borderGreen borderRadius" name="member_birthday" id="form_member_birthday" type="text" style="width:16em;">
+                                <input class="borderGreen borderRadius" name="member_birthday" id="form_member_birthday" type="text" style="width:16em;" maxlength="8">
                             </div>
                         </div>
 
@@ -39,7 +39,7 @@
                                 <label for="car_no">車番</label>
                             </div>
                             <div class="cell bgGrayTrans">
-                                <input class="borderGreen borderRadius" name="license_plates" id="form_license_plates" type="text" style="width:10em;">
+                                <input class="borderGreen borderRadius" name="license_plates" id="form_license_plates" type="text" style="width:10em;" maxlength="4">
                             </div>
                         </div>
                         <div class="row">
@@ -55,7 +55,7 @@
                                 <label for="tel_no">電話番号</label>
                             </div>
                             <div class="cell bgGrayTrans">
-                                <input class="borderGreen borderRadius" name="member_tel" id="form_member_tel" type="text" style="width:16em;" valid="true">
+                                <input class="borderGreen borderRadius" name="member_tel" id="form_member_tel" type="text" style="width:16em;" valid="true" maxlength="11">
                             </div>
                         </div>
 

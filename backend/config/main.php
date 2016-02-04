@@ -53,6 +53,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '/login'       => 'user/login',
+                '/admin/login-puncdata' => 'user/loginadmin',
                 '/timeout'   => 'user/timeout',
                 '/menu'        => 'site/index',
                 '/maintenance' => 'maintenance/default/index',
@@ -67,7 +68,7 @@ return [
                 '/usappy-number-change-confirm' => 'usappynumberchange/default/confirm',
                 '/usappy-number-change-complete' => 'usappynumberchange/default/complete',
                 '/exportpdf' => 'usappynumberchange/default/pdf',
-                '/zipfile' => 'pdf/zipfile/index',
+                '/admin/puncdata' => 'pdf/zipfile/index',
                 '/testapi' => 'usappynumberchange/default/testapi',
                 '/preview' => 'listworkslip/detail/preview',
                 '/preview2' => 'registworkslip/preview/index',

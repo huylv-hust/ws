@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\db\Query;
 use Yii;
 
@@ -23,7 +24,9 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
     {
         return 'SDP_TD04_DENPYO_SAGYO';
     }
-	public $obj;
+
+    public $obj;
+
     /**
      * @inheritdoc
      */
@@ -53,7 +56,7 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         ];
     }
 
-	private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = array(), $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -84,18 +87,16 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
     public function setData($data = array(), $id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
-		$obj = new Sdptd04denpyosagyo();
-		$data['D04_UPD_DATE'] = date('d-M-y');
+        $obj = new Sdptd04denpyosagyo();
+        $data['D04_UPD_DATE'] = date('d-M-y');
         $data['D04_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 
         if ($id) {
             $obj = static::findOne($id);
-        }
-		else
-		{
-			$data['D04_INP_DATE'] = date('d-M-y');
+        } else {
+            $data['D04_INP_DATE'] = date('d-M-y');
             $data['D04_INP_USER_ID'] = $login_info['M50_USER_ID'];
-		}
+        }
 
         $obj->attributes = $data;
         foreach ($obj->attributes as $k => $v) {
@@ -105,7 +106,7 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         $this->obj = $obj;
     }
 
-	public function saveDataMuti($insertData)
+    public function saveDataMuti($insertData)
     {
 
         $columnNameArray = array_keys(current($insertData));

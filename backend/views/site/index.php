@@ -11,8 +11,10 @@
                 <li><a href="<?php echo \yii\helpers\BaseUrl::base(true)?>/list-workslip" class="btnNavBasic iconSearchWork">情報検索</a></li>
                 <li><a href="maintenance" class="btnNavBasic iconMainte">メンテナンス</a></li>
                 <?php $login_info = Yii::$app->session->get('login_info');?>
-                <li><a href="http://220.213.238.88/asbo/?sscode=<?php echo $login_info['M50_SS_CD']?>" class="btnNavOther iconReserve" target="_blank">作業予約管理へ</a></li>
-                <li><a href="http://220.213.238.88/satei/?sscode=<?php echo $login_info['M50_SS_CD']?>" class="btnNavOther iconOldCar" target="_blank">中古車査定サイトへ</a></li>
+                <li><a href="/asbo/?sscode=<?php echo $login_info['M50_SS_CD']?>" class="btnNavOther iconReserve">作業予約管理へ</a></li>
+                <?php if (in_array($login_info['M50_SS_CD'], Yii::$app->params['sateiss'])) { ?>
+                <li><a href="/satei/?sscode=<?php echo $login_info['M50_SS_CD']?>" class="btnNavOther iconOldCar">中古車査定サイトへ</a></li>
+                <?php } ?>
             </ul>
         </nav>
     </article>

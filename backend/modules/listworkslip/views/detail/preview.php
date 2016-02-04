@@ -105,7 +105,7 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">お客様確認</label>
-                        <?php if (isset($detail['D03_KAKUNIN'])) {
+                        <?php if (isset($detail['D03_KAKUNIN']) && $detail['D03_KAKUNIN']) {
                             echo '<p class="txtValue">了承済</p>';
                         } else {
                             echo '<p class="txtValue">未了承</p>';
@@ -160,11 +160,11 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
-                        <p class="txtValue"><?php echo $detail['D03_TANTO_MEI'] .''. $detail['D03_TANTO_SEI']; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] .''. $detail['D03_TANTO_MEI']; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">確認者</label>
-                        <p class="txtValue"><?php echo $detail['D03_KAKUNIN_MEI'] .''. $detail['D03_KAKUNIN_SEI'] ; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] .''. $detail['D03_KAKUNIN_MEI'] ; ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -202,29 +202,33 @@
                         <th>単価</th>
                         <th>金額</th>
                     </tr>
+
                     <?php
-                    foreach ($detail['product'] as $k => $v) {
-                        ?>
-                        <tr class="mini">
-                            <td class="tdLeft"><?php echo $v['D05_COM_CD']; ?></td>
-                            <td class="tdLeft"><?php echo $v['M05_COM_NAMEN']; ?></td>
-                            <td><?php echo $v['D05_SURYO']; ?></td>
-                            <td><?php echo number_format($v['D05_TANKA']); ?>円</td>
-                            <td><?php echo number_format($v['D05_KINGAKU']); ?>円</td>
-                        </tr>
-                    <?php } ?>
+                    for ($k = 0; $k < 10; $k++) {
+                        if (isset($detail['product'][$k])) {
+                            ?>
+                            <tr class="mini">
+                                <td class="tdLeft"><?php echo $detail['product'][$k]['D05_COM_CD']; ?></td>
+                                <td class="tdLeft"><?php echo $detail['product'][$k]['M05_COM_NAMEN']; ?></td>
+                                <td><?php echo $detail['product'][$k]['D05_SURYO']; ?></td>
+                                <td><?php echo isset($detail['product'][$k]['D05_TANKA']) && $detail['product'][$k]['D05_TANKA'] != '' ? number_format($detail['product'][$k]['D05_TANKA']) : ''; ?>円</td>
+                                <td><?php echo isset($detail['product'][$k]['D05_KINGAKU']) && $detail['product'][$k]['D05_KINGAKU'] != '' ? number_format($detail['product'][$k]['D05_KINGAKU']) : ''; ?>円</td>
+                            </tr>
+                        <?php } else { ?>
+                            <tr class="mini">
+                                <td class="tdLeft"></td>
+                                <td class="tdLeft"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        <?php    }} ?>
                     <tr class="mini">
                         <td colspan="3"></td>
                         <th>合計</th>
-                        <td><?php echo number_format($detail['D03_SUM_KINGAKU']); ?>円</td>
+                        <td><?php echo isset($detail['D03_SUM_KINGAKU']) && $detail['D03_SUM_KINGAKU'] != '' ? number_format($detail['D03_SUM_KINGAKU']) : ''; ?>円</td>
                     </tr>
                 </table>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel pFlLeft">備考</label>
-                        <p class="txtValue"><?php echo nl2br($detail['D03_NOTE']); ?></p>
-                    </div>
-                </div>
             </fieldset>
         </section>
         <section class="pContent">
@@ -501,10 +505,10 @@
                     </tr>
                     <tr>
                         <td class="vMiddle"><p
-                                class="txtValue"><?php echo $detail['D03_TANTO_MEI'] . '' . $detail['D03_TANTO_SEI']; ?></p>
+                                class="txtValue"><?php echo $detail['D03_TANTO_SEI'] . '' . $detail['D03_TANTO_MEI']; ?></p>
                         </td>
                         <td class="vMiddle"><p
-                                class="txtValue"><?php echo $detail['D03_KAKUNIN_MEI'] . '' . $detail['D03_KAKUNIN_SEI']; ?></p>
+                                class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] . '' . $detail['D03_KAKUNIN_MEI']; ?></p>
                         </td>
                         <td class="vMiddle"><p
                                 class="txtValue"><?php echo ''; ?></p>

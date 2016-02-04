@@ -185,11 +185,11 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業者</label>
-                        <p class="txtValue"><?php echo $detail['D03_TANTO_MEI'] .''. $detail['D03_TANTO_SEI']; ?></p>
+                        <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] .''. $detail['D03_TANTO_MEI']; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">確認者</label>
-                        <p class="txtValue"><?php echo  $detail['D03_KAKUNIN_MEI'] .''.$detail['D03_KAKUNIN_SEI']; ?></p>
+                        <p class="txtValue"><?php echo  $detail['D03_KAKUNIN_SEI'] .''.$detail['D03_KAKUNIN_MEI']; ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -418,7 +418,7 @@
                             </div>
                             <div class="formItem">
                                 <label class="titleLabel">参考価格</label>
-                                <p class="txtValue"><?php echo number_format($v['M05_LIST_PRICE']); ?></p>
+                                <p class="txtValue"><?php echo isset($v['M05_LIST_PRICE']) && $v['M05_LIST_PRICE'] != '' ? number_format($v['M05_LIST_PRICE']) :''; ?></p>
                             </div>
                         </div>
                         <div class="formGroup">
@@ -428,11 +428,11 @@
                             </div>
                             <div class="formItem">
                                 <label class="titleLabel">単価</label>
-                                <p class="txtValue"><?php echo number_format($v['D05_TANKA']); ?><span class="txtUnit">円</span></p>
+                                <p class="txtValue"><?php echo isset($v['D05_TANKA']) && $v['D05_TANKA'] != '' ? number_format($v['D05_TANKA']) : ''; ?><span class="txtUnit">円</span></p>
                             </div>
                             <div class="formItem">
                                 <label class="titleLabel">金額</label>
-                                <p class="txtValue"><?php echo number_format($v['D05_KINGAKU']); ?><span class="txtUnit">円</span></p>
+                                <p class="txtValue"><?php echo isset($v['D05_KINGAKU']) && $v['D05_KINGAKU'] != '' ? number_format($v['D05_KINGAKU']) : ''; ?><span class="txtUnit">円</span></p>
                             </div>
                         </div>
                     <?php } ?>
@@ -441,7 +441,7 @@
                     <div class="flexRight">
                         <label class="titleLabelTotal">合計金額</label>
                         <p class="txtValue"><strong
-                                class="totalPrice"><?php echo number_format($detail['D03_SUM_KINGAKU']); ?></strong><span
+                                class="totalPrice"><?php echo isset($detail['D03_SUM_KINGAKU']) && $detail['D03_SUM_KINGAKU'] != '' ? number_format($detail['D03_SUM_KINGAKU']) : ''; ?></strong><span
                                 class="txtUnit">円</span></p>
                     </div>
                 </div>
@@ -522,10 +522,7 @@
                         <p class="txtValue"><?php echo isset($csv['right_front_serial']) ? $csv['right_front_serial'] : '' ?></p>
                     </div>
                     <div class="formItem">
-                        <p class="txtValue"><?php echo isset($csv['right_front_no']) ? $csv['right_front_no'] : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <p class="txtValue"><?php echo $csv['right_front_manu']!='' ? 1 : 0;?></p>
+                        <p class="txtValue"><?php echo isset($csv['right_front_no']) && $csv['right_front_no'] ? $csv['right_front_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
@@ -545,10 +542,7 @@
                         <p class="txtValue"><?php echo isset($csv['left_front_serial']) ? $csv['left_front_serial'] : '' ?></p>
                     </div>
                     <div class="formItem">
-                        <p class="txtValue"><?php echo isset($csv['left_front_no']) ? $csv['left_front_no'] : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <p class="txtValue"><?php echo $csv['left_front_manu']!='' ? 1 : 0; ?></p>
+                        <p class="txtValue"><?php echo isset($csv['left_front_no']) && $csv['left_front_no'] ? $csv['left_front_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
@@ -568,10 +562,7 @@
                         <p class="txtValue"><?php echo isset($csv['right_behind_serial']) ? $csv['right_behind_serial'] : '' ?></p>
                     </div>
                     <div class="formItem">
-                        <p class="txtValue"><?php echo isset($csv['right_behind_no']) ? $csv['right_behind_no'] : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <p class="txtValue"><?php echo $csv['right_behind_manu']!='' ? 1 : 0; ?></p>
+                        <p class="txtValue"><?php echo isset($csv['right_behind_no']) && $csv['right_behind_no'] ? $csv['right_behind_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
@@ -591,10 +582,7 @@
                         <p class="txtValue"><?php echo isset($csv['left_behind_serial']) ? $csv['left_behind_serial'] : '' ?></p>
                     </div>
                     <div class="formItem">
-                        <p class="txtValue"><?php echo isset($csv['left_behind_no']) ? $csv['left_behind_no'] : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <p class="txtValue"><?php echo $csv['left_behind_manu']!='' ? 1 : 0 ?></p>
+                        <p class="txtValue"><?php echo isset($csv['left_behind_no']) && $csv['left_behind_no'] ? $csv['left_behind_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
@@ -614,10 +602,7 @@
                         <p class="txtValue"><?php echo isset($csv['other_a_serial']) ? $csv['other_a_serial'] : '' ?></p>
                     </div>
                     <div class="formItem">
-                        <p class="txtValue"><?php echo isset($csv['other_a_no']) ? $csv['other_a_no'] : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <p class="txtValue"><?php echo $csv['other_a_manu']!='' ? 1 : 0 ?></p>
+                        <p class="txtValue"><?php echo isset($csv['other_a_no']) && $csv['other_a_no'] ? $csv['other_a_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup">
@@ -637,10 +622,7 @@
                         <p class="txtValue"><?php echo isset($csv['other_b_serial']) ? $csv['other_b_serial'] : '' ?></p>
                     </div>
                     <div class="formItem">
-                        <p class="txtValue"><?php echo isset($csv['other_b_no']) ? $csv['other_b_no'] : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <p class="txtValue"><?php echo $csv['other_b_manu']!='' ? 1 : 0 ?></p>
+                        <p class="txtValue"><?php echo isset($csv['other_b_no']) && $csv['other_b_no'] ? $csv['other_b_no'] : '' ?></p>
                     </div>
                 </div>
             </fieldset>

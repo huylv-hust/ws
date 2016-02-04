@@ -1,31 +1,29 @@
-
-<?php $request = Yii::$app->request->post()?>
+<?php $request = Yii::$app->request->post() ?>
 <?php
 
-if(count($request)) {
-    foreach ($cus as $key => $val)
-    {
-        if(isset($request[$key])) {
-            if($key != 'D01_CUST_NAMEN' && $key != 'D01_CUST_NAMEK' && $key != 'D01_NOTE')
+if (count($request)) {
+    foreach ($cus as $key => $val) {
+        if (isset($request[$key])) {
+            if ($key != 'D01_CUST_NAMEN' && $key != 'D01_CUST_NAMEK' && $key != 'D01_NOTE')
                 $cus[$key] = $request[$key];
         }
 
     }
 
     foreach ($confirm as $k => $v) {
-        if(isset($request[$k])) {
+        if (isset($request[$k])) {
             $confirm[$k] = $request[$k];
         }
     }
 
     foreach ($denpyo as $k => $v) {
-        if(isset($request[$k])) {
+        if (isset($request[$k])) {
             $denpyo[$k] = $request[$k];
         }
     }
 
     foreach ($car as $k => $v) {
-        if(isset($request[$k])) {
+        if (isset($request[$k])) {
             $car[$k] = $request[$k];
         }
     }
@@ -40,12 +38,14 @@ if(count($request)) {
             <h2 class="titleContent">作業伝票作成</h2>
             <p class="rightside">受付日 <?php echo date('Y年m月d日'); ?></p>
         </section>
-        <input type="hidden" id="url_action" value="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip?denpyo_no=<?= (int)$d03DenNo ?>">
+        <input type="hidden" id="url_action"
+               value="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip?denpyo_no=<?= (int)$d03DenNo ?>">
         <input type="hidden" name="D03_DEN_NO" id="D03_DEN_NO" value="<?= $d03DenNo ?>"/>
         <input type="hidden" name="D01_CUST_NO" value="<?= $cus['D01_CUST_NO'] ?>" id="D01_CUST_NO"/>
         <input type="hidden" name="WARRANTY_CUST_NAMEN" value="<?= $cus['D01_CUST_NAMEN'] ?>" id="D01_CUST_NAMEN"/>
         <input type="hidden" name="D03_CUST_NO" value="<?= $denpyo['D03_CUST_NO'] ?>" id="D03_CUST_NO"/>
-        <input type="hidden" name="D03_STATUS" value="<?= isset($denpyo['D03_STATUS']) ? $denpyo['D03_STATUS'] : 0?>" id="D03_CUST_NO"/>
+        <input type="hidden" name="D03_STATUS" value="<?= isset($denpyo['D03_STATUS']) ? $denpyo['D03_STATUS'] : 0 ?>"
+               id="D03_CUST_NO"/>
         <article class="container">
             <?php if (isset($errorEditInsert)) { ?>
                 <div class="alert alert-danger">編集が失敗しました。</div>
@@ -86,7 +86,8 @@ if(count($request)) {
                         <div class="formItem">
                             <label class="titleLabel">お名前</label>
                             <p class="txtValue"><?= $cus['D01_CUST_NAMEN'] ?></p>
-                            <input type="hidden" value="<?= $cus['D01_CUST_NAMEN'] ?>" name="D01_CUST_NAMEN">
+                            <input type="hidden" value="<?= $cus['D01_CUST_NAMEN'] ?>" name="D01_CUST_NAMEN"
+                                   maxlength="22">
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">フリガナ</label>
@@ -101,6 +102,10 @@ if(count($request)) {
                             <input type="hidden" value="<?= $cus['D01_NOTE'] ?>" name="D01_NOTE">
                         </div>
                     </div>
+                    <input type="hidden" name="D01_YUBIN_BANGO" value="<?= $cus['D01_YUBIN_BANGO'] ?>">
+                    <input type="hidden" name="D01_ADDR" value="<?= $cus['D01_ADDR'] ?>">
+                    <input type="hidden" name="D01_TEL_NO" value="<?= $cus['D01_TEL_NO'] ?>">
+                    <input type="hidden" name="D01_MOBTEL_NO" value="<?= $cus['D01_MOBTEL_NO'] ?>">
                 </fieldset>
             </section>
             <section class="bgContent">
@@ -111,70 +116,121 @@ if(count($request)) {
                             <a data-toggle="modal" onclick="showSeqCar()" class="onModal" href="#modalEditCar">編集</a>
                         <?php } ?>
                     </div>
+                    <?php
+                    $carHasDenpyo = $car;
+                    if ($d03DenNo) {
+                        $carOfDenpyo = [
+                            'D02_CAR_NAMEN' => $denpyo['D03_CAR_NAMEN'],
+                            'D02_JIKAI_SHAKEN_YM' => $denpyo['D03_JIKAI_SHAKEN_YM'],
+                            'D02_METER_KM' => $denpyo['D03_METER_KM'],
+                            'D02_RIKUUN_NAMEN' => $denpyo['D03_RIKUUN_NAMEN'],
+                            'D02_CAR_ID' => $denpyo['D03_CAR_ID'],
+                            'D02_HIRA' => $denpyo['D03_HIRA'],
+                            'D02_CAR_NO' => $denpyo['D03_CAR_NO'],
+                            'D02_CAR_SEQ' => $denpyo['D03_CAR_SEQ'],
+                            'D02_SELECTED' => 1,
+
+
+                        ];
+                        $tmpCar = [];
+                        foreach ($carHasDenpyo as $row) {
+                            if ($row['D02_CAR_SEQ'] != $denpyo['D03_CAR_SEQ']) {
+                                $tmpCar[] = $row;
+                            }else{
+                                $carOfDenpyo['D02_SYAKEN_CYCLE'] = $row['D02_SYAKEN_CYCLE'];
+                            }
+                        }
+                        array_unshift($tmpCar, $carOfDenpyo);
+                        $carHasDenpyo = $tmpCar;
+
+                    }
+                    ?>
                     <div class="formGroup">
                         <div class="formItem">
                             <label class="titleLabel">今回メンテナンスする車両</label>
                             <select class="selectForm" name="D02_CAR_SEQ_SELECT" id="D02_CAR_SEQ">
                                 <?php
-                                $selected = (int)$denpyo['D03_CAR_SEQ'];
-                                for ($i = 1; $i < $totalCarOfCus + 1; ++$i) {
-                                    if ($i == $selected)
-                                        echo '<option selected="selected" value="' . ($i) . '">' . str_pad($i, 4, '0', STR_PAD_LEFT) . '</option>';
-                                    else
-                                        echo '<option value="' . ($i) . '">' . str_pad($i, 4, '0', STR_PAD_LEFT) . '</option>';
+                                foreach ($carHasDenpyo as $carFirst) {
+                                    if ($carFirst['D02_CAR_NO']) {
+                                        if ($d03DenNo) {
+                                            if (isset($carFirst['D02_CAR_SEQ']))
+                                                echo '<option value="' . $carFirst['D02_CAR_SEQ'] . '">' . $carFirst['D02_CAR_NO'] . '</option>';
+                                            else
+                                                echo '<option value="' . $carFirst['D02_CAR_SEQ'] . '">' . $carFirst['D02_CAR_NO'] . '</option>';
+                                        } else {
+                                            echo '<option value="' . $carFirst['D02_CAR_SEQ'] . '">' . $carFirst['D02_CAR_NO'] . '</option>';
+                                        }
+
+                                    }
                                 }
+
                                 ?>
                             </select>
                         </div>
                         <?php
-                        $k = 1;
-                        $carOrigin = $car;
-                        foreach ($carOrigin as $key => $carFirst) {
-                            ?>
-                            <input type="hidden" name="D02_CAR_NO_<?= $k ?>" value="<?= $carFirst['D02_CAR_NO'] ?>"/>
-                            <input type="hidden" name="D02_CAR_ID_<?= $k ?>" value="<?= $carFirst['D02_CAR_ID'] ?>"/>
-                            <input type="hidden" name="D02_METER_KM_<?= $k ?>"
-                                   value="<?= $carFirst['D02_METER_KM'] ?>"/>
-                            <input type="hidden" name="D02_HIRA_<?= $k ?>" value="<?= $carFirst['D02_HIRA'] ?>"/>
-                            <input type="hidden" name="D02_CAR_NAMEN_<?= $k ?>"
-                                   value="<?= $carFirst['D02_CAR_NAMEN'] ?>"/>
-                            <input type="hidden" name="D02_JIKAI_SHAKEN_YM_<?= $k ?>"
-                                   value="<?= $carFirst['D02_JIKAI_SHAKEN_YM'] ?>"/>
-                            <input type="hidden" name="D02_SYAKEN_CYCLE_<?= $k ?>"
-                                   value="<?= $carFirst['D02_SYAKEN_CYCLE'] ?>"/>
-                            <input type="hidden" name="D02_RIKUUN_NAMEN_<?= $k ?>"
-                                   value="<?= $carFirst['D02_RIKUUN_NAMEN'] ?>"/>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                        function showCar($carFirst,$k)
+                        {
+                            if (isset($carFirst['D02_SELECTED']) || $k == 1)
+                                $class = "show";
+                            else {
+                                $class = "hide";
+                            }
+
+
+                            $prefix = 'D02';
+                            echo '<div class="formItem' . $carFirst['D02_CAR_SEQ'] . '">
+                            <input type="hidden" name="D02_CAR_NO_' . $carFirst['D02_CAR_SEQ'] . '" value="' . $carFirst['D02_CAR_NO'] . '"/>
+                            <input type="hidden" name="D02_CAR_ID_' . $carFirst['D02_CAR_SEQ'] . '" value="' . $carFirst['D02_CAR_ID'] . '"/>
+                            <input type="hidden" name="D02_METER_KM_' . $carFirst['D02_CAR_SEQ'] . '"
+                                   value="' . $carFirst['D02_METER_KM'] . '"/>
+                            <input type="hidden" name="D02_HIRA_' . $carFirst['D02_CAR_SEQ'] . '" value="' . $carFirst['D02_HIRA'] . '"/>
+                            <input type="hidden" name="D02_CAR_NAMEN_' . $carFirst['D02_CAR_SEQ'] . '"
+                                   value="' . $carFirst['D02_CAR_NAMEN'] . '"/>
+                            <input type="hidden" name="D02_JIKAI_SHAKEN_YM_' . $carFirst['D02_CAR_SEQ'] . '"
+                                   value="' . $carFirst['D02_JIKAI_SHAKEN_YM'] . '"/>
+                            <input type="hidden" name="D02_RIKUUN_NAMEN_' . $carFirst['D02_CAR_SEQ'] . '"
+                                   value="' . $carFirst['D02_RIKUUN_NAMEN'] . '"/>
+                            <input type="hidden" name="D02_SYAKEN_CYCLE' . $carFirst['D02_CAR_SEQ'] . '"
+                                   value="' . $carFirst['D02_SYAKEN_CYCLE'] . '"/>
+                                   </div>
+                           <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">車名</label>
-                                <p class="txtValue"><?= $carFirst['D02_CAR_NAMEN'] ?></p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_CAR_NAMEN'] . '</p>
                             </div>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                            <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">車検満了日</label>
-                                <p class="txtValue"><?php echo substr($carFirst['D02_JIKAI_SHAKEN_YM'], 0, 4) . '年' . substr($carFirst['D02_JIKAI_SHAKEN_YM'], 4, 2) . '月' . substr($carFirst['D02_JIKAI_SHAKEN_YM'], 6, 2) ?></p>
+                                <p class="txtValue">' . substr($carFirst[$prefix . '_JIKAI_SHAKEN_YM'], 0, 4) . '年' . substr($carFirst[$prefix . '_JIKAI_SHAKEN_YM'], 4, 2) . '月' . substr($carFirst[$prefix . '_JIKAI_SHAKEN_YM'], 6, 2) . '</p>
                             </div>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                            <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">走行距離</label>
-                                <p class="txtValue"><?= $carFirst['D02_METER_KM'] ?></p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_METER_KM'] . '</p>
                             </div>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                            <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">運輸支局</label>
-                                <p class="txtValue"><?= $carFirst['D02_RIKUUN_NAMEN'] ?></p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_RIKUUN_NAMEN'] . '</p>
                             </div>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                            <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">分類コード</label>
-                                <p class="txtValue"><?= $carFirst['D02_CAR_ID'] ?></p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_CAR_ID'] . '</p>
                             </div>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                            <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">ひらがな</label>
-                                <p class="txtValue"><?= $carFirst['D02_HIRA'] ?></p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_HIRA'] . '</p>
                             </div>
-                            <div class="formItem carDataBasic carDataBasic<?= $k ?>" style="display: none;">
+                            <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">登録番号</label>
-                                <p class="txtValue"><?= $carFirst['D02_CAR_NO'] ?></p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_CAR_NO'] . '</p>
                             </div>
-                            <?php
-                            ++$k;
+                           ';
                         }
+                        $k = 1;
+                        foreach ($carHasDenpyo as $key => $carFirst) {
+                            if ($carFirst['D02_CAR_NO']) {
+                                showCar($carFirst,$k);
+                                ++$k;
+                            }
+                        }
+
                         ?>
                     </div>
                 </fieldset>
@@ -187,7 +243,8 @@ if(count($request)) {
                             <label class="titleLabel">貴重品</label>
                             <div class="radioGroup">
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_KITYOHIN" value="1" id="valuables1" class="radios" <?php if ($denpyo['D03_KITYOHIN'] == 1) echo ' checked' ?>>
+                                    <input type="radio" name="D03_KITYOHIN" value="1" id="valuables1"
+                                           class="radios" <?php if ($denpyo['D03_KITYOHIN'] == 1) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_KITYOHIN'] == 1) echo ' checked' ?>"
                                            for="valuables1">有り</label>
                                 </div>
@@ -219,23 +276,27 @@ if(count($request)) {
                             <label class="titleLabel">精算方法</label>
                             <div class="radioGroup">
                                 <div class="radioItem">
-                                    <input type="radio" value="0" name="D03_SEISAN" id="pays1" class="radios" <?php if(!isset($denpyo['D03_SEISAN']) || ($d03DenNo == 0 || $denpyo['D03_SEISAN'] == 0)) echo 'checked' ?>>
+                                    <input type="radio" value="0" name="D03_SEISAN" id="pays1"
+                                           class="radios" <?php if (!isset($denpyo['D03_SEISAN']) || ($d03DenNo == 0 || $denpyo['D03_SEISAN'] == 0)) echo 'checked' ?>>
                                     <label
                                         class="labelRadios <?php if ($d03DenNo == 0 || $denpyo['D03_SEISAN'] == 0) echo ' checked' ?>"
                                         for="pays1">現金</label>
                                 </div>
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_SEISAN" value="1" id="pays2" class="radios" <?php if ($denpyo['D03_SEISAN'] == 1) echo ' checked' ?>>
+                                    <input type="radio" name="D03_SEISAN" value="1" id="pays2"
+                                           class="radios" <?php if ($denpyo['D03_SEISAN'] == 1) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_SEISAN'] == 1) echo ' checked' ?>"
                                            for="pays2">プリカ</label>
                                 </div>
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_SEISAN" value="2" id="pays3" class="radios" <?php if ($denpyo['D03_SEISAN'] == 2) echo ' checked' ?>>
+                                    <input type="radio" name="D03_SEISAN" value="2" id="pays3"
+                                           class="radios" <?php if ($denpyo['D03_SEISAN'] == 2) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_SEISAN'] == 2) echo ' checked' ?>"
                                            for="pays3">クレジット</label>
                                 </div>
                                 <div class="radioItem">
-                                    <input type="radio" name="D03_SEISAN" value="3" id="pays4" class="radios" <?php if ($denpyo['D03_SEISAN'] == 3) echo ' checked' ?>>
+                                    <input type="radio" name="D03_SEISAN" value="3" id="pays4"
+                                           class="radios" <?php if ($denpyo['D03_SEISAN'] == 3) echo ' checked' ?>>
                                     <label class="labelRadios<?php if ($denpyo['D03_SEISAN'] == 3) echo ' checked' ?>"
                                            for="pays4">掛</label>
                                 </div>
@@ -251,7 +312,8 @@ if(count($request)) {
                     <div class="formGroup">
                         <div class="formItem">
                             <label class="titleLabel">施行日（予約日）<span class="must">*</span></label>
-                            <input maxlength="8" type="text" value="<?php if(isset($_POST['D03_SEKOU_YMD'])) echo $_POST['D03_SEKOU_YMD']; else echo $denpyo['D03_SEKOU_YMD'];?>"
+                            <input maxlength="8" type="text"
+                                   value="<?php if (isset($_POST['D03_SEKOU_YMD'])) echo $_POST['D03_SEKOU_YMD']; else echo $denpyo['D03_SEKOU_YMD']; ?>"
                                    name="D03_SEKOU_YMD"
                                    class="textForm">
                             <span class="txtExample">例)2013年1月30日→20130130</span></div>
@@ -262,7 +324,7 @@ if(count($request)) {
                                 <?php
                                 $hour = (int)date('H');
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_BEGIN_HH'] : $hour;
-                                if(isset($request['D03_AZU_BEGIN_HH'])) $selected = $request['D03_AZU_BEGIN_HH'];
+                                if (isset($request['D03_AZU_BEGIN_HH'])) $selected = $request['D03_AZU_BEGIN_HH'];
                                 for ($i = 0; $i < 24; ++$i) {
                                     if ($i == $selected) {
                                         ?>
@@ -282,7 +344,7 @@ if(count($request)) {
                                 <?php
                                 $mi = (int)date('i') - (int)date('i') % 10;
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_BEGIN_MI'] : $mi;
-                                if(isset($request['D03_AZU_BEGIN_MI'])) $selected = $request['D03_AZU_BEGIN_MI'];
+                                if (isset($request['D03_AZU_BEGIN_MI'])) $selected = $request['D03_AZU_BEGIN_MI'];
                                 for ($i = 0; $i < 60; $i = $i + 10) {
                                     if ($i == $selected) {
                                         ?>
@@ -300,8 +362,8 @@ if(count($request)) {
                                 <?php
                                 $hour = (int)date('H');
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_END_HH'] : ($hour + 1);
-                                if(isset($request['D03_AZU_END_HH'])) $selected = $request['D03_AZU_END_HH'];
-                                if($denpyo['D03_AZU_END_HH']) $selected = $denpyo['D03_AZU_END_HH'];
+                                if (isset($request['D03_AZU_END_HH'])) $selected = $request['D03_AZU_END_HH'];
+                                if ($denpyo['D03_AZU_END_HH']) $selected = $denpyo['D03_AZU_END_HH'];
                                 for ($i = 0; $i < 24; ++$i) {
                                     if ($i == $selected) {
                                         ?>
@@ -320,7 +382,7 @@ if(count($request)) {
                                 <?php
                                 $mi = (int)date('i') - (int)date('i') % 10;
                                 $selected = $d03DenNo ? $denpyo['D03_AZU_END_MI'] : $mi;
-                                if(isset($request['D03_AZU_END_MI'])) $selected = $request['D03_AZU_END_MI'];
+                                if (isset($request['D03_AZU_END_MI'])) $selected = $request['D03_AZU_END_MI'];
                                 for ($i = 0; $i < 60; $i = $i + 10) {
                                     if ($i == $selected) {
                                         ?>
@@ -344,13 +406,13 @@ if(count($request)) {
                         <div class="formItem">
                             <label
                                 class="titleLabel">作業者<?php //echo $denpyo['D03_TANTO_MEI'].$denpyo['D03_TANTO_SEI']; ?></label>
-                            <?= \yii\helpers\Html::dropDownList('D03_TANTO_MEI_D03_TANTO_SEI', isset($request['D03_TANTO_MEI_D03_TANTO_SEI']) ? $request['D03_TANTO_MEI_D03_TANTO_SEI'] : $denpyo['D03_TANTO_MEI'] . '[]' . $denpyo['D03_TANTO_SEI'], $ssUerDenpyo, array('class' => 'selectForm D03_TANTO_MEI_D03_TANTO_SEI', 'id' => 'D03_TANTO_MEI_D03_TANTO_SEI')) ?>
+                            <?= \yii\helpers\Html::dropDownList('D03_TANTO_MEI_D03_TANTO_SEI', isset($request['D03_TANTO_MEI_D03_TANTO_SEI']) ? $request['D03_TANTO_MEI_D03_TANTO_SEI'] : $denpyo['D03_TANTO_SEI'] . '[]' . $denpyo['D03_TANTO_MEI'], $ssUerDenpyo, array('class' => 'selectForm D03_TANTO_MEI_D03_TANTO_SEI', 'id' => 'D03_TANTO_MEI_D03_TANTO_SEI')) ?>
 
                         </div>
                         <div class="formItem">
                             <label
                                 class="titleLabel">確認者<?php //echo $denpyo['D03_KAKUNIN_MEI'].$denpyo['D03_KAKUNIN_SEI'] ?></label>
-                            <?= \yii\helpers\Html::dropDownList('D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', isset($request['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']) ? $request['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI'] :$denpyo['D03_KAKUNIN_MEI'] . '[]' . $denpyo['D03_KAKUNIN_SEI'], $ssUerDenpyo, array('class' => 'selectForm D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', 'id' => 'D03_KAKUNIN_MEI_D03_KAKUNIN_SEI')) ?>
+                            <?= \yii\helpers\Html::dropDownList('D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', isset($request['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI']) ? $request['D03_KAKUNIN_MEI_D03_KAKUNIN_SEI'] : $denpyo['D03_KAKUNIN_SEI'] . '[]' . $denpyo['D03_KAKUNIN_MEI'], $ssUerDenpyo, array('class' => 'selectForm D03_KAKUNIN_MEI_D03_KAKUNIN_SEI', 'id' => 'D03_KAKUNIN_MEI_D03_KAKUNIN_SEI')) ?>
                         </div>
                     </div>
                 </fieldset>
@@ -407,28 +469,32 @@ if(count($request)) {
                                     <div class="itemPrintCheck FR">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" value="1" <?php echo ($confirm['tire_1']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox"
+                                                value="1" <?php echo ($confirm['tire_1']) == 1 ? 'checked' : '' ?>
                                                 name="tire_1">
                                         </label>
                                     </div>
                                     <div class="itemPrintCheck FL">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" value="1" <?php echo ($confirm['tire_2']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox"
+                                                value="1" <?php echo ($confirm['tire_2']) == 1 ? 'checked' : '' ?>
                                                 name="tire_2">
                                         </label>
                                     </div>
                                     <div class="itemPrintCheck RR">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" value="1" <?php echo ($confirm['tire_3']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox"
+                                                value="1" <?php echo ($confirm['tire_3']) == 1 ? 'checked' : '' ?>
                                                 name="tire_3">
                                         </label>
                                     </div>
                                     <div class="itemPrintCheck RL">
                                         <label class="labelPrintCheck">
                                             <input
-                                                type="checkbox" value="1" <?php echo ($confirm['tire_4']) == 1 ? 'checked' : '' ?>
+                                                type="checkbox"
+                                                value="1" <?php echo ($confirm['tire_4']) == 1 ? 'checked' : '' ?>
                                                 name="tire_4">
                                         </label>
                                     </div>
@@ -469,7 +535,8 @@ if(count($request)) {
                                 <div class="checkPrint">
                                     <label class="labelPrintCheck">
                                         <input type="checkbox"
-                                               value="1" <?php echo $confirm['torque'] ? 'checked' : '' ?> name="torque">
+                                               value="1" <?php echo $confirm['torque'] ? 'checked' : '' ?>
+                                               name="torque">
                                         締付</label>
                                 </div>
                             </td>
@@ -621,10 +688,10 @@ if(count($request)) {
                     $k = 1;
                     $showWarranty = false;
                     $disabled = '';
-                    if(file_exists('data/pdf/'.$d03DenNo.'.pdf')) {
+                    if (file_exists('data/pdf/' . $d03DenNo . '.pdf')) {
                         $disabled = 'disabled';
                     }
-                    echo '<input id="check_pdf" type="hidden" value="'.$disabled.'">';
+                    echo '<input id="check_pdf" type="hidden" value="' . $disabled . '">';
                     foreach ($listDenpyoCom as $com) {
 
                         if (in_array((int)$com['D05_COM_CD'], range(42000, 42999))) {
@@ -646,19 +713,24 @@ if(count($request)) {
                                 <?php }
                             } ?>
                             <input name="D05_NST_CD<?= $k ?>" id="nstcd<?= $k ?>" type="hidden"
-                                   value="<?= (isset($request['D05_NST_CD'.$k])) ? $request['D05_NST_CD'.$k] : $com['D05_NST_CD'] ?>"/>
+                                   value="<?= (isset($request['D05_NST_CD' . $k])) ? $request['D05_NST_CD' . $k] : $com['D05_NST_CD'] ?>"/>
                             <input name="D05_COM_CD<?= $k ?>" id="comcd<?= $k ?>" type="hidden" class="D05_COM_CD"
-                                   value="<?= (isset($request['D05_COM_CD'.$k])) ? $request['D05_COM_CD'.$k] : $com['D05_COM_CD'] ?>"/>
-                            <input name="D05_COM_SEQ<?= $k ?>" id="comseq<?= $k ?>" type="hidden" value="<?= (isset($request['D05_COM_SEQ'.$k])) ? $request['D05_COM_SEQ'.$k] : $k ?>">
-                            <input name="LIST_NAME[<?= $k ?>]" id="list<?= $k ?>" type="hidden" value="<?= (isset($request['LIST_NAME'][$k])) ? $request['LIST_NAME'][$k] : (isset($listTm05Edit[$com['D05_COM_CD']]) ? $listTm05Edit[$com['D05_COM_CD']]['M05_COM_NAMEN'] : '')?>"/>
+                                   value="<?= (isset($request['D05_COM_CD' . $k])) ? $request['D05_COM_CD' . $k] : $com['D05_COM_CD'] ?>"/>
+                            <input name="D05_COM_SEQ<?= $k ?>" id="comseq<?= $k ?>" type="hidden"
+                                   value="<?= (isset($request['D05_COM_SEQ' . $k])) ? $request['D05_COM_SEQ' . $k] : $k ?>">
+                            <input name="LIST_NAME[<?= $k ?>]" id="list<?= $k ?>" type="hidden"
+                                   value="<?= (isset($request['LIST_NAME'][$k])) ? $request['LIST_NAME'][$k] : (isset($listTm05Edit[$com['D05_COM_CD']]) ? $listTm05Edit[$com['D05_COM_CD']]['M05_COM_NAMEN'] : '') ?>"/>
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">商品・荷姿コード</label>
-                                    <input <?php if($disabled == 'disabled' && $isTaisa) echo $disabled?> rel="<?= $k ?>" type="text" name="code_search<?= $k ?>"
-                                                                                                          id="code_search<?= $k ?>"
-                                                                                                          maxlength="9" value="<?= (isset($request['code_search'.$k])) ? $request['code_search'.$k] : $com['D05_COM_CD'] . $com['D05_NST_CD'] ?>"
-                                                                                                          class="textForm codeSearchProduct">
-                                    <a onclick="<?php echo ($disabled == '' || $isTaisa == false) ? 'codeSearch('.$k.');' : ''?>" class="btnFormTool openSearchCodeProduct"
+                                    <input <?php if ($disabled == 'disabled' && $isTaisa) echo $disabled ?>
+                                        rel="<?= $k ?>" type="text" name="code_search<?= $k ?>"
+                                        id="code_search<?= $k ?>"
+                                        maxlength="9"
+                                        value="<?= (isset($request['code_search' . $k])) ? $request['code_search' . $k] : $com['D05_COM_CD'] . $com['D05_NST_CD'] ?>"
+                                        class="textForm codeSearchProduct">
+                                    <a onclick="<?php echo ($disabled == '' || $isTaisa == false) ? 'codeSearch(' . $k . ');' : '' ?>"
+                                       class="btnFormTool openSearchCodeProduct"
                                        style="cursor: pointer" rel="<?= $k ?>">コード一覧から選択</a></div>
                                 <div class="formItem">
                                     <label class="titleLabel">品名</label>
@@ -674,21 +746,25 @@ if(count($request)) {
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">数量</label>
-                                    <input maxlength="5" type="text" value="<?= (isset($request['D05_SURYO'.$k])) ? $request['D05_SURYO'.$k] : $com['D05_SURYO'] ?>"
+                                    <input maxlength="5" type="text"
+                                           value="<?= (isset($request['D05_SURYO' . $k])) ? $request['D05_SURYO' . $k] : $com['D05_SURYO'] ?>"
                                            name="D05_SURYO<?= $k ?>" rel="<?= $k ?>" id="no_<?= $k ?>"
-                                           class="textForm noProduct <?php if($disabled == 'disabled' && $isTaisa) echo 'no_event'?>">
+                                           class="textForm noProduct <?php if ($disabled == 'disabled' && $isTaisa) echo 'no_event' ?>">
                                 </div>
                                 <div class="formItem">
                                     <label class="titleLabel">単価</label>
                                     <input maxlength="10" type="text" name="D05_TANKA<?= $k ?>" rel="<?= $k ?>"
-                                           id="price_<?= $k ?>" value="<?= (isset($request['D05_TANKA'.$k])) ? $request['D05_TANKA'.$k] : $com['D05_TANKA'] ?>"
-                                           class="textForm priceProduct <?php if($disabled == 'disabled' && $isTaisa) echo 'no_event'?>">
+                                           id="price_<?= $k ?>"
+                                           value="<?= (isset($request['D05_TANKA' . $k])) ? $request['D05_TANKA' . $k] : $com['D05_TANKA'] ?>"
+                                           class="textForm priceProduct <?php if ($disabled == 'disabled' && $isTaisa) echo 'no_event' ?>">
                                     <span class="txtUnit">円</span></div>
                                 <div class="formItem">
                                     <label class="titleLabel">金額</label>
 
-                                    <input maxlength="10" type="text" name="D05_KINGAKU<?= $k ?>" rel="<?= $k ?>" id="total_<?= $k ?>"
-                                           value="<?= (isset($request['D05_KINGAKU'.$k])) ? $request['D05_KINGAKU'.$k] : $com['D05_KINGAKU'] ?>" class="textForm totalPriceProduct <?php if($disabled == 'disabled' && $isTaisa) echo 'no_event'?>">
+                                    <input maxlength="10" type="text" name="D05_KINGAKU<?= $k ?>" rel="<?= $k ?>"
+                                           id="total_<?= $k ?>"
+                                           value="<?= (isset($request['D05_KINGAKU' . $k])) ? $request['D05_KINGAKU' . $k] : $com['D05_KINGAKU'] ?>"
+                                           class="textForm totalPriceProduct <?php if ($disabled == 'disabled' && $isTaisa) echo 'no_event' ?>">
                                     <span class="txtUnit">円</span></div>
                             </div>
                         </div>
@@ -703,7 +779,8 @@ if(count($request)) {
                             <p class="txtValue" style="position: relative"><strong class="totalPrice"
                                                                                    id="totalPrice"><?= $denpyo['D03_SUM_KINGAKU'] ?></strong><span
                                     class="txtUnit">円</span>
-                                <input maxlength="10" type="hidden" id="D03_SUM_KINGAKU"  value="<?= $denpyo['D03_SUM_KINGAKU'] ?>" name="D03_SUM_KINGAKU"/>
+                                <input maxlength="10" type="hidden" id="D03_SUM_KINGAKU"
+                                       value="<?= $denpyo['D03_SUM_KINGAKU'] ?>" name="D03_SUM_KINGAKU"/>
                             </p>
                         </div>
                     </div>
@@ -738,7 +815,8 @@ if(count($request)) {
                     <div class="formGroup">
                         <div class="formItem">
                             <label class="titleLabel">POS伝票番号</label>
-                            <textarea class="textarea" name="D03_POS_DEN_NO"><?= $denpyo['D03_POS_DEN_NO'] ?></textarea>
+                            <textarea class="textarea" name="D03_POS_DEN_NO"
+                                      maxlength="50"><?= $denpyo['D03_POS_DEN_NO'] ?></textarea>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">備考</label>
@@ -760,7 +838,8 @@ if(count($request)) {
                                 <div class="checkItem">
                                     <input type="checkbox" name="warranty_check" <?= $ck ?> value="1" id="checkWarranty"
                                            style="display: none;">
-                                    <label class="labelSingleCheck <?= $class ?>" <?= $style1 ?> id="checkWarranty_label"
+                                    <label class="labelSingleCheck <?= $class ?>" <?= $style1 ?>
+                                           id="checkWarranty_label"
                                            for="checkWarranty">保証書を作成する</label>
                                 </div>
                             </div>
@@ -768,18 +847,18 @@ if(count($request)) {
                         <div class="formItem">
                             <label class="titleLabel">保証書番号</label>
 
-                           <p class="txtValue toggleWarranty"
+                            <p class="txtValue toggleWarranty"
                                id="warrantyNo" <?= $style ?>><?php echo $csv['M09_WARRANTY_NO'] ?></p>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">購入日</label>
-                            <p class="txtValue toggleWarranty" <?= $style ?>><?php if ($csv['M09_INP_DATE']) echo Yii::$app->formatter->asDate(date('d-M-y', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd日');
+                            <p class="txtValue toggleWarranty" <?= $style ?>><?php if ($csv['M09_INP_DATE']) echo Yii::$app->formatter->asDate(date('Y/m/d', strtotime($csv['M09_INP_DATE'])), 'yyyy年MM月dd日');
                                 else echo date('Y年m月d日') ?></p>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">保証期間</label>
                             <p class="txtValue toggleWarranty" id="toggleWarranty" <?= $style ?>>
-                                <?php if ($csv['warranty_period']) echo Yii::$app->formatter->asDate(date('d-M-y', strtotime($csv['warranty_period'])), 'yyyy年MM月dd日');
+                                <?php if ($csv['warranty_period']) echo Yii::$app->formatter->asDate(date('Y/m/d', strtotime($csv['warranty_period'])), 'yyyy年MM月dd日');
                                 else echo date('Y年m月d日', strtotime('+ 6 month')); ?>
                                 <input type="hidden" value="0" name="checkClickWarranty" id="checkClickWarranty"/>
 
@@ -787,10 +866,10 @@ if(count($request)) {
                                        value="<?php echo $csv['M09_WARRANTY_NO'] ?>"/>
                                 <input type="hidden" name="M09_INP_DATE" id="M09_INP_DATE"
                                        value="<?php if ($csv['M09_INP_DATE']) echo $csv['M09_INP_DATE'];
-                                       else echo date('d-M-y') ?>"/>
+                                       else echo date('Y/m/d') ?>"/>
                                 <input type="hidden" name="warranty_period" id="warranty_period"
                                        value="<?php if ($csv['warranty_period']) echo $csv['warranty_period'];
-                                       else echo date('Ymd', strtotime('+ 6 month')); ?>"/>
+                                       else echo date('Y/m/d', strtotime('+ 6 month')); ?>"/>
                             </p>
                         </div>
                     </div>
@@ -829,12 +908,10 @@ if(count($request)) {
                                     } elseif ($i == 3) {
                                         $name = 'right_behind';
                                         echo '右後';
-                                    }
-                                    elseif ($i == 5) {
+                                    } elseif ($i == 5) {
                                         $name = 'other_a';
                                         echo 'その他A';
-                                    }
-                                    elseif ($i == 6) {
+                                    } elseif ($i == 6) {
                                         $name = 'other_b';
                                         echo 'その他B';
                                     } else {
@@ -861,7 +938,9 @@ if(count($request)) {
                                        id="<?= $name . '_serial' ?>" name="<?= $name . '_serial' ?>">
                             </div>
                             <div class="formItem">
-                                <p class="txtValue number_product"><?php echo $csv[$name . '_manu']!=''? 1 : 0; ?></p>
+                                <p class="txtValue number_product_p"><?php echo $csv[$name . '_manu'] != '' ? 1 : ''; ?></p>
+                                <input type="hidden" value="<?php echo $csv[$name . '_manu'] != '' ? 1 : 0; ?>" class="number_product_hidden"
+                                       id="<?= $name . '_no' ?>" name="<?= $name . '_no' ?>">
                             </div>
                         </div>
                     <?php } ?>
@@ -919,13 +998,13 @@ if(count($request)) {
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">お名前<span class="must">*</span></label>
-                                    <input type="text" value="<?= $cus['D01_CUST_NAMEN'] ?>" class="textForm"
+                                    <input maxlength="22" type="text" value="<?= $cus['D01_CUST_NAMEN'] ?>" class="textForm"
                                            name="D01_CUST_NAMEN">
                                 </div>
                                 <div class="formItem">
                                     <label class="titleLabel">フリガナ<span class="must">*</span></label>
-                                    <input type="text" value="<?= $cus['D01_CUST_NAMEK'] ?>" name="D01_CUST_NAMEK"
-                                           class="textForm">
+                                    <input maxlength="30" type="text" value="<?= $cus['D01_CUST_NAMEK'] ?>" name="D01_CUST_NAMEK"
+                                           class="textForm" id="D01_CUST_NAMEK">
                                 </div>
                                 <div class="formItem">
                                     <label class="titleLabel">掛カード</label>
@@ -937,25 +1016,27 @@ if(count($request)) {
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">郵便番号</label>
-                                    <input maxlength="7" type="text" value="<?= isset($cus['D01_YUBIN_BANGO']) ? $cus['D01_YUBIN_BANGO'] : '' ?>" name="D01_YUBIN_BANGO"
+                                    <input maxlength="7" type="text"
+                                           value="<?= isset($cus['D01_YUBIN_BANGO']) ? $cus['D01_YUBIN_BANGO'] : '' ?>"
+                                           name="D01_YUBIN_BANGO"
                                            class="textForm" id="D01_YUBIN_BANGO">
                                     <a id="btn_get_address" class="btnFormTool" href="javascript:void(0)">住所検索</a></div>
                                 <div class="formItem">
                                     <label class="titleLabel">ご住所</label>
-                                    <input type="text" value="<?= $cus['D01_ADDR'] ?>" name="D01_ADDR" id="D01_ADDR"
+                                    <input maxlength="35" type="text" value="<?= $cus['D01_ADDR'] ?>" name="D01_ADDR" id="D01_ADDR"
                                            class="textForm">
                                 </div>
                             </div>
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">電話番号</label>
-                                    <input type="text" value="<?= $cus['D01_TEL_NO'] ?>" name="D01_TEL_NO"
+                                    <input maxlength="12" type="text" value="<?= $cus['D01_TEL_NO'] ?>" name="D01_TEL_NO"
                                            id="D01_TEL_NO"
                                            class="textForm">
                                 </div>
                                 <div class="formItem">
                                     <label class="titleLabel">携帯電話番号</label>
-                                    <input type="text" value="<?= $cus['D01_MOBTEL_NO'] ?>" id="D01_MOBTEL_NO"
+                                    <input maxlength="12" type="text" value="<?= $cus['D01_MOBTEL_NO'] ?>" id="D01_MOBTEL_NO"
                                            name="D01_MOBTEL_NO" class="textForm">
                                 </div>
                             </div>
@@ -976,7 +1057,7 @@ if(count($request)) {
                                                    value="1" class="checks">
                                             <label id="agreeLabel" class="labelSingleCheck" for="agreeCheck">
                                                 <a target="_blank"
-                                                   href="https://verify-ups.com/sss/pdf/PrivacyPolicy.pdf">プライバシーポリシー</a>に同意する
+                                                   href="<?= \yii\helpers\BaseUrl::base() ?>/assets/PrivacyPolicy.pdf">プライバシーポリシー</a>に同意する
                                             </label>
                                         </div>
                                     </div>
@@ -1012,8 +1093,7 @@ if(count($request)) {
                     use backend\components\Api; ?>
                     <?php
                     $k = 1;
-                    $carOrigin = $car;
-                    foreach ($carOrigin as $carFirst) {
+                    foreach ($car as $carFirst) {
                         if ((int)$carFirst['D02_CAR_SEQ'] == 0) {
                             $class = 'accordion accClose';
                             $label_delete = '追加';
@@ -1054,10 +1134,8 @@ if(count($request)) {
                             <fieldset class="fieldsetRegist">
                                 <div class="accordionHead">
                                     <legend class="titleLegend"><?= $k ?>台目</legend>
-                                    <?php if (!in_array($carFirst['D02_CAR_SEQ'], $carSeqUse)) { ?>
-                                        <a class="toggleAccordion" id="delete<?= $k ?>"
-                                           style="cursor: pointer;"><?= $label_delete ?></a>
-                                    <?php } ?>
+                                    <a class="toggleAccordion" id="delete<?= $k ?>"
+                                       style="cursor: pointer;"><?= $label_delete ?></a>
                                 </div>
                                 <div class="accordionBody">
                                     <div class="formGroup">
@@ -1066,7 +1144,7 @@ if(count($request)) {
                                             <?php
                                             $api = new Api();
                                             $maker = $api->getListMaker();
-                                            $list_maker = ['0' => 'クライスラー・ジープ'];
+                                            $list_maker = [];
                                             $list_grade = ['' => ''];
                                             $list_type = ['' => ''];
                                             $maker_code = 0;
@@ -1074,8 +1152,21 @@ if(count($request)) {
                                                 $list_maker[$mak['maker_code']] = $mak['maker'];
                                             }
 
+                                            $makers = array('' => 'メーカーを選択して下さい','-1' => 'その他');
+                                            static $_GENRE_NAMES = array('1' => '----- 国産車 -----', '2' => '----- 輸入車 -----');
+
+                                            foreach ($list_maker as $maker_value => $value) {
+                                                $genre_code = substr($maker_value, 0, 1);
+                                                if ($genre_code > '2') { $genre_code = '2'; }
+                                                $genre_name = $_GENRE_NAMES[$genre_code];
+                                                if (isset($makers[$genre_name]) == false) {
+                                                    $makers[$genre_name] = array();
+                                                }
+                                                $makers[$genre_name][$maker_value] = $value;
+                                            }
+
                                             $list_model = ['0' => 'ジープ・ラングラーアンリミテッド'];
-                                            if ((int)$carFirst['D02_MAKER_CD']) {
+                                            if ((int)$carFirst['D02_MAKER_CD'] > 0) {
 
                                                 $model = $api->getListModel($carFirst['D02_MAKER_CD']);
                                                 foreach ($model as $mod) {
@@ -1104,7 +1195,18 @@ if(count($request)) {
                                                 }
                                             }
                                             ?>
-                                            <?= \yii\helpers\Html::dropDownList('D02_MAKER_CD', $carFirst['D02_MAKER_CD'], $list_maker, array('class' => 'selectForm D02_MAKER_CD', 'id' => 'D02_MAKER_CD', 'rel' => $k)) ?>
+                                            <?= \yii\helpers\Html::dropDownList('D02_MAKER_CD', $carFirst['D02_MAKER_CD'], $makers, array('class' => 'selectForm D02_MAKER_CD', 'id' => 'D02_MAKER_CD', 'rel' => $k)) ?>
+                                            <?php
+
+                                                if($carFirst['D02_MAKER_CD'] == -1) {
+                                                    if(isset($carFirst['ApiCar']['car_carName']))
+                                                        echo '<input type="text" id="D02_CAR_NAMEN_OTHER" name="D02_CAR_NAMEN_OTHER" value="' . $carFirst['ApiCar']['car_carName'] . '">';
+                                                    else
+                                                        echo '<input type="text" id="D02_CAR_NAMEN_OTHER" name="D02_CAR_NAMEN_OTHER" value="' . $carFirst['D02_CAR_NAMEN'] . '">';
+                                                }
+                                                else
+                                                    echo '<input type="text" id="D02_CAR_NAMEN_OTHER"  name="D02_CAR_NAMEN_OTHER" value="" style="display:none">';
+                                            ?>
                                             <span class="txtExample">例)トヨタ</span>
                                         </div>
                                         <div class="formItem">
@@ -1364,11 +1466,6 @@ if(count($request)) {
         var id = $(this).attr('for');
         $("#" + id).attr('checked', 'checked');
     });
-    $(function () {
-        var carSeq = $("#D02_CAR_SEQ").val();
-        $(".carDataBasic").removeClass('show').addClass('hide');
-        $(".carDataBasic" + carSeq).removeClass('hide').addClass('show');
-    });
     function showSeqCar() {
         var carSeq = $("#D02_CAR_SEQ").val();
         if (carSeq != null) {
@@ -1386,29 +1483,40 @@ if(count($request)) {
 <script>
     $(".D02_MAKER_CD").change(function () {
         var cur = $(this);
-        if ($(this).val() == '0') {
-            $("#car_model_code").html('<option value=""></option>');
-            $("#car_type_code").html('<option value=""></option>');
-            $("#car_grade_code").html('<option value=""></option>');
+        if ($(this).val() == '' || $(this).val() == '-1') {
+            $(cur).parents('section').find('.D02_MODEL_CD').html('<option value="">ジープ・ラングラーアンリミテッド</option>');
+            $(cur).parents('section').find('.D02_TYPE_CD').html('<option value=""></option>');
+            $(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
+            $(cur).parents('section').find('.D02_SHONENDO_YM').val('');
+
+            if($(this).val() == '-1')
+            {
+                $(cur).parents('section').find('[name=D02_CAR_NAMEN_OTHER]').removeAttr('disabled').show();
+            }
+
             return;
         }
+        else {
+            $(cur).parents('section').find('[name=D02_CAR_NAMEN_OTHER]').attr('disabled', 'disabled').hide();
+        }
+
         $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/maker',
             {
                 'car_maker_code': $(this).val(),
                 'level': '1'
             },
             function (data) {
-                var option = '';
+                var option = '<option value="">ジープ・ラングラーアンリミテッド</option>';
                 $.each(data, function (key, value) {
                     option += '<option value="' + key + '">' + value + '</option>';
                 });
                 $(cur).parents('section').find('.D02_MODEL_CD').html(option);
                 $(cur).parents('section').find('.D02_TYPE_CD').html('<option value=""></option>');
                 $(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
-                //$(cur).parent('section').find('.D02_TYPE_CD').html('<option value=""></option>');
             }
         );
     });
+
     $(".D02_MODEL_CD").change(function () {
 
         var cur = $(this);
@@ -1427,13 +1535,37 @@ if(count($request)) {
             },
             function (data) {
 
-                var option = '';
+                var option = '<option value=""></option>';
                 $.each(data, function (key, value) {
                     option += '<option value="' + key + '">' + value + '</option>';
                 });
                 $(cur).parents('section').find('.D02_TYPE_CD').html(option);
                 $(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
             }
+        );
+    });
+    $(".D02_SHONENDO_YM").change(function () {
+        var cur = $(this);
+        var year  = $(this).val();
+        if ( year.length != '6') {
+            $(cur).parents('section').find('.D02_TYPE_CD').html('<option value=""></option>');
+            $(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
+            return;
+        }
+        $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/maker',
+        {
+            'car_maker_code': $(cur).parents('section').find('.D02_MAKER_CD').val(),
+            'car_model_code': $(cur).parents('section').find('.D02_MODEL_CD').val(),
+            'car_year': $(this).val(),
+            'level': '3'
+        },
+        function (data) {
+            var option = '<option value=""></option>';
+            $.each(data, function (key, value) {
+                option += '<option value="' + key + '">' + value + '</option>';
+            });
+            $(cur).parents('section').find('.D02_TYPE_CD').html(option);
+        }
         );
     });
 
@@ -1463,9 +1595,8 @@ if(count($request)) {
     });
 </script>
 <script type="text/javascript">
-    function closePop()
-    {
-        if($('input[name="M05_COM_CD.M05_NST_CD"]').is(':checked')) {
+    function closePop() {
+        if ($('input[name="M05_COM_CD.M05_NST_CD"]').is(':checked')) {
             $("#modalCodeSearch").modal('hide');
         } else {
             alert('商品を選択してください');
@@ -1503,8 +1634,6 @@ if(count($request)) {
             }
         }
     }
-
-
 
 
     $(function () {
@@ -1548,10 +1677,10 @@ if(count($request)) {
                 if (count == 0) {
                     $("#warrantyBox").hide();
                 }
-                $('#nstcd'+index).val('');
-                $('#comcd'+index).val('');
-                $('#comseq'+index).val('');
-                $('#list'+index).val('');
+                $('#nstcd' + index).val('');
+                $('#comcd' + index).val('');
+                $('#comseq' + index).val('');
+                $('#list' + index).val('');
                 return;
             }
             $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/search',
@@ -1593,8 +1722,8 @@ if(count($request)) {
                     'ssCode': member_ssCode
                 },
                 function (data) {
-                    var option0 = '';
-                    var option1 = '';
+                    var option0 = '<option></option>';
+                    var option1 = '<option></option>';
 
                     $.each(data['0'], function (key, value) {
                         option0 += '<option value="' + key + '">' + value + '</option>';
@@ -1610,14 +1739,14 @@ if(count($request)) {
             );
         });
 
-        $('.totalPriceProduct').on('change', function(){
+        $('.totalPriceProduct').on('change', function () {
             var total = 0,
                 sub_price = Number.isInteger(parseInt($(this).val())) ? parseInt($(this).val()) : 0,
                 totalHasVat;
             for (var i = 1; i < 11; ++i) {
                 if ($('#commodity' + i).hasClass('on')) {
                     sub_price = Number.isInteger(parseInt($("#total_" + i).val())) ? parseInt($("#total_" + i).val()) : 0,
-                    total = total + sub_price;
+                        total = total + sub_price;
                 }
             }
             totalHasVat = (total *<?php echo(100 + Yii::$app->params['vat']) ?>) / 100;
@@ -1646,7 +1775,8 @@ if(count($request)) {
 
             for (var i = 1; i < 11; ++i) {
                 if ($('#commodity' + i).hasClass('on')) {
-                    totalPrice = totalPrice + parseInt($("#total_" + i).val());
+                    var sub_total = Number.isInteger(parseInt($("#total_" + i).val())) ? parseInt($("#total_" + i).val()) : 0,
+                    totalPrice = totalPrice + sub_total;
                 }
             }
 
@@ -1713,8 +1843,7 @@ if(count($request)) {
                         'D01_YUBIN_BANGO': $("#modalEditCustomer input[name = D01_YUBIN_BANGO]").val(),
                     },
                     function (data) {
-                        if(data.kake_card_no_exist == 1)
-                        {
+                        if (data.kake_card_no_exist == 1) {
                             $("#updateInfo").html('<div class="alert alert-danger">入力掛カードが存在されてしまいました。</div>');
                             return;
                         }
@@ -1724,7 +1853,7 @@ if(count($request)) {
                                 $("#modalEditCustomer").modal('hide');
                                 if (data.custNo) {
                                     $("#D01_CUST_NO").val(data.custNo);
-                                    $("#login_form").attr('action',"<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip?addCust=true&custNo=" + data.custNo)['0'].submit();
+                                    $("#login_form").attr('action', "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip?addCust=true&custNo=" + data.custNo)['0'].submit();
                                 }
                                 else
                                     window.location.reload(true);
@@ -1749,7 +1878,7 @@ if(count($request)) {
             for (var j = 1; j < 6; ++j) {
                 if ($("#dataCar" + j).hasClass('accOpen')) {
                     string = {
-                        'D02_CUST_NO': $("#dataCar" + j).find("#D02_CUST_NO").val(),
+                        'D02_CUST_NO': $("#D01_CUST_NO").val(),
                         'D02_CAR_SEQ': $("#dataCar" + j).find("#D02_CAR_SEQ").val(),
                         'D02_CAR_NAMEN': $("#dataCar" + j).find("#D02_MODEL_CD option:selected").html(),
                         'D02_JIKAI_SHAKEN_YM': $("#dataCar" + j).find("#D02_JIKAI_SHAKEN_YM").val(),
@@ -1764,6 +1893,7 @@ if(count($request)) {
                         'D02_UPD_DATE': $("#dataCar" + j).find("#D02_UPD_DATE").val(),
                         'D02_UPD_USER_ID': $("#dataCar" + j).find("#D02_UPD_USER_ID").val(),
                         'D02_MAKER_CD': $("#dataCar" + j).find("#D02_MAKER_CD").val(),
+                        'MAKER_CD_OTHER':$("#dataCar" + j).find("#D02_CAR_NAMEN_OTHER").val(),
                         'car_makerNamen': $("#dataCar" + j).find("#D02_MAKER_CD option:selected").html(),
                         'D02_MODEL_CD': $("#dataCar" + j).find("#D02_MODEL_CD").val(),
                         'car_modelNamen': $("#dataCar" + j).find("#D02_MODEL_CD option:selected").html(),
@@ -1778,6 +1908,7 @@ if(count($request)) {
                 }
             }
 
+            var custNo = $("#D01_CUST_NO").val();
             $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/car',
                 {
                     'dataPost': JSON.stringify(arr),
@@ -1790,8 +1921,8 @@ if(count($request)) {
                     if (data.result == '1') {
                         $("#updateCarInfo").html('<div class="alert alert-success">編集が成功しました。</div>');
                         setTimeout(function () {
-                            $("#modalEditCar").modal('hide');
-                            window.location.reload();
+                            $("#D01_CUST_NO").val(custNo);
+                            $("#login_form").attr('action', "<?php echo yii\helpers\BaseUrl::base(true) ?>/regist-workslip?addCust=true&custNo=" + custNo)['0'].submit();
                         }, 1000);
 
                     }

@@ -12,17 +12,17 @@ class utilities
         $ss_address = array();
         $ss_tel = array();
         foreach ($ss as $k => $v) {
-            $all_branch[$v['branch_code']] =  $v['branch_name'];
+            $all_branch[$v['branch_code']] = $v['branch_name'];
             $all_ss[$v['sscode']] = $v['ss_name'];
             $all_ss_branch[$v['sscode']] = $v['branch_code'];
             $all_branch_ss[$v['branch_code']][] = $v['sscode'];
-            $ss_address[$v['sscode']]= $v['address'];
+            $ss_address[$v['sscode']] = $v['address'];
             $ss_tel[$v['sscode']] = $v['tel'];
         }
 
         return [
             'all_ss' => $all_ss,
-            'all_branch' => $all_branch,
+            'all_branch' => \Yii::$app->params['branch'],
             'all_branch_ss' => $all_branch_ss,
             'all_ss_branch' => $all_ss_branch,
             'ss_address' => $ss_address,
@@ -50,6 +50,29 @@ class utilities
         rewind($fp);
         return $fp;
     }
+
+    public static function convertSJIS($file)
+    {
+        $data = file_get_contents($file);
+        if (mb_detect_encoding($data, 'SJIS', true) === false) {
+            $encode_ary = array(
+                'ASCII',
+                'JIS',
+                'eucjp-win',
+                'sjis-win',
+                'EUC-JP',
+                'UTF-8',
+            );
+            $data = mb_convert_encoding($data, 'SJIS', $encode_ary);
+        }
+
+        $fp = tmpfile();
+        fwrite($fp, $data);
+        rewind($fp);
+        return $fp;
+    }
+
+
     /**
      * @inheritdoc
      * delete cookie
@@ -70,9 +93,9 @@ class utilities
         $string_path = explode('/', $path);
         $string = '';
         foreach ($string_path as $k => $v) {
-            $string = $string.'/'.$v;
+            $string = $string . '/' . $v;
             $string = trim($string, '/');
-            if (! is_dir($string)) {
+            if (!is_dir($string)) {
                 mkdir($string);
             }
         }

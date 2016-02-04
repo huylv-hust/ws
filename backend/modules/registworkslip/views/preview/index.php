@@ -69,7 +69,7 @@
                     } else {
                         $D02_CAR_NAMEN = $post['D02_CAR_NAMEN_'.$post['D02_CAR_SEQ_SELECT']];
                         $D02_JIKAI_SHAKEN_YM = $post['D02_JIKAI_SHAKEN_YM_'.$post['D02_CAR_SEQ_SELECT']];
-                        $D02_SYAKEN_CYCLE = $post['D02_SYAKEN_CYCLE_'.$post['D02_CAR_SEQ_SELECT']];
+                        $D02_SYAKEN_CYCLE = $post['D02_SYAKEN_CYCLE'.$post['D02_CAR_SEQ_SELECT']];
                         $D02_METER_KM = $post['D02_METER_KM_'.$post['D02_CAR_SEQ_SELECT']];
                         $D02_RIKUUN_NAMEN = $post['D02_RIKUUN_NAMEN_'.$post['D02_CAR_SEQ_SELECT']];
                         $D02_CAR_ID = $post['D02_CAR_ID_'.$post['D02_CAR_SEQ_SELECT']];
@@ -201,7 +201,7 @@
                                 foreach ($post['M01_SAGYO_NO'] as $k => $v) {
                                     $sagyo .= $job[$v] . '、';
                                 }
-                                echo trim($sagyo, '、');
+                                echo preg_replace('/、$/', '', $sagyo);
                             }
                             ?>
                         </p>
@@ -232,22 +232,24 @@
                             <td class="tdLeft"><?php echo $post['D05_COM_CD'.$k]; ?></td>
                             <td class="tdLeft"><?php echo $post['M05_COM_NAMEN'.$k]; ?></td>
                             <td><?php echo $post['D05_SURYO'.$k]; ?></td>
-                            <td><?php echo number_format($post['D05_TANKA'.$k]); ?>円</td>
-                            <td><?php echo number_format($post['D05_KINGAKU'.$k]); ?>円</td>
+                            <td><?php echo $post['D05_TANKA'.$k] != '' ? number_format($post['D05_TANKA'.$k]) : ''; ?>円</td>
+                            <td><?php echo $post['D05_KINGAKU'.$k] != '' ? number_format($post['D05_KINGAKU'.$k]) : ''; ?>円</td>
                         </tr>
-                    <?php }} ?>
+                    <?php } else { ?>
+                            <tr class="mini">
+                                <td class="tdLeft"></td>
+                                <td class="tdLeft"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        <?php    }} ?>
                     <tr class="mini">
                         <td colspan="3"></td>
                         <th>合計</th>
-                        <td><?php echo number_format($post['D03_SUM_KINGAKU']); ?>円</td>
+                        <td><?php echo $post['D03_SUM_KINGAKU'] != '' ? number_format($post['D03_SUM_KINGAKU']) : ''; ?>円</td>
                     </tr>
                 </table>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel pFlLeft">備考</label>
-                        <p class="txtValue"><?php echo nl2br($post['D03_NOTE']); ?></p>
-                    </div>
-                </div>
             </fieldset>
         </section>
         <section class="pContent">

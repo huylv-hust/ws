@@ -22,10 +22,12 @@ class DetailController extends WsController
     public function actionIndex()
     {
         $api = new api();
+        $data = array();
         $filter['detail_no'] = Yii::$app->request->get('den_no');
         $obj = new Sdptd03denpyo();
         $obj_job = new Sdptm01sagyo();
         $cus = new Sdptd01customer();
+        $car = new Sdptd02car();
 
         $job[''] = '';
         $all_job = $obj_job->getData();
@@ -39,18 +41,28 @@ class DetailController extends WsController
         }
 
         $data['detail'] = $detail[0];
-
-        $cus_infor = $cus->findOne($data['detail']['D03_CUST_NO']);
-        if (isset($cus_infor['D01_KAIIN_CD'])) {
-            $infor = $api->getMemberInfo($cus_infor['D01_KAIIN_CD']);
-            $data['detail']['D01_CUST_NAMEN'] = $infor['member_kaiinName'];
-            $data['detail']['D01_CUST_NAMEK'] = $infor['member_kaiinKana'];
-        }
-
         $data['detail']['D02_SYAKEN_CYCLE'] = $this->getCar([
             'D02_CUST_NO' => $data['detail']['D03_CUST_NO'],
-            'D02_CAR_NO' => $data['detail']['D03_CAR_NO']
+            'D02_CAR_SEQ' => $data['detail']['D03_CAR_SEQ']
         ]);
+
+        $cus_info = $cus->findOne($data['detail']['D03_CUST_NO']);
+        if (isset($cus_info['D01_KAIIN_CD'])) {
+            $info = $api->getMemberInfo($cus_info['D01_KAIIN_CD']);
+            $data['detail']['D01_CUST_NAMEN'] = $info['member_kaiinName'];
+            $data['detail']['D01_CUST_NAMEK'] = $info['member_kaiinKana'];
+        }
+
+        if ($cus_info['D01_KAIIN_CD'] != '') {
+            $car_api = $api->getInfoListCar($cus_info['D01_KAIIN_CD']);
+
+            foreach ($car_api['car_carSeq'] as $k => $v) {
+                if ($v == $data['detail']['D03_CAR_SEQ']) {
+                    $data['detail']['D02_SYAKEN_CYCLE'] = $car_api['car_syakenCycle'][$k];
+                }
+            }
+        }
+
         $data['detail']['sagyo'] = $this->getSagyo($data['detail']['D03_DEN_NO']);
         $data['detail']['product'] = $this->getProduct($data['detail']['D03_DEN_NO']);
 
@@ -143,6 +155,15 @@ class DetailController extends WsController
                 $obj = new Sdptd03denpyo();
                 if ($obj->deleteData(['den_no' => $den_no, 'cus_no' => $cus_no, 'car_no' => $car_no])) {
                     Yii::$app->session->setFlash('success', '伝票No.' . $den_no . 'を削除しました。');
+                    if (file_exists(getcwd() . '/data/csv/' . $den_no . '.csv')) {
+                        unlink(getcwd() . '/data/csv/' . $den_no . '.csv');
+                    }
+                    if (file_exists(getcwd() . '/data/confirm/' . $den_no . '.csv')) {
+                        unlink(getcwd() . '/data/confirm/' . $den_no . '.csv');
+                    }
+                    if (file_exists(getcwd() . '/data/pdf/' . $den_no . '.pdf')) {
+                        unlink(getcwd() . '/data/pdf/' . $den_no . '.pdf');
+                    }
                     $url = Yii::$app->session->has('url_list_workslip') ? Yii::$app->session->get('url_list_workslip') : \yii\helpers\BaseUrl::base(true) . '/list-workslip';
                     return $this->redirect($url);
                 }
@@ -161,10 +182,12 @@ class DetailController extends WsController
         $tel = $branch['ss_tel'];
 
         $api = new api();
-        $filter['detail_no'] = \Yii::$app->request->get('den_no');
+        $data = array();
+        $filter['detail_no'] = Yii::$app->request->get('den_no');
+        $cus = new Sdptd01customer();
         $obj = new Sdptd03denpyo();
         $obj_job = new Sdptm01sagyo();
-        $cus = new Sdptd01customer();
+        $car = new Sdptd02car();
 
         $job[''] = '';
         $all_job = $obj_job->getData();
@@ -178,21 +201,31 @@ class DetailController extends WsController
         }
 
         $data['detail'] = $detail[0];
+        $data['detail']['D02_SYAKEN_CYCLE'] = $this->getCar([
+            'D02_CUST_NO' => $data['detail']['D03_CUST_NO'],
+            'D02_CAR_NO' => $data['detail']['D03_CAR_NO']
+        ]);
+//getCustomer_API
+        $cus_info = $cus->findOne($data['detail']['D03_CUST_NO']);
+        if (isset($cus_info['D01_KAIIN_CD'])) {
+            $info = $api->getMemberInfo($cus_info['D01_KAIIN_CD']);
+            $data['detail']['D01_CUST_NAMEN'] = $info['member_kaiinName'];
+            $data['detail']['D01_CUST_NAMEK'] = $info['member_kaiinKana'];
+        }
+//getCar_API
+        if ($cus_info['D01_KAIIN_CD'] != '') {
+            $car_api = $api->getInfoListCar($cus_info['D01_KAIIN_CD']);
 
-        $cus_infor = $cus->findOne($data['detail']['D03_CUST_NO']);
-        if (isset($cus_infor['D01_KAIIN_CD'])) {
-            $infor = $api->getMemberInfo($cus_infor['D01_KAIIN_CD']);
-            $data['detail']['D01_CUST_NAMEN'] = $infor['member_kaiinName'];
-            $data['detail']['D01_CUST_NAMEK'] = $infor['member_kaiinKana'];
+            foreach ($car_api['car_carSeq'] as $k => $v) {
+                if ($v == $data['detail']['D03_CAR_SEQ']) {
+                    $data['detail']['D02_SYAKEN_CYCLE'] = $car_api['car_syakenCycle'][$k];
+                }
+            }
         }
 
         $data['ss'] = isset($ss[$data['detail']['D03_SS_CD']]) ? $ss[$data['detail']['D03_SS_CD']] : '';
         $data['address'] = isset($address[$data['detail']['D03_SS_CD']]) ? $address[$data['detail']['D03_SS_CD']] : '';
         $data['tel'] = isset($tel[$data['detail']['D03_SS_CD']]) ? $tel[$data['detail']['D03_SS_CD']] : '';
-        $data['detail']['D02_SYAKEN_CYCLE'] = $this->getCar([
-            'D02_CUST_NO' => $data['detail']['D03_CUST_NO'],
-            'D02_CAR_NO' => $data['detail']['D03_CAR_NO']
-        ]);
         $data['detail']['sagyo'] = $this->getSagyo($data['detail']['D03_DEN_NO']);
         $data['detail']['product'] = $this->getProduct($data['detail']['D03_DEN_NO']);
 

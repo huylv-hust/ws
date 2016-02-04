@@ -15,6 +15,38 @@ use app\models\Tm50ssuser;
  */
 class UserController extends Controller
 {
+    /**
+     *Login admin
+     * @author: Dang Bui
+     */
+    public function actionLoginadmin()
+    {
+        $session = \Yii::$app->session;
+        $count = 0;
+        $list_user = Yii::$app->params['admin_user'];
+        if ($user_info = Yii::$app->request->post()) {
+            $id = $user_info['ssid'];
+            $pass = $user_info['password'];
+            foreach ($list_user as $k => $v) {
+                if ($id == $v['ssid'] and $pass == $v['password']) {
+                    $count++;
+                }
+            }
+            if ($count > 0) {
+                Yii::$app->session->set('login_admin_info', ['status' => 'login_success', 'expired' => time() + Yii::$app->params['timeOutLogin']]);
+                $this->redirect(BaseUrl::base(true).'/admin/puncdata');
+            } else {
+                Yii::$app->session->setFlash('error', '入力されたSSＩＤまたはパスワードが正しくありません');
+            }
+        }
+
+        $this->layout = '@backend/views/layouts/blank';
+        return $this->render('login_admin');
+    }
+    /**
+     *Login
+     * @author: Dang Bui
+     */
     public function actionLogin()
     {
         $session = \Yii::$app->session;
@@ -38,7 +70,10 @@ class UserController extends Controller
         $this->layout = '@backend/views/layouts/blank';
         return $this->render('login');
     }
-
+    /**
+     *Logout
+     * @author: Dang Bui
+     */
     public function actionLogout()
     {
         $session = Yii::$app->session;

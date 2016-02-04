@@ -101,7 +101,7 @@ var regist_work = function () {
             end,
             first,
             last;
-        if(count_data <= per_page) total_page = 1;
+        if (count_data <= per_page) total_page = 1;
         else {
             total_page = count_data % per_page > 0 ? parseInt(count_data / per_page) + 1 : count_data / per_page;
         }
@@ -372,7 +372,7 @@ var regist_work = function () {
 
         jQuery.validator.addMethod("check_taisa", function (value, element) {
             var rel = $(element).attr('rel'),
-                val = $('#comcd'+rel).val();
+                val = $('#comcd' + rel).val();
             if ($('#check_pdf').val() == 'disabled' && Number.isInteger(parseInt(val)) && parseInt(val) >= 42000 && parseInt(val) <= 42999) {
                 return false
             }
@@ -412,7 +412,8 @@ var regist_work = function () {
                     date_format: true
                 },
                 D03_POS_DEN_NO: {
-                    pos_den_no: true
+                    pos_den_no: true,
+                    maxlength: 50
                 },
                 D03_KAKUNIN: {
                     required: function () {
@@ -427,24 +428,24 @@ var regist_work = function () {
                 },
                 date_1: {
                     maxlength: 4,
-                    min:0
+                    min: 0
                 },
                 date_2: {
                     maxlength: 2,
-                    min:0
+                    min: 0
                 },
                 date_3: {
                     maxlength: 2,
-                    min:0
+                    min: 0
                 },
                 pressure_front: {
-                    min:0
+                    min: 0
                 },
                 pressure_behind: {
-                    min:0
+                    min: 0
                 },
                 km: {
-                    min:0
+                    min: 0
                 }
             },
             messages: {
@@ -458,6 +459,9 @@ var regist_work = function () {
                 },
                 D02_CAR_SEQ_SELECT: {
                     required: '先に車両情報を作成して下さい。'
+                },
+                D03_POS_DEN_NO: {
+                    maxlength: 'POS伝票番号50桁の数字以内で入力してください。'
                 },
                 D03_SEKOU_YMD: {
                     required: '施行日を入力してください',
@@ -475,27 +479,27 @@ var regist_work = function () {
                 },
                 date_1: {
                     maxlength: '年は4桁の数字以内で入力してください。',
-                    min:'年は0桁の数字以外で入力してください'
+                    min: '年は0桁の数字以外で入力してください'
                 },
                 date_2: {
                     maxlength: '月は2桁の数字以内で入力してください。',
-                    min:'月は0桁の数字以外で入力してください'
+                    min: '月は0桁の数字以外で入力してください'
                 },
                 date_3: {
                     maxlength: '日は2桁の数字以内で入力してください。',
-                    min:'日は0桁の数字以外で入力してください。'
+                    min: '日は0桁の数字以外で入力してください。'
                 },
                 pressure_front: {
-                    min:'前は0桁の数字以外で入力してください。'
+                    min: '前は0桁の数字以外で入力してください。'
                 },
                 pressure_behind: {
-                    min:'後は0桁の数字以外で入力してください。'
+                    min: '後は0桁の数字以外で入力してください。'
                 },
                 km: {
-                    min:'kmは0桁の数字以外で入力してください。'
+                    min: 'kmは0桁の数字以外で入力してください。'
                 }
             },
-            invalidHandler: function() {
+            invalidHandler: function () {
                 var errors = validator.numberOfInvalids();
                 if (errors) {
                     validator.errorList[0].element.focus();
@@ -525,7 +529,7 @@ var regist_work = function () {
             $(this).rules("add", {
                 digits: true,
                 totalPriceProduct: true,
-                maxlength:10,
+                maxlength: 10,
                 messages: {
                     digits: '金額は数字で入力してください',
                     totalPriceProduct: '伝票作業データを更新できませんでした',
@@ -567,7 +571,11 @@ var regist_work = function () {
     };
 
     var convert_zen2han = function () {
-        $('#D01_YUBIN_BANGO , #D01_TEL_NO, #D01_MOBTEL_NO, #D01_KAKE_CARD_NO').on('change', function () {
+        $('#D01_CUST_NAMEK').on('change', function () {
+            utility.toHankakuCase(this);
+        });
+
+        $('#D01_CUST_NAMEK, #D01_YUBIN_BANGO , #D01_TEL_NO, #D01_MOBTEL_NO, #D01_KAKE_CARD_NO').on('change', function () {
             utility.zen2han(this);
         });
 
@@ -608,20 +616,20 @@ var regist_work = function () {
         });
     };
 
-    var get_addr_from_zipcode = function() {
-        $('#btn_get_address').off('click').on('click',function(){
+    var get_addr_from_zipcode = function () {
+        $('#btn_get_address').off('click').on('click', function () {
             var zipcode = $('#D01_YUBIN_BANGO').val();
-            if(zipcode.length != 7) return;
+            if (zipcode.length != 7) return;
             var request = $.ajax({
                 type: 'post',
                 data: {
-                    zipcode : zipcode
+                    zipcode: zipcode
                 },
                 url: baseUrl + '/registworkslip/search/address'
             });
             var response = request.done(function (data) {
                 var html = '';
-                if(data != false) {
+                if (data != false) {
                     html = data[0].prefecture + ' ' + data[0].city + ' ' + data[0].town;
                 }
 
@@ -631,11 +639,16 @@ var regist_work = function () {
     };
 
     //select product_number
-    var change_number_product = function (){
-        $('.select_product').on('change', function(){
-            var number = 0;
-            if ($(this).val())  number = 1;
-            $(this).closest('.lineBottom').find('.number_product').html(number);
+    var change_number_product = function () {
+        $('.select_product').on('change', function () {
+            var number = 0,
+                text = '';
+            if ($(this).val())  {
+                number = 1;
+                text = 1;
+            }
+            $(this).closest('.lineBottom').find('.number_product_hidden').val(number);
+            $(this).closest('.lineBottom').find('.number_product_p').html(text);
         });
     };
 

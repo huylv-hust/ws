@@ -266,6 +266,7 @@ var cardmembers = function(){
     {
         var str = e.value;
         var str = toKatakanaCase(str);
+
         var i, f, c, m, a = [];
 
         m =
@@ -286,6 +287,7 @@ var cardmembers = function(){
         for(i=0,f=str.length;i<f;i++)
         {
             c = str.charCodeAt(i);
+            if(c == '12288') c = '32';
             switch(true)
             {
                 case (c in m):
@@ -309,7 +311,6 @@ var cardmembers = function(){
         };
 
         var string =  String.fromCharCode.apply(null, a);
-
         e.value = string;
     };
 

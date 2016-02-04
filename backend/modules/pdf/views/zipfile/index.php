@@ -36,33 +36,33 @@ AppAsset::register($this);
 </header>
 <main id="contents">
     <article class="container">
-        <form class="pt50" id="form_download_zip" method="get">
+        <form class="pt50" action="<?php echo \yii\helpers\BaseUrl::base(true); ?>/admin/puncdata" id="form_download_zip" method="post">
             <section class="bgContent">
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">保証書作成日</label>
                         <?php
-                            echo Html::dropDownList('start_year', Yii::$app->request->get('start_year'), Yii::$app->params['zippdf']['year'], ['class' => 'selectForm']);
+                            echo Html::dropDownList('start_year', Yii::$app->request->post('start_year'), Yii::$app->params['zippdf']['year'], ['class' => 'selectForm']);
                         ?>
                         <span class="txtUnit">年</span>
                         <?php
-                        echo Html::dropDownList('start_month', Yii::$app->request->get('start_month'), Yii::$app->params['zippdf']['month'], ['class' => 'selectForm']);
+                        echo Html::dropDownList('start_month', Yii::$app->request->post('start_month'), Yii::$app->params['zippdf']['month'], ['class' => 'selectForm']);
                         ?>
                         <span class="txtUnit">月</span>
                         <?php
-                        echo Html::dropDownList('start_day', Yii::$app->request->get('start_day'), Yii::$app->params['zippdf']['day'], ['class' => 'selectForm']);
+                        echo Html::dropDownList('start_day', Yii::$app->request->post('start_day'), Yii::$app->params['zippdf']['day'], ['class' => 'selectForm']);
                         ?>
                         <span class="txtUnit">日〜</span>
                         <?php
-                        echo Html::dropDownList('end_year', Yii::$app->request->get('end_year'), Yii::$app->params['zippdf']['year'], ['class' => 'selectForm']);
+                        echo Html::dropDownList('end_year', Yii::$app->request->post('end_year'), Yii::$app->params['zippdf']['year'], ['class' => 'selectForm']);
                         ?>
                         <span class="txtUnit">年</span>
                         <?php
-                        echo Html::dropDownList('end_month', Yii::$app->request->get('end_month'), Yii::$app->params['zippdf']['month'], ['class' => 'selectForm']);
+                        echo Html::dropDownList('end_month', Yii::$app->request->post('end_month'), Yii::$app->params['zippdf']['month'], ['class' => 'selectForm']);
                         ?>
                         <span class="txtUnit">月</span>
                         <?php
-                        echo Html::dropDownList('end_day', Yii::$app->request->get('end_day'), Yii::$app->params['zippdf']['day'], ['class' => 'selectForm']);
+                        echo Html::dropDownList('end_day', Yii::$app->request->post('end_day'), Yii::$app->params['zippdf']['day'], ['class' => 'selectForm']);
                         ?>
                         <span class="txtUnit">日</span> </div>
                         <input type="hidden" id="form-type-download" name="type-download" value="" />

@@ -91,7 +91,7 @@ AppAsset::register($this);
         </div>
         <?php ActiveForm::end(); ?>
     </div>
-    <script type="text/javascript" src="js/module/login.js"></script>
+    <script type="text/javascript" src="<?php \yii\helpers\BaseUrl::base(true); ?>/js/module/login.js"></script>
 </main>
 <footer id="footer">
     <!-- <div class="toolbar"><a href="#" class="btnBack">戻る</a></div> -->
