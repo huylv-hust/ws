@@ -30,7 +30,7 @@ class PdfController
 
         $stringTarget = Pdfbill::widget($data);
 
-        $pdf = new \mPDF('ja', 'A4', 0, 'DejaVuSansCondensed', '4', '4', '4', '4', '4', '4');
+        $pdf = new \mPDF('ja', 'A4', 0, 'DejaVuSansCondensed', '4', '4', '5', '5', '4', '4');
         $pdf->WriteHTML($stringTarget);
         if ($watermark) {
             $pdf->SetWatermarkImage('../web/img/confidentiality.png', 0.6);
@@ -46,8 +46,9 @@ class PdfController
                 return true;
             }
         } else {
-            $pdf->Output('data/pdf/review.pdf', 'F');
-            return 'data/pdf/review.pdf';
+            utilities::createFolder('data/tmp');
+            $pdf->Output('data/tmp/review.pdf', 'F');
+            return 'data/tmp/review.pdf';
         }
 
     }

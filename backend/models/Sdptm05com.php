@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Exception;
 use yii\db\Query;
 use Yii;
+use common\components\DatabaseLight;
 
 /**
  * This is the model class for table "SDP_TM05_COM".
@@ -207,7 +208,8 @@ class Sdptm05com extends \yii\db\ActiveRecord
      */
     public function saveImport($file)
     {
-        ini_set('memory_limit', '256M');
+        $lightdb = DatabaseLight::singleton();
+
         $login_info = Yii::$app->session->get('login_info');
         $header = fgetcsv($file);
         if (count($header) != 10) {
@@ -217,6 +219,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
         $insert_data = array();
         $count_error_update = 0;
         $count_error_insert = 0;
+
         //update
         $update_data['update'] = " M05_KIND_COM_NO=:M05_KIND_COM_NO, M05_LARGE_COM_NO=:M05_LARGE_COM_NO"
             . ", M05_MIDDLE_COM_NO=:M05_MIDDLE_COM_NO, M05_KIND_DM_NO=:M05_KIND_DM_NO"
@@ -225,59 +228,60 @@ class Sdptm05com extends \yii\db\ActiveRecord
             . ", M05_UPD_USER_ID=:M05_UPD_USER_ID";
         $update_data['where'] = " M05_COM_CD=:M05_COM_CD and M05_NST_CD=:M05_NST_CD";
         $query = 'update ' . self::tableName() . ' set' . $update_data['update'] . ' where ' . $update_data['where'];
-        $update = Yii::$app->db->createCommand($query);
+
+        $sthUpdate = $lightdb->prepare($query);
 
         //insert
         $insert_data['data'] = ":M05_COM_CD,:M05_NST_CD,:M05_KIND_COM_NO,:M05_LARGE_COM_NO,:M05_MIDDLE_COM_NO,:M05_KIND_DM_NO"
             . ",:M05_COM_NAMEN,:M05_LIST_PRICE,:M05_ORDER,:M05_MEMO,:M05_INP_DATE,:M05_INP_USER_ID"
             . ",:M05_UPD_DATE,:M05_UPD_USER_ID";
         $query = "insert into " . self::tableName() . " values (" . $insert_data['data'] . ")";
-        $insert = Yii::$app->db->createCommand($query);
+        $sthInsert = $lightdb->prepare($query);
 
         $savedTraceLevel = Yii::$app->log->traceLevel;
         Yii::$app->log->traceLevel = 0;
 
-        $transaction = $this->getDb()->beginTransaction();
+        $lightdb->begin();
         try {
             while (($data = fgetcsv($file)) !== false) {
                 $this->validateImport($line, $data);
                 if (count($data) == 10) {
                     if ($obj = self::findOne(array('M05_COM_CD' => $data[0], 'M05_NST_CD' => $data[1]))) {
-                        $result = $update
-                            ->bindParam(':M05_KIND_COM_NO', $data[2])
-                            ->bindParam(':M05_LARGE_COM_NO', $data[3])
-                            ->bindParam(':M05_MIDDLE_COM_NO', $data[4])
-                            ->bindParam(':M05_KIND_DM_NO', $data[5])
-                            ->bindParam(':M05_COM_NAMEN', $data[6])
-                            ->bindParam(':M05_LIST_PRICE', $data[7])
-                            ->bindParam(':M05_ORDER', $data[8])
-                            ->bindParam(':M05_MEMO', $data[9])
-                            ->bindParam(':M05_UPD_DATE', date('y-M-d'))
-                            ->bindParam(':M05_UPD_USER_ID', $login_info['M50_USER_ID'])
-                            ->bindParam(':M05_COM_CD', $data[0])
-                            ->bindParam(':M05_NST_CD', $data[1])
-                            ->execute();
+                        $result = $lightdb->execute($sthUpdate, array(
+                            ':M05_KIND_COM_NO' => $data[2],
+                            ':M05_LARGE_COM_NO' => $data[3],
+                            ':M05_MIDDLE_COM_NO' => $data[4],
+                            ':M05_KIND_DM_NO' => $data[5],
+                            ':M05_COM_NAMEN' => $data[6],
+                            ':M05_LIST_PRICE' => $data[7],
+                            ':M05_ORDER' => $data[8],
+                            ':M05_MEMO' => $data[9],
+                            ':M05_UPD_DATE' => date('y-M-d'),
+                            ':M05_UPD_USER_ID' => $login_info['M50_USER_ID'],
+                            ':M05_COM_CD' => $data[0],
+                            ':M05_NST_CD' => $data[1]
+                        ));
                         if (!$result) {
                             $count_error_update++;
                         }
 
                     } else {
-                        $result = $insert
-                            ->bindParam(':M05_COM_CD', $data[0])
-                            ->bindParam(':M05_NST_CD', $data[1])
-                            ->bindParam(':M05_KIND_COM_NO', $data[2])
-                            ->bindParam(':M05_LARGE_COM_NO', $data[3])
-                            ->bindParam(':M05_MIDDLE_COM_NO', $data[4])
-                            ->bindParam(':M05_KIND_DM_NO', $data[5])
-                            ->bindParam(':M05_COM_NAMEN', $data[6])
-                            ->bindParam(':M05_LIST_PRICE', $data[7])
-                            ->bindParam(':M05_ORDER', $data[8])
-                            ->bindParam(':M05_MEMO', $data[9])
-                            ->bindParam(':M05_INP_DATE', date('y-M-d'))
-                            ->bindParam(':M05_INP_USER_ID', $login_info['M50_USER_ID'])
-                            ->bindParam(':M05_UPD_DATE', date('y-M-d'))
-                            ->bindParam(':M05_UPD_USER_ID', $login_info['M50_USER_ID'])
-                            ->execute();
+                        $result = $lightdb->execute($sthInsert, array(
+                            ':M05_COM_CD' => $data[0],
+                            ':M05_NST_CD' => $data[1],
+                            ':M05_KIND_COM_NO' => $data[2],
+                            ':M05_LARGE_COM_NO' => $data[3],
+                            ':M05_MIDDLE_COM_NO' => $data[4],
+                            ':M05_KIND_DM_NO' => $data[5],
+                            ':M05_COM_NAMEN' => $data[6],
+                            ':M05_LIST_PRICE' => $data[7],
+                            ':M05_ORDER' => $data[8],
+                            ':M05_MEMO' => $data[9],
+                            ':M05_INP_DATE' => date('y-M-d'),
+                            ':M05_INP_USER_ID' => $login_info['M50_USER_ID'],
+                            ':M05_UPD_DATE' => date('y-M-d'),
+                            ':M05_UPD_USER_ID' => $login_info['M50_USER_ID']
+                        ));
                         if (!$result) {
                             $count_error_insert++;
                         }
@@ -287,18 +291,18 @@ class Sdptm05com extends \yii\db\ActiveRecord
             }
 
             if ($count_error_update > 0 || $count_error_insert > 0) {
-                $transaction->rollBack();
+                $lightdb->rollback();
                 return array('insert' => false, 'error' => $this->error_import);
             }
 
             if (!empty($this->error_import)) {
-                $transaction->rollBack();
+                $lightdb->rollback();
                 return array('insert' => false, 'error' => $this->error_import);
             }
 
-            $transaction->commit();
+            $lightdb->commit();
         } catch (Exception $e) {
-            $transaction->rollback();
+            $lightdb->rollback();
             $this->error_import[] = 'インポートができません';
             return array('insert' => false, 'error' => $this->error_import);
         }

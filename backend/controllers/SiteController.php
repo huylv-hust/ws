@@ -79,7 +79,7 @@ class SiteController extends WsController
         $array_source = array();
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
-        $type_redirect = Yii::$app->request->post('type_redirect');
+        $type_redirect = 1;//Yii::$app->request->post('type_redirect');
 
         $member_card = Yii::$app->request->post('card_number', '');
         $member_birthday = Yii::$app->request->post('member_birthday', '');
@@ -145,7 +145,7 @@ class SiteController extends WsController
         $flag = false;
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
-        $type_redirect = Yii::$app->request->post('type_redirect');
+        $type_redirect = 2;//Yii::$app->request->post('type_redirect');
         $member_card = Yii::$app->request->post('card_number_auth');
         $customer = new Sdptd01customer();
         $member_info = $customer->getData(['D01_KAKE_CARD_NO' => $member_card]);
@@ -174,7 +174,7 @@ class SiteController extends WsController
         $member_info = array();
         $url_redirect = Yii::$app->request->post('url_redirect');
         $type_redirect = Yii::$app->request->post('type_redirect');
-        $member_info['type_redirect'] = $type_redirect;
+        $member_info['type_redirect'] = 3;
         $cookie = new Cookie([
             'name' => 'cus_info',
             'value' => $member_info

@@ -358,7 +358,7 @@ class DefaultController extends WsController
                             $dataInsert[$index]['D02_CAR_SEQ'] = ($index + 1);
                         }
 
-                        if ($tmp['D02_MAKER_CD'] == '-1' && isset($tmp['MAKER_CD_OTHER']))
+                        if ($tmp['D02_MAKER_CD'] == '-111' && isset($tmp['MAKER_CD_OTHER']))
                             $dataInsert[$index]['D02_CAR_NAMEN'] = $tmp['MAKER_CD_OTHER'];
                     }
                 }
@@ -440,6 +440,14 @@ class DefaultController extends WsController
                 $result = ['kake_card_no_exist' => '1'];
                 return $result;
             }
+			if ($cusInfo['type_redirect'] == 2 && $check > 1){
+                $result = ['kake_card_no_exist' => '1'];
+                return $result;
+			}
+			if ($cusInfo['type_redirect'] == 3 && $check > 0){
+                $result = ['kake_card_no_exist' => '1'];
+                return $result;
+			}
         }
         if ($cusInfo['type_redirect'] == 1) { // Is member
             $dataCsApi = array(

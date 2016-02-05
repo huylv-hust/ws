@@ -34,7 +34,7 @@ class UserController extends Controller
             }
             if ($count > 0) {
                 Yii::$app->session->set('login_admin_info', ['status' => 'login_success', 'expired' => time() + Yii::$app->params['timeOutLogin']]);
-                $this->redirect(BaseUrl::base(true).'/admin/puncdata');
+                $this->redirect(BaseUrl::base(true).'/operator/punc');
             } else {
                 Yii::$app->session->setFlash('error', '入力されたSSＩＤまたはパスワードが正しくありません');
             }

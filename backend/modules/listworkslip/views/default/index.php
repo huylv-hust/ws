@@ -14,9 +14,9 @@
                 <div class="formGroup">
                     <div class="formItem">
                         <label class="titleLabel">施行日（予約日）<span class="must">*</span></label>
-                        <?= yii\helpers\Html::input('text', 'start_time', isset($filters['start_time']) ? $filters['start_time'] : date('Ymd'), ['class' => 'textForm', 'maxlength' => '8', 'id' => 'start_time']) ?>
+                        <?= yii\helpers\Html::input('text', 'start_time', isset($filters['start_time']) ? $filters['start_time'] : date('Ymd'), ['class' => 'textForm dateform', 'maxlength' => '8', 'id' => 'start_time']) ?>
                         <span class="txtUnit">〜</span>
-                        <?= yii\helpers\Html::input('text', 'end_time', isset($filters['end_time']) ? $filters['end_time'] : date('Ymd'), ['class' => 'textForm', 'maxlength' => '8', 'id' => 'end_time']) ?>
+                        <?= yii\helpers\Html::input('text', 'end_time', isset($filters['end_time']) ? $filters['end_time'] : date('Ymd'), ['class' => 'textForm dateform', 'maxlength' => '8', 'id' => 'end_time']) ?>
                         <span class="txtExample">例)YYYYMMDD~YYYYMMDD</span></div>
                 </div>
                 <div class="formGroup">

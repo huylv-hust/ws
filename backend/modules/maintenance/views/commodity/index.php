@@ -7,7 +7,7 @@
         <p class="note">商品を更新する場合は、ファイルを選択して「インポート」ボタンを押してください。<br>
             現在登録済の商品を確認する場合は、「現在の商品リストをダウンロードする」を押してください。</p>
         <?php if (Yii::$app->session->hasFlash('success')) {?>
-        <div class="alert alert-danger">商品リストの取り込みが完了しました。
+        <div class="alert alert-danger">商品リストのインポートが完了しました。
             <button data-dismiss="alert" class="close">×</button>
         </div>
         <?php } ?>
@@ -21,10 +21,17 @@
 
             </div>
         <?php } ?>
+
+        <div class="alert alert-warning" id="loading">
+            <img src="<?php echo \yii\helpers\BaseUrl::base() ?>/img/loading7_light_blue.gif" width="30" height="30">
+            インポート中です。
+            <button data-dismiss="alert" class="close">×</button>
+        </div>
+
             <section class="bgContent">
                 <div class="formGroup">
                     <div class="formItem">
-                        <label class="titleLabel">商品リスト取り込み</label>
+                        <label class="titleLabel">商品リストインポート</label>
                         <input name="commodity" type="file" class="inputFile">
                     </div>
                 </div>
@@ -40,3 +47,9 @@
 </footer>
 </form>
 <script src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/js/module/maintenance.js"></script>
+<script>
+$(function()
+{
+    $('#loading').hide();
+});
+</script>

@@ -15,7 +15,7 @@ class ZipfileController extends Controller
     {
         $session = \Yii::$app->session;
         if (! $session->get('login_admin_info')) {
-            Yii::$app->response->redirect(BaseUrl::base(true).'/admin/login-puncdata');
+            Yii::$app->response->redirect(BaseUrl::base(true).'/operator/login');
             return false;
         }
 
@@ -116,10 +116,12 @@ class ZipfileController extends Controller
         }
         //Add file in zip
         foreach ($arr_file as $k => $v) {
-            $zip->addFile($v);
+            $new_filename = substr($v, strrpos($v, '/') + 1);
+            $zip->addFile($v, $new_filename);
         }
+
         $zip->close();
-        header('Content-disposition: attachment; filename=Article.zip');
+        header('Content-disposition: attachment; filename=Pdf.zip');
         header('Content-type: application/zip');
         readfile($tmp_file);
         unlink($tmp_file);
@@ -149,7 +151,7 @@ class ZipfileController extends Controller
         }
 
         header('Content-Type: text/csv; charset=shift-jis');
-        header('Content-Disposition: attachment; filename=punc_csv_'.date('Ymd').'.csv');
+        header('Content-Disposition: attachment; filename=保証リスト.csv');
         $fp = fopen('php://output', 'w');
         foreach ($csv as $k => $v) {
             $v['1'] = $this->convertToDateFormat($v['1']);
@@ -199,10 +201,17 @@ class ZipfileController extends Controller
                 Yii::$app->session->setFlash('success', 'ＰＤＦファイルを作りました。');
             }
         }
+        //Get date time in select box
+        $yesterday = date("Y-m-d", strtotime("- 1 day"));
+        $year_now = date('Y');
+        $year = date('Y', strtotime($yesterday));
+        $day = date('d', strtotime($yesterday));
+        $month = date('m', strtotime($yesterday));
+        $select_date = array('year_now' => array($year_now - 2 => $year_now - 2, $year_now - 1 => $year_now - 1, $year_now => $year_now), 'year' => $year, 'day' => $day, 'month' => $month);
 
         \Yii::$app->params['titlePage'] = 'パンク保証データダウンロード';
         \Yii::$app->view->title = 'パンク保証データダウンロード';
         $this->layout = '@backend/views/layouts/blank';
-        return $this->render('index');
+        return $this->render('index',array('select_date' => $select_date));
     }
 }

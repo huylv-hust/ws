@@ -338,6 +338,54 @@ var regist_work = function () {
                 }
             });
         });
+
+        $('.D02_CAR_NAMEN_OTHER').each(function () {
+            var rel = $(this).closest('section').attr('rel');
+            $(this).rules("add", {
+                required: function() {
+                    if($('#modal_car section[rel=' + rel + '] #D02_MAKER_CD option:selected').val() == -111) {
+                        return true;
+                    }
+                    return false;
+                },
+                messages: {
+                    required: function () {
+                        return rel + 'メーカーを入力してください';
+                    }
+                }
+            });
+        });
+
+        $('.D02_MAKER_CD').each(function () {
+            var rel = $(this).closest('section').attr('rel');
+            $(this).rules("add", {
+                required: true,
+                messages: {
+                    required: function () {
+                        return rel + 'メーカーを入力してください';
+                    }
+                }
+            });
+        });
+
+        $('.D02_MODEL_CD').each(function () {
+            var rel = $(this).closest('section').attr('rel');
+            $(this).rules("add", {
+                required: function() {
+                    if($('#modal_car section[rel=' + rel + '] #D02_MAKER_CD option:selected').val() == -111) {
+                        return false;
+                    }
+                    return true;
+                },
+                messages: {
+                    required: function () {
+                        return rel + '車名を入力してください';
+                    }
+                }
+            });
+        });
+
+
     };
 
     var validate_workslip = function () {

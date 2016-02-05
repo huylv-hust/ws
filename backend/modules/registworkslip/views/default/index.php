@@ -1,14 +1,8 @@
-<?php $request = Yii::$app->request->post() ?>
+<?php $request = Yii::$app->request->post();
+?>
 <?php
 
 if (count($request)) {
-    foreach ($cus as $key => $val) {
-        if (isset($request[$key])) {
-            if ($key != 'D01_CUST_NAMEN' && $key != 'D01_CUST_NAMEK' && $key != 'D01_NOTE')
-                $cus[$key] = $request[$key];
-        }
-
-    }
 
     foreach ($confirm as $k => $v) {
         if (isset($request[$k])) {
@@ -28,7 +22,6 @@ if (count($request)) {
         }
     }
 }
-
 ?>
 <form id="login_form" method="post"
       action="<?= \yii\helpers\BaseUrl::base(true) ?>/regist-workslip?denpyo_no=<?= (int)$d03DenNo ?>"
@@ -203,7 +196,7 @@ if (count($request)) {
                             </div>
                             <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">走行距離</label>
-                                <p class="txtValue">' . $carFirst[$prefix . '_METER_KM'] . '</p>
+                                <p class="txtValue">' . $carFirst[$prefix . '_METER_KM'] . 'km</p>
                             </div>
                             <div class="formItem carDataBasic carDataBasic' . $carFirst['D02_CAR_SEQ'] . ' ' . $class . '">
                                 <label class="titleLabel">運輸支局</label>
@@ -315,7 +308,7 @@ if (count($request)) {
                             <input maxlength="8" type="text"
                                    value="<?php if (isset($_POST['D03_SEKOU_YMD'])) echo $_POST['D03_SEKOU_YMD']; else echo $denpyo['D03_SEKOU_YMD']; ?>"
                                    name="D03_SEKOU_YMD"
-                                   class="textForm">
+                                   class="textForm dateform">
                             <span class="txtExample">例)2013年1月30日→20130130</span></div>
                         <div class="formItem">
                             <label class="titleLabel">お預かり時間</label>
@@ -1030,7 +1023,7 @@ if (count($request)) {
                             <div class="formGroup">
                                 <div class="formItem">
                                     <label class="titleLabel">電話番号</label>
-                                    <input maxlength="12" type="text" value="<?= $cus['D01_TEL_NO'] ?>" name="D01_TEL_NO"
+                                    <input maxlength="12" type="text" value="<?php if($cus['D01_TEL_NO']) echo $cus['D01_TEL_NO']; ?>" name="D01_TEL_NO"
                                            id="D01_TEL_NO"
                                            class="textForm">
                                 </div>
@@ -1057,7 +1050,7 @@ if (count($request)) {
                                                    value="1" class="checks">
                                             <label id="agreeLabel" class="labelSingleCheck" for="agreeCheck">
                                                 <a target="_blank"
-                                                   href="<?= \yii\helpers\BaseUrl::base() ?>/assets/PrivacyPolicy.pdf">プライバシーポリシー</a>に同意する
+                                                   href="<?= \yii\helpers\BaseUrl::base() ?>/img/PrivacyPolicy.pdf">プライバシーポリシー</a>に同意する
                                             </label>
                                         </div>
                                     </div>
@@ -1152,7 +1145,7 @@ if (count($request)) {
                                                 $list_maker[$mak['maker_code']] = $mak['maker'];
                                             }
 
-                                            $makers = array('' => 'メーカーを選択して下さい','-1' => 'その他');
+                                            $makers = array('' => 'メーカーを選択して下さい','-111' => 'その他');
                                             static $_GENRE_NAMES = array('1' => '----- 国産車 -----', '2' => '----- 輸入車 -----');
 
                                             foreach ($list_maker as $maker_value => $value) {
@@ -1165,7 +1158,7 @@ if (count($request)) {
                                                 $makers[$genre_name][$maker_value] = $value;
                                             }
 
-                                            $list_model = ['0' => 'ジープ・ラングラーアンリミテッド'];
+                                            $list_model = ['' => ''];
                                             if ((int)$carFirst['D02_MAKER_CD'] > 0) {
 
                                                 $model = $api->getListModel($carFirst['D02_MAKER_CD']);
@@ -1195,23 +1188,22 @@ if (count($request)) {
                                                 }
                                             }
                                             ?>
-                                            <?= \yii\helpers\Html::dropDownList('D02_MAKER_CD', $carFirst['D02_MAKER_CD'], $makers, array('class' => 'selectForm D02_MAKER_CD', 'id' => 'D02_MAKER_CD', 'rel' => $k)) ?>
+                                            <?= \yii\helpers\Html::dropDownList('D02_MAKER_CD['.$k.']', $carFirst['D02_MAKER_CD'], $makers, array('class' => 'selectForm D02_MAKER_CD', 'id' => 'D02_MAKER_CD', 'rel' => $k)) ?>
                                             <?php
-
-                                                if($carFirst['D02_MAKER_CD'] == -1) {
+                                                if($carFirst['D02_MAKER_CD'] == '-111') {
                                                     if(isset($carFirst['ApiCar']['car_carName']))
-                                                        echo '<input type="text" id="D02_CAR_NAMEN_OTHER" name="D02_CAR_NAMEN_OTHER" value="' . $carFirst['ApiCar']['car_carName'] . '">';
+                                                        echo '<input type="text" id="D02_CAR_NAMEN_OTHER" name="D02_CAR_NAMEN_OTHER['. $k .']"'. ' class="textForm D02_CAR_NAMEN_OTHER" value="' . $carFirst['ApiCar']['car_carName'] . '">';
                                                     else
-                                                        echo '<input type="text" id="D02_CAR_NAMEN_OTHER" name="D02_CAR_NAMEN_OTHER" value="' . $carFirst['D02_CAR_NAMEN'] . '">';
+                                                        echo '<input type="text" id="D02_CAR_NAMEN_OTHER" name="D02_CAR_NAMEN_OTHER['. $k .']"'. ' class="textForm D02_CAR_NAMEN_OTHER" value="' . $carFirst['D02_CAR_NAMEN'] . '">';
                                                 }
                                                 else
-                                                    echo '<input type="text" id="D02_CAR_NAMEN_OTHER"  name="D02_CAR_NAMEN_OTHER" value="" style="display:none">';
+                                                    echo '<input type="text" id="D02_CAR_NAMEN_OTHER"  name="D02_CAR_NAMEN_OTHER['. $k .']"'. ' class="textForm D02_CAR_NAMEN_OTHER" value="" style="display:none">';
                                             ?>
                                             <span class="txtExample">例)トヨタ</span>
                                         </div>
                                         <div class="formItem">
                                             <label class="titleLabel">車名<span class="must">*</span></label>
-                                            <?= \yii\helpers\Html::dropDownList('D02_MODEL_CD', $carFirst['D02_MODEL_CD'], $list_model, array('class' => 'selectForm D02_MODEL_CD', 'id' => 'D02_MODEL_CD', 'rel' => $k)) ?>
+                                            <?= \yii\helpers\Html::dropDownList('D02_MODEL_CD['.$k.']', $carFirst['D02_MODEL_CD'], $list_model, array('class' => 'selectForm D02_MODEL_CD', 'id' => 'D02_MODEL_CD', 'rel' => $k)) ?>
                                             <span class="txtExample">例)プリウス</span>
                                         </div>
                                     </div>
@@ -1419,9 +1411,12 @@ if (count($request)) {
     $(".btnSubmitDenpyo").click(function () {
         $("#login_form").submit();
     });
-    $(".onPreview").click(function () {
-        $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/pdfview',
-            {
+    $(".onPreview").click(function (e) {
+        var link = window.open("<?php echo yii\helpers\BaseUrl::base(true) ?>/data/tmp/review.pdf");
+        $.ajax({
+            url: '<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/pdfview',
+            type:'post',
+            data: {
                 'D03_SS_CD': $("#D01_SS_CD").val(),
                 'right_front_manu': $("#right_front_manu").val(),
                 'right_front_product': $("#right_front_product").val(),
@@ -1451,12 +1446,13 @@ if (count($request)) {
                 'WARRANTY_CUST_NAMEN': $("#D01_CUST_NAMEN").val(),
                 'D03_CAR_NO': $("input[name =D02_CAR_NO_" + $("#D02_CAR_SEQ").val() + ']').val(),
                 'D03_CAR_NAMEN': $("input[name =D02_CAR_NAMEN_" + $("#D02_CAR_SEQ").val() + ']').val()
-
             },
-            function (data) {
-                window.open("<?php echo yii\helpers\BaseUrl::base(true) ?>/data/pdf/review.pdf", '_blank');
-            }
-        );
+            success: function(data){
+                link.location;
+            },
+            async: false
+        });
+        return false;
     });
     $(".labelRadios").click(function () {
         var id = $(this).attr('for');
@@ -1483,21 +1479,23 @@ if (count($request)) {
 <script>
     $(".D02_MAKER_CD").change(function () {
         var cur = $(this);
-        if ($(this).val() == '' || $(this).val() == '-1') {
-            $(cur).parents('section').find('.D02_MODEL_CD').html('<option value="">ジープ・ラングラーアンリミテッド</option>');
+        if ($(this).val() == '' || $(this).val() == '-111') {
+            $(cur).parents('section').find('.D02_MODEL_CD').html('<option value=""></option>');
             $(cur).parents('section').find('.D02_TYPE_CD').html('<option value=""></option>');
             $(cur).parents('section').find('.D02_GRADE_CD').html('<option value=""></option>');
             $(cur).parents('section').find('.D02_SHONENDO_YM').val('');
 
-            if($(this).val() == '-1')
+            if($(this).val() == '-111')
             {
-                $(cur).parents('section').find('[name=D02_CAR_NAMEN_OTHER]').removeAttr('disabled').show();
+                $(cur).parents('section').find('#D02_CAR_NAMEN_OTHER').removeAttr('disabled').show();
             }
+            else
+                $(cur).parents('section').find('#D02_CAR_NAMEN_OTHER').attr('disabled', 'disabled').hide();
 
             return;
         }
         else {
-            $(cur).parents('section').find('[name=D02_CAR_NAMEN_OTHER]').attr('disabled', 'disabled').hide();
+            $(cur).parents('section').find('#D02_CAR_NAMEN_OTHER').attr('disabled', 'disabled').hide();
         }
 
         $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/maker',
@@ -1506,7 +1504,7 @@ if (count($request)) {
                 'level': '1'
             },
             function (data) {
-                var option = '<option value="">ジープ・ラングラーアンリミテッド</option>';
+                var option = '<option value=""></option>';
                 $.each(data, function (key, value) {
                     option += '<option value="' + key + '">' + value + '</option>';
                 });
@@ -1585,7 +1583,7 @@ if (count($request)) {
             },
             function (data) {
                 //alert(data);
-                var option = '';
+                var option = '<option value=""></option>';
                 $.each(data, function (key, value) {
                     option += '<option value="' + key + '">' + value + '</option>';
                 });
@@ -1642,12 +1640,23 @@ if (count($request)) {
         }
 
         $("#checkWarranty_label").click(function () {
-            var check = $("#checkClickWarranty").val();
+            var check = $("#checkClickWarranty").val(),
+                warranty_no = $("#M09_WARRANTY_NO").val();
             $("#checkWarranty").attr('checked', 'checked');
-            ($(this)).addClass('checked')
-            if (check == '1') {
+            if($(this).hasClass('checked')) {
+                $("#checkWarranty").attr('checked', 'checked');
+                $("#checkClickWarranty").val('1');
+                $("#warrantyNo").html(warranty_no);
+            } else {
+                $("#checkWarranty").removeAttr('checked');
+                $("#checkClickWarranty").val('');
+                $("#warrantyNo").html('');
+            }
+
+            if (warranty_no != '') {
                 return;
             }
+
             $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/warranty',
                 {
                     'ss_cd': $("#D01_SS_CD").val()
@@ -1656,7 +1665,6 @@ if (count($request)) {
                     $("#warrantyNo").html(data.numberWarrantyNo);
                     $("#checkClickWarranty").val('1');
                     $("#M09_WARRANTY_NO").val(data.numberWarrantyNo);
-
                 }
             );
         });

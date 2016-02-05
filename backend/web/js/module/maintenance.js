@@ -103,6 +103,11 @@ var maintenance = function(){
                 commodity: {
                     required: 'required'
                 }
+            },
+            submitHandler: function(form)
+            {
+                $('#loading').show();
+                return true;
             }
         });
     };

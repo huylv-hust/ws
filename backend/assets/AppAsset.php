@@ -19,11 +19,13 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/jquery.sidr.dark.css',
+        'css/jquery-ui.css',
         'css/style.css',
         'font-awesome/css/font-awesome.min.css',
         'css/custom.css'
     ];
     public $js = [
+        'js/jquery-ui.min.js',
         'js/jquery.sidr.min.js',
         'js/bootstrap.min.js',
         'js/jquery.validate.min.js',
