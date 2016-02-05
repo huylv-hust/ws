@@ -113,7 +113,7 @@ return [
             '31' => '31',
         ]
     ],
-    'vat' => 8,
+    'vat' => 0,
     'route_keep_cookie' => [
         'usappynumberchange/default/index',
         'usappynumberchange/default/confirm',

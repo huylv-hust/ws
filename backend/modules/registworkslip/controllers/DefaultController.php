@@ -11,6 +11,7 @@ use app\models\Sdptd03denpyo;
 use app\models\Sdptd01custommerseq;
 use backend\modules\pdf\controllers\PdfController;
 use yii\data\Pagination;
+use yii\helpers\BaseUrl;
 use yii\web\Cookie;
 use backend\components\confirm;
 
@@ -423,11 +424,9 @@ class DefaultController extends WsController
     {
 
         $api = new api();
-        $uDenpyo = new Udenpyo();
         $cusObj = new \app\models\Sdptd01customer();
         $request = Yii::$app->request;
         $cookie = \Yii::$app->request->cookies;
-        $infoLogin = Yii::$app->session->get('login_info');
         $cusInfo = $cookie->getValue('cus_info', ['type_redirect' => 3]);
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->post();
@@ -440,14 +439,27 @@ class DefaultController extends WsController
                 $result = ['kake_card_no_exist' => '1'];
                 return $result;
             }
-			if ($cusInfo['type_redirect'] == 2 && $check > 1){
+            if ($cusInfo['type_redirect'] == 2 && $check > 1) {
                 $result = ['kake_card_no_exist' => '1'];
                 return $result;
-			}
-			if ($cusInfo['type_redirect'] == 3 && $check > 0){
+            }
+            if ($cusInfo['type_redirect'] == 3 && $check > 0) {
+                if (!$data['D01_CUST_NO']) {
+                    $result = ['kake_card_no_exist' => '1'];
+                    return $result;
+                }
+            }
+            if ($check > 1) {
                 $result = ['kake_card_no_exist' => '1'];
                 return $result;
-			}
+            }
+        }
+
+        if ($check == 1 && isset($data['D01_CUST_NO']) &&  $data['D01_CUST_NO']) {
+            if ($cusDd[0]['D01_CUST_NO'] != $data['D01_CUST_NO']) {
+                $result = ['kake_card_no_exist' => '1'];
+                return $result;
+            }
         }
         if ($cusInfo['type_redirect'] == 1) { // Is member
             $dataCsApi = array(
@@ -474,7 +486,6 @@ class DefaultController extends WsController
             $memberInfo['type_redirect'] = 1;
             $result = ['result_api' => (int)$res, 'result_db' => $resDb, 'custNo' => 0];
         } else { // guest insert db or update
-
             $cusObj->setData($data, $data['D01_CUST_NO']);
             $res = $cusObj->saveData();
             $memberInfo = $cusObj->getData(['D01_CUST_NO' => $data['D01_CUST_NO']]);
@@ -555,7 +566,7 @@ class DefaultController extends WsController
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $postData = \Yii::$app->request->post();
-        return ['file' => $this->savePdf('0', $postData, true)];
+        return ['file' => BaseUrl::base(true).'/'.$this->savePdf('0', $postData, true)];
     }
 
     public function savePdf($denpyoNo, $postData, $isView = false)
