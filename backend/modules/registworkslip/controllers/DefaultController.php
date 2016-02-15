@@ -614,6 +614,9 @@ class DefaultController extends WsController
             'customer_name' => isset($postData['WARRANTY_CUST_NAMEN']) ? $postData['WARRANTY_CUST_NAMEN'] : '',
             'car_name' => isset($postData['D03_CAR_NAMEN']) ? $postData['D03_CAR_NAMEN'] : '',
             'car_license' => isset($postData['D03_CAR_NO']) ? $postData['D03_CAR_NO'] : '',
+            'car_riku' => isset($postData['D03_RIKUUN_NAMEN']) ? $postData['D03_RIKUUN_NAMEN'] : '',
+            'car_type_code' => isset($postData['D03_CAR_ID']) ? $postData['D03_CAR_ID'] : '',
+            'car_hira' => isset($postData['D03_HIRA']) ? $postData['D03_HIRA'] : '',
         ];
         $info_bill = [
             'right_front' => [

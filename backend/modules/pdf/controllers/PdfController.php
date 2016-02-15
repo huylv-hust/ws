@@ -47,8 +47,10 @@ class PdfController
             }
         } else {
             utilities::createFolder('data/tmp');
-            $pdf->Output('data/tmp/review.pdf', 'F');
-            return 'data/tmp/review.pdf';
+			$name = 'draft-' . md5( uniqid( mt_rand(), true ) ) . '.pdf';
+			$filename = "data/tmp/$name";
+            $pdf->Output($filename, 'F');
+            return $filename;
         }
 
     }

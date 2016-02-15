@@ -2,6 +2,13 @@
 $_API_URL_USAPPY = 'http://usappy.com/api/';
 $_API_URL_UPS = 'http://verify-ups.com/api/';
 $_API_SECRET = 'sec';
+
+if (YII_ENV == 'prod') {
+    $_API_URL_USAPPY = 'https://usappy.jp/api/';
+    $_API_URL_UPS = 'https://usami-p.com/api/';
+    $_API_SECRET = 'CJCHG2SEFN';
+}
+
 return [
     'api' => [
         'ss' => [

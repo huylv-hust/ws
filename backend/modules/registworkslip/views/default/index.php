@@ -166,6 +166,7 @@ foreach ($carHasDenpyo as $carFirst) {
 
 
                                     $prefix = 'D02';
+                                    $carFirst['D02_SYAKEN_CYCLE'] = isset($carFirst['D02_SYAKEN_CYCLE']) ? $carFirst['D02_SYAKEN_CYCLE'] : '';
                                     echo '<div class="formItem' . $carFirst['D02_CAR_SEQ'] . '">
                             <input type="hidden" name="D02_CAR_NO_' . $carFirst['D02_CAR_SEQ'] . '" value="' . $carFirst['D02_CAR_NO'] . '"/>
                             <input type="hidden" name="D02_CAR_ID_' . $carFirst['D02_CAR_SEQ'] . '" value="' . $carFirst['D02_CAR_ID'] . '"/>
@@ -301,8 +302,16 @@ foreach ($carHasDenpyo as $carFirst) {
                         <div class="formItem">
                             <label class="titleLabel">施行日（予約日）<span class="must">*</span></label>
                             <input maxlength="8" type="text"
-                                   value="<?php if (isset($_POST['D03_SEKOU_YMD'])) echo $_POST['D03_SEKOU_YMD'];
-                        else echo $denpyo['D03_SEKOU_YMD']; ?>"
+                                   value="<?php
+								   if (isset($_POST['D03_SEKOU_YMD']))
+									   echo $_POST['D03_SEKOU_YMD'];
+									else{
+										if($denpyo['D03_SEKOU_YMD'])
+											echo $denpyo['D03_SEKOU_YMD'];
+										else
+											echo date('Ymd');
+									}
+						?>"
                                    name="D03_SEKOU_YMD"
                                    class="textForm dateform">
                             <span class="txtExample">例)2013年1月30日→20130130</span></div>
@@ -1226,7 +1235,7 @@ foreach ($car as $carFirst) {
                                             <label class="titleLabel">初年度登録年月</label>
                                             <input maxlength="6" type="text" id="D02_SHONENDO_YM"
                                                    name="D02_SHONENDO_YM[<?= $k ?>]"
-                                                   value="<?= $carFirst['D02_SHONENDO_YM'] ?>"
+                                                   value="<?php echo $carFirst['D02_SHONENDO_YM']; ?>"
                                                    class="textForm D02_SHONENDO_YM">
                                             <span class="txtExample">例)2013年1月→201301</span></div>
                                         <div class="formItem">
@@ -1431,7 +1440,6 @@ echo yii\widgets\LinkPager::widget([
         $("#login_form").submit();
     });
     $(".onPreview").click(function () {
-        var link = window.open("<?php echo yii\helpers\BaseUrl::base(true) ?>/data/tmp/review.pdf");
         $.ajax({
             url: '<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/pdfview',
             type: 'post',
@@ -1464,11 +1472,14 @@ echo yii\widgets\LinkPager::widget([
                 'M09_WARRANTY_NO': ($("#M09_WARRANTY_NO:enabled").val() != undefined) ? $("#M09_WARRANTY_NO:enabled").val() : '',
                 'WARRANTY_CUST_NAMEN': $("#D01_CUST_NAMEN").val(),
                 'D03_CAR_NO': $("input[name =D02_CAR_NO_" + $("#D02_CAR_SEQ").val() + ']').val(),
-                'D03_CAR_NAMEN': $("input[name =D02_CAR_NAMEN_" + $("#D02_CAR_SEQ").val() + ']').val()
+                'D03_CAR_NAMEN': $("input[name =D02_CAR_NAMEN_" + $("#D02_CAR_SEQ").val() + ']').val(),
+                'D03_RIKUUN_NAMEN': $("input[name =D02_RIKUUN_NAMEN_" + $("#D02_CAR_SEQ").val() + ']').val(),
+                'D03_CAR_ID': $("input[name =D02_CAR_ID_" + $("#D02_CAR_SEQ").val() + ']').val(),
+                'D03_HIRA': $("input[name =D02_HIRA_" + $("#D02_CAR_SEQ").val() + ']').val()
             },
             async: false,
             success: function (data) {
-                link.location = data.file;
+                window.open(data.file);
             }
         });
         return false
@@ -1701,19 +1712,25 @@ echo yii\widgets\LinkPager::widget([
 
             if (code.length < 9) {
                 var count = 0;
+
+                $('#nstcd' + index).val('');
+                $('#comcd' + index).val('');
+                $('#comseq' + index).val('');
+                $('#list' + index).val('');
+                $('#no_'+index).val('');
+                $('#no_'+index).trigger('change');
+                $('#price_'+index).val('');
+                $('#total_'+index).val('');
                 $('.commodityBox.on').each(function () {
                     var value = parseInt($(this).find('.D05_COM_CD').val());
                     if (value > 41999 && value < 43000) {
                         count++;
                     }
                 });
+
                 if (count == 0) {
                     $("#warrantyBox").hide();
                 }
-                $('#nstcd' + index).val('');
-                $('#comcd' + index).val('');
-                $('#comseq' + index).val('');
-                $('#list' + index).val('');
                 return;
             }
             $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/search',
@@ -1848,7 +1865,7 @@ echo yii\widgets\LinkPager::widget([
 
             var check = false;
             for (var i = 1; i < 11; ++i) {
-                if ($("#comcd" + i).val() > 4200 && $("#comcd" + i).val() < 43000) {
+                if (parseInt($("#comcd" + i).val()) > 4200 && parseInt($("#comcd" + i).val()) < 43000) {
                     check = true;
                 }
             }
@@ -1879,7 +1896,7 @@ echo yii\widgets\LinkPager::widget([
                         },
                         function (data) {
                             if (data.kake_card_no_exist == 1) {
-                                $("#updateInfo").html('<div class="alert alert-danger">入力掛カードが存在されてしまいました。</div>');
+                                $("#updateInfo").html('<div class="alert alert-danger">同じ掛カード番号が既に登録されています。</div>');
                                 return;
                             }
                             if (data.result_api == '1' && data.result_db == '1') {
