@@ -7,16 +7,16 @@
     <article class="container mb0">
         <section class="pContent">
             <fieldset class="fieldsetRegist">
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">伝票No</label>
                         <p class="txtValue"><?php echo $detail['D03_DEN_NO']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">受付日</label>
                         <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">状況</label>
                         <p class="txtValue">
                             <?php
@@ -34,16 +34,16 @@
         <section class="pContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">お客様情報</legend>
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">お名前</label>
                         <p class="txtValue"><?php echo $detail['D01_CUST_NAMEN']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">フリガナ</label>
                         <p class="txtValue"><?php echo $detail['D01_CUST_NAMEK']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">備考</label>
                         <p><?php echo nl2br($detail['D01_NOTE']); ?></p>
                     </div>
@@ -55,36 +55,36 @@
                 <div class="flexHead">
                     <legend class="titleLegend">車両情報</legend>
                 </div>
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">車名</label>
                         <p class="txtValue"><?php echo $detail['D03_CAR_NAMEN']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">車検満了日</label>
                         <p class="txtValue"><?php echo $detail['D03_JIKAI_SHAKEN_YM'] != '' ? Yii::$app->formatter->asDate(date('d-M-y', strtotime($detail['D03_JIKAI_SHAKEN_YM'])), 'yyyy年MM月dd日') : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">車検サイクル</label>
                         <p class="txtValue"><?php echo $detail['D02_SYAKEN_CYCLE']; ?>年</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">走行距離</label>
                         <p class="txtValue"><?php echo $detail['D03_METER_KM']; ?>km</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">運輸支局</label>
                         <p class="txtValue"><?php echo $detail['D03_RIKUUN_NAMEN']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">分類コード</label>
                         <p class="txtValue"><?php echo $detail['D03_CAR_ID']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">ひらがな</label>
                         <p class="txtValue"><?php echo $detail['D03_HIRA']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">登録番号</label>
                         <p class="txtValue"><?php echo $detail['D03_CAR_NO']; ?></p>
                     </div>
@@ -94,8 +94,8 @@
         <section class="pContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">貴重品・精算情報</legend>
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">貴重品</label>
                         <?php if (isset($detail['D03_KITYOHIN']) && $detail['D03_KITYOHIN'] == 0) {
                             echo '<p class="txtValue">無し</p>';
@@ -103,7 +103,7 @@
                             echo '<p class="txtValue">有り</p>';
                         } ?>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">お客様確認</label>
                         <?php if (isset($detail['D03_KAKUNIN']) && $detail['D03_KAKUNIN']) {
                             echo '<p class="txtValue">了承済</p>';
@@ -111,7 +111,7 @@
                             echo '<p class="txtValue">未了承</p>';
                         } ?>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">精算方法</label>
                         <?php if (isset($detail['D03_SEISAN']) && $detail['D03_SEISAN'] == 0) {
                             echo '<p class="txtValue">現金</p>';
@@ -132,12 +132,12 @@
         <section class="pContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">作業日など</legend>
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">施行日（予約日）</label>
                         <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">お預かり時間</label>
                         <p class="txtValue">
                             <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? str_pad($detail['D03_AZU_BEGIN_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
@@ -149,7 +149,7 @@
                             <?php echo isset($detail['D03_AZU_END_MI']) ? str_pad($detail['D03_AZU_END_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                         </p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">予約内容</label>
                         <p class="txtValue"><?php
                             if (isset($job[$detail['D03_YOYAKU_SAGYO_NO']])) {
@@ -158,11 +158,11 @@
                                 echo '';
                             } ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">作業者</label>
                         <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] .''. $detail['D03_TANTO_MEI']; ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">確認者</label>
                         <p class="txtValue"><?php echo $detail['D03_KAKUNIN_SEI'] .''. $detail['D03_KAKUNIN_MEI'] ; ?></p>
                     </div>
@@ -172,8 +172,8 @@
         <section class="pContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">作業内容</legend>
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <p class="txtValue">
                             <?php
                             $sagyo = '';
@@ -184,7 +184,7 @@
                             ?>
                         </p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">その他作業内容</label>
                         <p class="txtValue"><?php echo nl2br($detail['D03_SAGYO_OTHER']); ?></p>
                     </div>
@@ -202,22 +202,22 @@
                         <th>単価</th>
                         <th>金額</th>
                     </tr>
-
                     <?php
-                    for ($k = 0; $k < 10; $k++) {
+                    $count = count($detail['product']) > 5 ? count($detail['product']) : 5;
+                    for ($k = 0; $k < $count; $k++) {
                         if (isset($detail['product'][$k])) {
                             ?>
                             <tr class="mini">
-                                <td class="tdLeft"><?php echo $detail['product'][$k]['D05_COM_CD']; ?></td>
+                                <td class="tdLeft" style="min-width: 15%"><?php echo $detail['product'][$k]['D05_COM_CD'].$detail['product'][$k]['D05_NST_CD']; ?></td>
                                 <td class="tdLeft"><?php echo $detail['product'][$k]['M05_COM_NAMEN']; ?></td>
-                                <td><?php echo $detail['product'][$k]['D05_SURYO']; ?></td>
-                                <td><?php echo isset($detail['product'][$k]['D05_TANKA']) && $detail['product'][$k]['D05_TANKA'] != '' ? number_format($detail['product'][$k]['D05_TANKA']) : ''; ?>円</td>
-                                <td><?php echo isset($detail['product'][$k]['D05_KINGAKU']) && $detail['product'][$k]['D05_KINGAKU'] != '' ? number_format($detail['product'][$k]['D05_KINGAKU']) : ''; ?>円</td>
+                                <td style="min-width: 8%"><?php echo $detail['product'][$k]['D05_SURYO']; ?></td>
+                                <td style="min-width: 10%"><?php echo isset($detail['product'][$k]['D05_TANKA']) && $detail['product'][$k]['D05_TANKA'] != '' ? number_format($detail['product'][$k]['D05_TANKA']) : ''; ?>円</td>
+                                <td style="min-width: 15%"><?php echo isset($detail['product'][$k]['D05_KINGAKU']) && $detail['product'][$k]['D05_KINGAKU'] != '' ? number_format($detail['product'][$k]['D05_KINGAKU']) : ''; ?>円</td>
                             </tr>
                         <?php } else { ?>
                             <tr class="mini">
-                                <td class="tdLeft"></td>
-                                <td class="tdLeft"></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -234,28 +234,28 @@
         <section class="pContent">
             <fieldset class="fieldsetRegist">
                 <legend class="titleLegend">作業点検</legend>
-                <div class="formGroup">
-                    <div class="formItem">
+                <div class="formGroup boder-black">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">オイル量</label>
                         <p class="txtValue">OK ・ NG</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">キャップ・ゲージ</label>
                         <p class="txtValue">OK ・ NG</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">タイヤ損傷・摩耗</label>
                         <p class="txtValue">OK ・ NG</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">オイル漏れ</label>
                         <p class="txtValue">OK ・ NG</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">ドレンボルト</label>
                         <p class="txtValue">OK ・ NG</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem back-ground">
                         <label class="titleLabel">ボルト・ナット</label>
                         <p class="txtValue">OK ・ NG</p>
                     </div>

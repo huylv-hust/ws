@@ -259,6 +259,7 @@ class DetailController extends WsController
         $post['D03_DEN_NO'] = $den_no;
         $post['status'] = Yii::$app->request->post('status');
         confirm::writeconfirm($post);
-        return true;
+        $link = BaseUrl::base(true).'/data/pdf/'.$den_no.'.pdf';
+        return $link;
     }
 }

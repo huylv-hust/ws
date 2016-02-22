@@ -13,14 +13,17 @@ class csv
         $branch_name = isset($branch['all_branch'][$branch_code]) ? $branch['all_branch'][$branch_code] : '';
         $ss_name = isset($branch['all_ss'][$post['D01_SS_CD']]) ? $branch['all_ss'][$post['D01_SS_CD']] : '';
 
-        if ($post['D01_MOBTEL_NO'] != '' && $post['D01_TEL_NO'] != '') {
+        if ($post['D01_MOBTEL_NO'] && $post['D01_TEL_NO']) {
             $post['TEL_NUMBER'] = $post['D01_TEL_NO'] . ',' . $post['D01_MOBTEL_NO'];
         }
-        if ($post['D01_MOBTEL_NO'] != '' && $post['D01_TEL_NO'] == '') {
+        elseif($post['D01_MOBTEL_NO'])
+        {
             $post['TEL_NUMBER'] = $post['D01_MOBTEL_NO'];
         }
-        if ($post['D01_MOBTEL_NO'] == '' && $post['D01_TEL_NO'] != '') {
+        elseif($post['D01_TEL_NO']) {
             $post['TEL_NUMBER'] = $post['D01_TEL_NO'];
+        } else {
+            $post['TEL_NUMBER'] = '';
         }
 
         $data[0] = array(
@@ -83,7 +86,7 @@ class csv
             'D01_CUST_NAMEK' => isset($post['D01_CUST_NAMEK']) ? $post['D01_CUST_NAMEK'] : '',
             'D01_YUBIN_BANGO' => isset($post['D01_YUBIN_BANGO']) && trim($post['D01_YUBIN_BANGO']) != '' ? substr($post['D01_YUBIN_BANGO'],0,3).'-'.substr($post['D01_YUBIN_BANGO'],3,4) : '',
             'D01_ADDR' => isset($post['D01_ADDR']) ? $post['D01_ADDR'] : '',
-            'TEL_NUMBER' => isset($post['TEL_NUMBER']) ? $post['TEL_NUMBER'] : '',
+            'TEL_NUMBER' => $post['TEL_NUMBER'],
             'D02_MODEL_CD' => isset($post['D02_CAR_NAMEN_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_CAR_NAMEN_' . $post['D02_CAR_SEQ_SELECT']] : '',
             'D02_CAR_NO' => isset($post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_RIKUUN_NAMEN_' . $post['D02_CAR_SEQ_SELECT']].' '.$post['D02_CAR_ID_' . $post['D02_CAR_SEQ_SELECT']].' '.$post['D02_HIRA_' . $post['D02_CAR_SEQ_SELECT']].' '.$post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']] : '',
             'right_front_manu' => isset($post['right_front_manu']) ? $post['right_front_manu'] : '',

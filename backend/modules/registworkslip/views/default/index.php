@@ -306,7 +306,7 @@ foreach ($carHasDenpyo as $carFirst) {
 								   if (isset($_POST['D03_SEKOU_YMD']))
 									   echo $_POST['D03_SEKOU_YMD'];
 									else{
-										if($denpyo['D03_SEKOU_YMD'])
+										if($d03DenNo)
 											echo $denpyo['D03_SEKOU_YMD'];
 										else
 											echo date('Ymd');
@@ -749,7 +749,7 @@ for ($i = 0; $i < 60; $i = $i + 10) {
                                 <div class="formItem">
                                     <label class="titleLabel">数量</label>
                                     <input maxlength="5" type="text"
-                                           value="<?= (isset($request['D05_SURYO' . $k])) ? $request['D05_SURYO' . $k] : $com['D05_SURYO'] ?>"
+                                           value="<?= (isset($request['D05_SURYO' . $k])) ? $request['D05_SURYO' . $k] : ($com['D05_SURYO'] ? ($com['D05_SURYO'] < 1 ? floatval($com['D05_SURYO']) : $com['D05_SURYO']) : '') ?>"
                                            name="D05_SURYO<?= $k ?>" rel="<?= $k ?>" id="no_<?= $k ?>"
                                            class="textForm noProduct <?php if ($disabled == 'disabled' && $isTaisa) echo 'no_event' ?>">
                                 </div>
@@ -1440,7 +1440,9 @@ echo yii\widgets\LinkPager::widget([
         $("#login_form").submit();
     });
     $(".onPreview").click(function () {
-        $.ajax({
+        var link = window.open('');
+		link.document.title = 'ViewPdf';
+		$.ajax({
             url: '<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/pdfview',
             type: 'post',
             data: {
@@ -1479,7 +1481,7 @@ echo yii\widgets\LinkPager::widget([
             },
             async: false,
             success: function (data) {
-                window.open(data.file);
+               link.location= data;
             }
         });
         return false
@@ -1706,18 +1708,25 @@ echo yii\widgets\LinkPager::widget([
         });
 
         $(".codeSearchProduct").change(function () {
-            var item = $(this);
+
+			var item = $(this);
             var index = $(this).attr('rel');
             var code = $("#code_search" + index).val();
+			var length = parseInt(code.length);
+			if(code.length == 8){
+				$("#code_search" + index).val('0'+code);
+				length=9;
+			}
 
-            if (code.length < 9) {
-                var count = 0;
-
+            if (length < 9) {
+				var count = 0;
                 $('#nstcd' + index).val('');
                 $('#comcd' + index).val('');
                 $('#comseq' + index).val('');
                 $('#list' + index).val('');
                 $('#no_'+index).val('');
+				$("#txtValueName" + index).html('');
+				$("#txtValuePrice" + index).html('');
                 $('#no_'+index).trigger('change');
                 $('#price_'+index).val('');
                 $('#total_'+index).val('');
@@ -1733,19 +1742,33 @@ echo yii\widgets\LinkPager::widget([
                 }
                 return;
             }
-            $.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/search',
+
+			$.post('<?php yii\helpers\BaseUrl::base(true) ?>registworkslip/default/search',
                     {
                         'code': $("#code_search" + index).val()
                     },
             function (data) {
-                $("#txtValueName" + index).html(data.M05_COM_NAMEN);
-                $("#txtValuePrice" + index).html(data.M05_LIST_PRICE);
-                $('#nstcd' + index).val(data.M05_NST_CD);
-                $('#comcd' + index).val(data.M05_COM_CD);
-                $(item).attr('title1', (data.M05_COM_CD + data.M05_NST_CD));
-                if (data.M05_COM_CD > 41999 && data.M05_COM_CD < 43000) {
+                console.log(data);
+				if(data == false)
+				{
+					$("#txtValueName" + index).html('');
+					$("#txtValuePrice" + index).html('');
+					$('#nstcd' + index).val('');
+					$('#comcd' + index).val('');
+					$(item).attr('title1', '');
+				}
+				else
+				{
+					$("#txtValueName" + index).html(data.M05_COM_NAMEN);
+					$("#txtValuePrice" + index).html(data.M05_LIST_PRICE);
+					$('#nstcd' + index).val(data.M05_NST_CD);
+					$('#comcd' + index).val(data.M05_COM_CD);
+					$(item).attr('title1', (data.M05_COM_CD + data.M05_NST_CD));
+					if (data.M05_COM_CD > 41999 && data.M05_COM_CD < 43000) {
                     $("#warrantyBox").show();
-                }
+					}
+				}
+
                 var count = 0;
                 $('.commodityBox.on').each(function () {
                     var value = parseInt($(this).find('.D05_COM_CD').val());
@@ -1814,7 +1837,8 @@ echo yii\widgets\LinkPager::widget([
 
             utility.zen2han(this);
             if ($("#no_" + index).val() != null && $("#price_" + index).val() != null && Number.isInteger(parseInt($("#no_" + index).val())) && Number.isInteger(parseInt($("#price_" + index).val()))) {
-                total = parseInt($("#no_" + index).val()) * parseInt($("#price_" + index).val());
+                total = $("#no_" + index).val() * parseInt($("#price_" + index).val());
+				total = Math.round(total);
                 if (Number.isInteger(total)) {
                     $("#total_" + index).val(total);
                 }

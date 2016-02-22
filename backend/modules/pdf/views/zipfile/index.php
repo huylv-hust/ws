@@ -75,7 +75,7 @@ AppAsset::register($this);
             </div>
         </form>
 
-        <div class="clearfix">
+        <div class="clearfix" style="margin: 20px 0">
             <?php
             if (Yii::$app->session->hasFlash('error')) {
                 ?>

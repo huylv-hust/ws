@@ -554,12 +554,31 @@ var regist_work = function () {
                 }
             }
         });
-
+        
+        jQuery.validator.addMethod("real_1", function (value, element) {
+            var value = $(element).val();
+            if(value == '') return true;
+            if(value.match(/^\d+(.)?(\d{1})?$/))
+            {
+                return true;
+            }
+            return false;
+        });
+        
         $('.noProduct').each(function () {
+            var rel = $(this).attr('rel');
             $(this).rules("add", {
-                digits: true,
+                real_1:true,
+                min:0.1,
+                required: function () {
+                        if($('.codeSearchProduct[rel='+ rel + ']').val() != '')
+                            return true;
+                        return false;
+                },
                 messages: {
-                    digits: '数量は数字で入力してください'
+                    real_1: '数量が正しくありません',
+                    required:'数量を入力してください',
+                    min:'数量は0.1以上の値を入力してください'
                 }
             });
         });
@@ -600,6 +619,7 @@ var regist_work = function () {
         $('#btnRegistWorkSlip').on('click', function () {
             var form = $(this).closest('form'),
                 valid = form.valid();
+                console.log(valid);
             form.removeAttr('target').attr('action', $('#url_action').val());
             if (valid == false) {
                 var tooltip_hidden = $('input[name=D03_KAKUNIN]').attr('aria-describedby');

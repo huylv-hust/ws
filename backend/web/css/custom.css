@@ -18,3 +18,9 @@ label.error {
 .no_event {
     pointer-events: none;
 }
+.boder-black {
+    background: #000!important;
+}
+.back-ground {
+    background: #FFF!important;
+}

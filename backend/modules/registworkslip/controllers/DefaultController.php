@@ -227,11 +227,13 @@ class DefaultController extends WsController
         $dataDenpyoCom = [];
         $k = 1;
         for ($i = 1; $i < 11; ++$i) {
-            if ($dataTemp['D05_COM_CD' . $i] != '') {
+            if ($dataTemp['code_search' . $i] != '') {
                 $dataDenpyoCom[$k]['D05_DEN_NO'] = $dataDenpyo['D03_DEN_NO'];
-                $dataDenpyoCom[$k]['D05_COM_CD'] = $dataTemp['D05_COM_CD' . $i];
-                $dataDenpyoCom[$k]['D05_NST_CD'] = $dataTemp['D05_NST_CD' . $i];
-                $dataDenpyoCom[$k]['D05_COM_SEQ'] = $k;
+				//$dataDenpyoCom[$k]['D05_COM_CD'] = $dataTemp['D05_COM_CD' . $i];
+                //$dataDenpyoCom[$k]['D05_NST_CD'] = $dataTemp['D05_NST_CD' . $i];
+                $dataDenpyoCom[$k]['D05_COM_CD'] = str_pad(substr($dataTemp['code_search' . $i],0,6),6,'0',STR_PAD_LEFT);
+				$dataDenpyoCom[$k]['D05_NST_CD'] = str_pad(substr($dataTemp['code_search' . $i],6,3),3,'0',STR_PAD_LEFT);
+				$dataDenpyoCom[$k]['D05_COM_SEQ'] = $k;
                 $dataDenpyoCom[$k]['D05_SURYO'] = $dataTemp['D05_SURYO' . $i];
                 $dataDenpyoCom[$k]['D05_TANKA'] = $dataTemp['D05_TANKA' . $i];
                 $dataDenpyoCom[$k]['D05_KINGAKU'] = $dataTemp['D05_KINGAKU' . $i];
@@ -564,9 +566,9 @@ class DefaultController extends WsController
 
     public function actionPdfview()
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        //Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $postData = \Yii::$app->request->post();
-        return ['file' => BaseUrl::base(true).'/'.$this->savePdf('0', $postData, true)];
+        return BaseUrl::base(true).'/'.$this->savePdf('0', $postData, true);
     }
 
     public function savePdf($denpyoNo, $postData, $isView = false)

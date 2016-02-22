@@ -16,6 +16,7 @@ AppAsset::register($this);
     </script>
 
     <link rel="stylesheet" href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/css/custom.css">
     <link rel="stylesheet" href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/font-awesome/css/font-awesome.min.css">
 </head>
 <body>

@@ -310,7 +310,7 @@ body {
 }
 .mini td {
 	box-sizing: content-box;
-	height: 30px;
+	height: 60px;
 }
 .vMiddle {
 	vertical-align: middle;

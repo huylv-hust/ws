@@ -1,6 +1,7 @@
 <?php
 namespace backend\modules\pdf\controllers;
 
+use app\models\Sdptd03denpyo;
 use backend\components\utilities;
 use Yii;
 use yii\console\Controller;
@@ -68,6 +69,21 @@ class ZipfileController extends Controller
     }
 
     /**
+     * Get list denpyo status is 1
+     * @return array
+     * $author Dang Bui
+     */
+    private function getListDenpyoStatusOn()
+    {
+        $sdpt03denpyo = new Sdptd03denpyo();
+        $listDenpyoNo = $sdpt03denpyo->getData(['D03_STATUS' => 1],'D03_DEN_NO');
+        foreach ($listDenpyoNo as $k => $v) {
+            $listDenpyo[] = $v['D03_DEN_NO'];
+        }
+        return $listDenpyo;
+    }
+
+    /**
      * get list array file
      * @return string
      * @author: Dang Bui
@@ -90,8 +106,9 @@ class ZipfileController extends Controller
         }
 
         foreach ($list_files as $k => $v) {
+            $filename = explode('.',$v);
             $create_time_file = date("Ymd", filectime($url_source.$v));
-            if ($this->equal3Time($create_time_file, $start_date, $end_date)) {
+            if ($this->equal3Time($create_time_file, $start_date, $end_date) and in_array($filename[0],$this->getListDenpyoStatusOn())) {
                 $arr_files[] = $url_source.$v;
             }
         }

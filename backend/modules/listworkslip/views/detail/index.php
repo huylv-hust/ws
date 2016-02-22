@@ -424,7 +424,7 @@
                         <div class="formGroup">
                             <div class="formItem">
                                 <label class="titleLabel">数量</label>
-                                <p class="txtValue"><?php echo $v['D05_SURYO']; ?></p>
+                                <p class="txtValue"><?php echo floatval($v['D05_SURYO']); ?></p>
                             </div>
                             <div class="formItem">
                                 <label class="titleLabel">単価</label>
