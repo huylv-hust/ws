@@ -1763,6 +1763,7 @@ echo yii\widgets\LinkPager::widget([
 					$("#txtValuePrice" + index).html(data.M05_LIST_PRICE);
 					$('#nstcd' + index).val(data.M05_NST_CD);
 					$('#comcd' + index).val(data.M05_COM_CD);
+                    $("#list" + index).val(data.M05_COM_NAMEN);
 					$(item).attr('title1', (data.M05_COM_CD + data.M05_NST_CD));
 					if (data.M05_COM_CD > 41999 && data.M05_COM_CD < 43000) {
                     $("#warrantyBox").show();
