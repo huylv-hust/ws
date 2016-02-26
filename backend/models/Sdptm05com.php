@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\base\Exception;
+use yii\db\Expression;
 use yii\db\Query;
 use Yii;
 use common\components\DatabaseLight;
@@ -27,7 +28,7 @@ use common\components\DatabaseLight;
  */
 class Sdptm05com extends \yii\db\ActiveRecord
 {
-    public $header = array(
+    public $header = [
         '商品コード',
         '荷姿コード',
         'M05_KIND_COM_NO',
@@ -38,9 +39,9 @@ class Sdptm05com extends \yii\db\ActiveRecord
         '参考価格',
         'M05_ORDER',
         'M05_MEMO'
-    );
+    ];
 
-    public $error_import = array();
+    public $error_import = [];
 
     /**
      * @inheritdoc
@@ -72,7 +73,6 @@ class Sdptm05com extends \yii\db\ActiveRecord
             [['M05_NST_CD'], 'string', 'max' => 3],
             [['M05_COM_NAMEN'], 'string', 'max' => 100],
             [['M05_MEMO'], 'string', 'max' => 500],
-            [['M05_INP_DATE', 'M05_UPD_DATE'], 'string'],
             [['M05_INP_USER_ID', 'M05_UPD_USER_ID'], 'string', 'max' => 20],
             [
                 ['M05_COM_CD', 'M05_NST_CD'],
@@ -104,7 +104,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
         ];
     }
 
-    public function setData($data = array())
+    public function setData($data = [])
     {
         foreach ($data as $k => $v) {
             $data[$k] = trim($v) != '' ? trim($v) : null;
@@ -118,7 +118,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
      * @param $line
      * @param array $data
      */
-    public function validateImport($line, $data = array())
+    public function validateImport($line, $data = [])
     {
         if (count($data) != 10) {
             $this->error_import[] = $line . '行目:CSVファイルのフォーマットが正しくありません';
@@ -216,7 +216,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
             $this->error_import[] = '1行目:CSVファイルのフォーマットが正しくありません';
         }
         $line = 2;
-        $insert_data = array();
+        $insert_data = [];
         $count_error_update = 0;
         $count_error_insert = 0;
 
@@ -246,8 +246,8 @@ class Sdptm05com extends \yii\db\ActiveRecord
             while (($data = fgetcsv($file)) !== false) {
                 $this->validateImport($line, $data);
                 if (count($data) == 10) {
-                    if ($obj = self::findOne(array('M05_COM_CD' => $data[0], 'M05_NST_CD' => $data[1]))) {
-                        $result = $lightdb->execute($sthUpdate, array(
+                    if ($obj = self::findOne(['M05_COM_CD' => $data[0], 'M05_NST_CD' => $data[1]])) {
+                        $result = $lightdb->execute($sthUpdate, [
                             ':M05_KIND_COM_NO' => $data[2],
                             ':M05_LARGE_COM_NO' => $data[3],
                             ':M05_MIDDLE_COM_NO' => $data[4],
@@ -256,17 +256,17 @@ class Sdptm05com extends \yii\db\ActiveRecord
                             ':M05_LIST_PRICE' => $data[7],
                             ':M05_ORDER' => $data[8],
                             ':M05_MEMO' => $data[9],
-                            ':M05_UPD_DATE' => date('y-M-d'),
+                            ':M05_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                             ':M05_UPD_USER_ID' => $login_info['M50_USER_ID'],
                             ':M05_COM_CD' => $data[0],
                             ':M05_NST_CD' => $data[1]
-                        ));
+                        ]);
                         if (!$result) {
                             $count_error_update++;
                         }
 
                     } else {
-                        $result = $lightdb->execute($sthInsert, array(
+                        $result = $lightdb->execute($sthInsert, [
                             ':M05_COM_CD' => $data[0],
                             ':M05_NST_CD' => $data[1],
                             ':M05_KIND_COM_NO' => $data[2],
@@ -277,11 +277,11 @@ class Sdptm05com extends \yii\db\ActiveRecord
                             ':M05_LIST_PRICE' => $data[7],
                             ':M05_ORDER' => $data[8],
                             ':M05_MEMO' => $data[9],
-                            ':M05_INP_DATE' => date('y-M-d'),
+                            ':M05_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                             ':M05_INP_USER_ID' => $login_info['M50_USER_ID'],
-                            ':M05_UPD_DATE' => date('y-M-d'),
+                            ':M05_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                             ':M05_UPD_USER_ID' => $login_info['M50_USER_ID']
-                        ));
+                        ]);
                         if (!$result) {
                             $count_error_insert++;
                         }
@@ -292,24 +292,24 @@ class Sdptm05com extends \yii\db\ActiveRecord
 
             if ($count_error_update > 0 || $count_error_insert > 0) {
                 $lightdb->rollback();
-                return array('insert' => false, 'error' => $this->error_import);
+                return ['insert' => false, 'error' => $this->error_import];
             }
 
             if (!empty($this->error_import)) {
                 $lightdb->rollback();
-                return array('insert' => false, 'error' => $this->error_import);
+                return ['insert' => false, 'error' => $this->error_import];
             }
 
             $lightdb->commit();
         } catch (Exception $e) {
             $lightdb->rollback();
             $this->error_import[] = 'インポートができません';
-            return array('insert' => false, 'error' => $this->error_import);
+            return ['insert' => false, 'error' => $this->error_import];
         }
 
         Yii::$app->log->traceLevel = $savedTraceLevel;
 
-        return array('insert' => true, 'error' => $this->error_import);
+        return ['insert' => true, 'error' => $this->error_import];
     }
 
     /**
@@ -317,8 +317,9 @@ class Sdptm05com extends \yii\db\ActiveRecord
      * @param string $select
      * @return Query
      */
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
+
         $query = new Query();
         $query->select($select)->from(static::tableName());
 
@@ -338,6 +339,14 @@ class Sdptm05com extends \yii\db\ActiveRecord
             $query->andwhere(['like', 'M05_NST_CD', $filters['M05_NST_CD']]);
         }
 
+        if (isset($filters['in']) && count($filters['in'])) {
+            $query->andwhere(['IN', 'M05_KIND_DM_NO', $filters['in']]);
+        }
+
+        if (isset($filters['not_in']) && count($filters['not_in'])) {
+            $query->andwhere(['NOT IN', 'M05_KIND_DM_NO', $filters['not_in']]);
+        }
+
         if (isset($filters['offset']) && $filters['offset']) {
             $query->offset($filters['offset']);
         }
@@ -345,6 +354,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
         if (isset($filters['limit']) && $filters['limit']) {
             $query->limit($filters['limit']);
         }
+
 
         return $query;
     }
@@ -362,7 +372,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
      * @param string $select
      * @return array
      */
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('M05_COM_CD ASC');

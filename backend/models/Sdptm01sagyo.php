@@ -59,7 +59,7 @@ class Sdptm01sagyo extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -75,7 +75,7 @@ class Sdptm01sagyo extends \yii\db\ActiveRecord
         return $query;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         return $query->all();
@@ -86,7 +86,7 @@ class Sdptm01sagyo extends \yii\db\ActiveRecord
         return $this->obj->save();
     }
 
-    public function setData($data = array(), $id = null)
+    public function setData($data = [], $id = null)
     {
         $obj = new Sdptd04denpyosagyo();
         if ($id) {

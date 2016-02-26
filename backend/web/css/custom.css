@@ -15,12 +15,16 @@ label.error {
     padding: 0 0;
 }
 
+.custom-table td {
+    vertical-align: middle;
+}
+
 .no_event {
     pointer-events: none;
 }
-.boder-black {
-    background: #000!important;
+.boder-black tr, .boder-black td, .boder-black th {
+    border: 1px solid black!important;
 }
 .back-ground {
-    background: #FFF!important;
+    background: #000!important;
 }

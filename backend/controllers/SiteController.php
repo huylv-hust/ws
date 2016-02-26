@@ -25,7 +25,7 @@ class SiteController extends WsController
      * equal two array
      * @author: dangbc6591
      */
-    private function equalArray($arr1 = array(), $arr2 = array())
+    private function equalArray($arr1 = [], $arr2 = [])
     {
         if (empty($arr1)) {
             return false;
@@ -53,7 +53,7 @@ class SiteController extends WsController
      * equal no car
      * @author: dangbc6591
      */
-    private function equalNocar($nocar, $arrnocar = array())
+    private function equalNocar($nocar, $arrnocar = [])
     {
         foreach ($arrnocar as $k => $v) {
             if ($nocar == $arrnocar[$k]) {
@@ -76,14 +76,14 @@ class SiteController extends WsController
         $flag1 = false;
         $flag2 = true;
         $flag3 = false;
-        $array_source = array();
+        $array_source = [];
         //Get data post
         $url_redirect = Yii::$app->request->post('url_redirect');
         $type_redirect = 1;//Yii::$app->request->post('type_redirect');
 
         $member_card = Yii::$app->request->post('card_number', '');
         $member_birthday = Yii::$app->request->post('member_birthday', '');
-        $member_kaiinKana =  preg_replace(array('/\s/', '/\s+/'), '', Yii::$app->request->post('member_kaiinKana', ''));
+        $member_kaiinKana =  preg_replace(['/\s/', '/\s+/'], '', Yii::$app->request->post('member_kaiinKana', ''));
         $member_tel = Yii::$app->request->post('member_tel', '');
         $license_plates = Yii::$app->request->post('license_plates', '');
 
@@ -104,7 +104,7 @@ class SiteController extends WsController
         if (! isset($member_info['member_kaiinCd'])) {
             $flag = false;
         } else {
-            $member_info['member_kaiinKana'] = preg_replace(array('/\s/', '/\s+/'), '', $member_info['member_kaiinKana']);//trim whitespace in kaiinKana
+            $member_info['member_kaiinKana'] = preg_replace(['/\s/', '/\s+/'], '', $member_info['member_kaiinKana']);//trim whitespace in kaiinKana
             $flag1 = $this->equalArray($array_source, $member_info);
             if ($license_plates != '') {
                 if ($list_info_car = $api->getInfoListCar($member_info['member_kaiinCd'])) {
@@ -171,7 +171,7 @@ class SiteController extends WsController
     {
         $flag = false;
         utilities::deleteCookie('cus_info');//Delete coolkie cus_info
-        $member_info = array();
+        $member_info = [];
         $url_redirect = Yii::$app->request->post('url_redirect');
         $type_redirect = Yii::$app->request->post('type_redirect');
         $member_info['type_redirect'] = 3;

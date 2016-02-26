@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\db\Expression;
 use yii\db\Query;
 use Yii;
 
@@ -35,7 +36,6 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         return [
             [['D04_DEN_NO', 'D04_SAGYO_NO'], 'required'],
             [['D04_DEN_NO', 'D04_SAGYO_NO'], 'integer'],
-            [['D04_INP_DATE', 'D04_UPD_DATE'], 'string'],
             [['D04_INP_USER_ID', 'D04_UPD_USER_ID'], 'string', 'max' => 20],
             [['D04_DEN_NO', 'D04_SAGYO_NO'], 'unique', 'targetAttribute' => ['D04_DEN_NO', 'D04_SAGYO_NO'], 'message' => 'The combination of D04  Den  No and D04  Sagyo  No has already been taken.']
         ];
@@ -56,7 +56,7 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -84,23 +84,27 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         return $this->obj->save();
     }
 
-    public function setData($data = array(), $id = null)
+    public function setData($data = [], $id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
         $obj = new Sdptd04denpyosagyo();
-        $data['D04_UPD_DATE'] = date('d-M-y');
+        $data['D04_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
         $data['D04_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 
         if ($id) {
             $obj = static::findOne($id);
         } else {
-            $data['D04_INP_DATE'] = date('d-M-y');
+            $data['D04_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
             $data['D04_INP_USER_ID'] = $login_info['M50_USER_ID'];
         }
 
         $obj->attributes = $data;
         foreach ($obj->attributes as $k => $v) {
-            $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            if ($k != 'D04_UPD_DATE' && $k != 'D04_INP_DATE') {
+                $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            } else {
+                $obj->{$k} = $v;
+            }
         }
 
         $this->obj = $obj;
@@ -121,7 +125,7 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         return $insertCount;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('D04_DEN_NO ASC');

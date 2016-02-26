@@ -16,6 +16,39 @@ class SearchController extends WsController
         if ($request->isAjax) {
             $obj = new Sdptm05com();
             $condition = $request->post('condition');
+            $condition_1 = trim($request->post('condition_1'), ',');
+            if ($condition_1) {
+                $condition_1 = ',' . $condition_1 . ',';
+            }
+            $a_search = [
+                '1' => '7,8',
+                '2' => '1,2,3,4,5,6',
+                '3' => '10',
+                '4' => '24,25,26',
+                '5' => '27',
+                '6' => '21',
+                '7' => '0',
+            ];
+            $kind_com_search_in = '';
+            $kind_com_search_not_in = '';
+            foreach ($a_search as $key => $val) {
+                if (substr_count($condition_1, ',' . $key . ',')) {
+                    $kind_com_search_in .= $val . ',';
+                } else {
+                    $kind_com_search_not_in .= $val . ',';
+                }
+            }
+
+            if (substr_count($condition_1, ',7,')) {
+                if ($kind_com_search_not_in) {
+                    $data['filters']['not_in'] = explode(',', trim($kind_com_search_not_in, ','));
+                }
+            } else {
+                if ($kind_com_search_in) {
+                    $data['filters']['in'] = explode(',', trim($kind_com_search_in, ','));
+                }
+            }
+
             $data['filters'][$condition] = $request->post('value');
             $data['count'] = $obj->coutData($data['filters']);
             $data['pagination'] = new Pagination([

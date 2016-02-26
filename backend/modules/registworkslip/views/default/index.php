@@ -805,7 +805,22 @@ for ($i = 0; $i < 60; $i = $i + 10) {
                 if ($d03DenNo && $showWarranty) {
                     $style = 'style="display:block"';
                 } else {
-                    $style = "";
+					$style = "";
+					if(isset($request['warranty_check']))
+						$ck = 'checked="checked"';
+					
+					for($i = 1; $i < 11; ++$i) {
+						if(isset($request['code_search'.$i])) {
+							if(in_array((int) substr($request['code_search'.$i],0,6),  range(42000, 42999))) {
+								$style = 'style="display:block"';
+
+								$class = "checked";
+								break;
+							}
+
+						}
+					}
+
                 }
             }
             ?>
@@ -851,7 +866,7 @@ for ($i = 0; $i < 60; $i = $i + 10) {
                             <label class="titleLabel">保証書番号</label>
 
                             <p class="txtValue toggleWarranty"
-                               id="warrantyNo" <?= $style ?>><?php echo $csv['M09_WARRANTY_NO'] ?></p>
+                               id="warrantyNo" <?= $style ?>><?php if(isset($request['M09_WARRANTY_NO'])) echo $request['M09_WARRANTY_NO']; else echo $csv['M09_WARRANTY_NO']; ?></p>
                         </div>
                         <div class="formItem">
                             <label class="titleLabel">購入日</label>
@@ -872,7 +887,7 @@ else
                                 <input type="hidden" value="0" name="checkClickWarranty" id="checkClickWarranty"/>
 
                                 <input type="hidden" name="M09_WARRANTY_NO" id="M09_WARRANTY_NO"
-                                       value="<?php echo $csv['M09_WARRANTY_NO'] ?>"/>
+                                       value="<?php if(isset($request['M09_WARRANTY_NO'])) echo $request['M09_WARRANTY_NO']; else echo $csv['M09_WARRANTY_NO']; ?>"/>
                                 <input type="hidden" name="M09_INP_DATE" id="M09_INP_DATE"
                                        value="<?php if ($csv['M09_INP_DATE'])
     echo $csv['M09_INP_DATE'];
@@ -908,7 +923,7 @@ else
                             <label class="titleLabel">数量</label>
                         </div>
                     </div>
-                                <?php $warranty_item = ['' => '', 'BS' => 'BS', 'YH' => 'YH', 'DF' => 'DF', 'TY' => 'TY'] ?>
+                                <?php $warranty_item = ['' => '', 'BS' => 'BS', 'YH' => 'YH', 'DF' => 'DF', 'TY' => 'TY','FK' => 'FK'] ?>
                                 <?php for ($i = 1; $i < 7; ++$i) { ?>
                         <div class="formGroup lineBottom">
                             <div class="formItem">
@@ -938,7 +953,7 @@ else
                                 </p>
                             </div>
                             <div class="formItem">
-    <?= \yii\helpers\Html::dropDownList($name . '_manu', $csv[$name . '_manu'], $warranty_item, array('class' => 'selectForm select_product', 'id' => $name . '_manu')) ?>
+    <?= \yii\helpers\Html::dropDownList($name . '_manu', isset($request[$name . '_manu']) ? $request[$name . '_manu'] : $csv[$name . '_manu'], $warranty_item, array('class' => 'selectForm select_product', 'id' => $name . '_manu')) ?>
                             </div>
                             <div class="formItem">
                                 <input type="text" value="<?= $csv[$name . '_product'] ?>" class="textForm"
@@ -1312,7 +1327,7 @@ foreach ($car as $carFirst) {
 <div id="modalCodeSearch" class="modal fade ">
     <input type="hidden" value="" id="condition">
     <div class="modal-dialog widthS">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 850px;">
             <div class="modal-header">
                 <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span
                         aria-hidden="true">×</span></button>
@@ -1343,15 +1358,58 @@ foreach ($car as $carFirst) {
                                     </div>
                                 </div>
                                 <div class="itemFlex">
-                                    <input id="code_search_value" type="text" style="width:15em;" value=""
-                                           class="textForm">
-                                    <a id="code_search_btn" class="btnFormTool" href="#">検索する</a></div>
+                                    <input id="code_search_value" type="text" style="width:15em;" value="" class="textForm" />
+									<a id="code_search_btn" class="btnFormTool" href="#" style="height: 35px;line-height: 35px;">検索する</a>
+								</div>
                             </div>
                         </div>
-                    </section>
+						<div class="formGroup">
+							<div class="formItem flexHorizontal">
+								<label class="titleLabel">カテゴリ検索 </label>
+								<div class="checkGroupGroup itemFlex pl10">
+									<?php
+									$a_search = [
+										'1' => 'タイヤ̣',
+										'2' => 'オイル',
+										'3' => 'バッテリー',
+										'4' => 'コーティング',
+										'5' => 'リペア',
+										'6' => '車検',
+										'7' => 'その他',
+									];
+									foreach($a_search as $key => $val)
+									{
+										echo '<div class="checkItem">
+										<input type="checkbox" name="search_M05_KIND_DM_NO[]" value="'.$key.'" id="search_M05_KIND_DM_NO'.$key.'" class="checks">
+										<label class="labelChecks kind_dm_no_search" id="labelSearch_M05_KIND_DM_NO'.$key.'" rel="'.$key.'" for="search_M05_KIND_DM_NO'.$key.'" rel="'.$key.'">'.$val.'</label>
+										</div>';
+									}
+									?>
+								</div>
+							</div>
+						</div>
+					</section>
                 </form>
-<?php
+				<script>
 
+				/*
+				$(".kind_dm_no_search").click(function(){
+					var index = $(this).attr("rel");
+					if(index == '7'){
+						for(var i = 1; i < 7; ++i){
+							$("#search_M05_KIND_DM_NO" + i).removeAttr('checked');
+							$("#labelSearch_M05_KIND_DM_NO" + i).removeClass('checked');
+						}
+					}
+					else
+					{
+						$("#search_M05_KIND_DM_NO7").prop('checked',false);
+						$("#labelSearch_M05_KIND_DM_NO7").removeClass('checked');
+					}
+				});
+				*/
+				</script>
+<?php
 use yii\data\Pagination; ?>
                 <nav class="paging">
 <?php
@@ -1494,6 +1552,7 @@ echo yii\widgets\LinkPager::widget([
         var id = $(this).attr('for');
         $("#" + id).attr('checked', 'checked');
     });
+
     function showSeqCar() {
         var carSeq = $("#D02_CAR_SEQ").val();
         if (carSeq != null) {
@@ -1748,7 +1807,6 @@ echo yii\widgets\LinkPager::widget([
                         'code': $("#code_search" + index).val()
                     },
             function (data) {
-                console.log(data);
 				if(data == false)
 				{
 					$("#txtValueName" + index).html('');

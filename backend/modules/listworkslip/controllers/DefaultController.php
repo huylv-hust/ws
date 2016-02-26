@@ -52,7 +52,7 @@ class DefaultController extends WsController
         if (empty($data['list'])) {
             Yii::$app->session->setFlash('empty', '入力条件に該当する作業伝票が存在しません');
         }
-        $data['job'] = array();
+        $data['job'] = [];
         $all_job = $obj_job->getData();
         foreach ($all_job as $k => $v) {
             $data['job'][''] = '';
@@ -72,7 +72,7 @@ class DefaultController extends WsController
      */
     public static function getJob($order_id)
     {
-        $result = array();
+        $result = [];
         $obj = new Sdptd04denpyosagyo();
         $job = $obj->getData(['D04_DEN_NO' => $order_id]);
         if (!empty($job)) {

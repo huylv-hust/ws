@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\db\Expression;
 use yii\db\Query;
 use Yii;
 
@@ -72,7 +73,6 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
             [['D03_CAR_NO'], 'string', 'max' => 4],
             [['D03_SEKOU_YMD', 'D03_JIKAI_SHAKEN_YM'], 'string', 'max' => 8],
             [['D03_SAGYO_OTHER', 'D03_NOTE'], 'string', 'max' => 2000],
-            [['D03_INP_DATE', 'D03_UPD_DATE'], 'string'],
             [['D03_INP_USER_ID', 'D03_UPD_USER_ID'], 'string', 'max' => 20],
             [['D03_TANTO_SEI', 'D03_TANTO_MEI', 'D03_KAKUNIN_SEI', 'D03_KAKUNIN_MEI'], 'string', 'max' => 30],
             [['D03_DEN_NO'], 'unique']
@@ -122,7 +122,7 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -152,17 +152,17 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         return $this->obj->save();
     }
 
-    public function setData($data = array(), $id = null)
+    public function setData($data = [], $id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
-        $data['D03_UPD_DATE'] = date('d-M-y');
+        $data['D03_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
         $data['D03_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 
         if ($id) {
             $obj = static::findOne($id);
         } else {
             $obj = new Sdptd03denpyo();
-            $data['D03_INP_DATE'] = date('d-M-y');
+            $data['D03_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
             $data['D03_STATUS'] = 0;
             $data['D03_INP_USER_ID'] = $login_info['M50_USER_ID'];
         }
@@ -170,13 +170,17 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         $obj->attributes = $data;
 
         foreach ($obj->attributes as $k => $v) {
-            $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            if ($k != 'D03_UPD_DATE' && $k != 'D03_INP_DATE') {
+                $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            } else {
+                $obj->{$k} = $v;
+            }
         }
 
         $this->obj = $obj;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = new Query();
         if (isset($filters['D03_CUST_NO']) && $filters['D03_CUST_NO'] != '') {
@@ -222,7 +226,7 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         if (isset($filters['job']) && $filters['job'] != '') {
             $denpyo_sagyo = new Sdptd04denpyosagyo();
             $data = $denpyo_sagyo->getData(['D04_SAGYO_NO' => $filters['job']]);
-            $arr_den_no = array(-1);
+            $arr_den_no = [-1];
             foreach ($data as $k => $v) {
                 $arr_den_no[] = $v['D04_DEN_NO'];
             }
@@ -267,14 +271,14 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
     public function setDataDefault()
     {
         $attri = $this->attributeLabels();
-        $data = array();
+        $data = [];
         foreach ($attri as $key => $val) {
             $data[$key] = null;
         }
         return $data;
     }
 
-    public function deleteData($primaryKey = array())
+    public function deleteData($primaryKey = [])
     {
         $transaction = $this->getDb()->beginTransaction();
         try {

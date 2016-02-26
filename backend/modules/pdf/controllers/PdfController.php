@@ -9,17 +9,17 @@ use yii\base\Controller;
 class PdfController
 {
     /**
-	 *
-	 * @param type $info_warranty
-	 * @param type $info_car
-	 * @param type $info_bill
-	 * @param type $info_ss
-	 * @param type $denpyoNo
-	 * @param type $savetype
-	 * @param type $watermark 1 has lock
-	 * @return boolean|string
-	 */
-	public function exportBill($info_warranty = array(), $info_car = array(), $info_bill = array(), $info_ss = array(),$denpyoNo, $savetype = null, $watermark = null)
+     * @param array $info_warranty
+     * @param array $info_car
+     * @param array $info_bill
+     * @param array $info_ss
+     * @param $denpyoNo
+     * @param null $savetype
+     * @param null $watermark
+     * @return bool|string
+     * @throws \Exception
+     */
+    public function exportBill($info_warranty = [], $info_car = [], $info_bill = [], $info_ss = [], $denpyoNo = null, $savetype = null, $watermark = null)
     {
         $data = [
             'info_warranty' => $info_warranty,
@@ -38,24 +38,24 @@ class PdfController
         }
         utilities::createFolder('data/pdf');//Create folder data/pdf
         if ($savetype == 'save') {
-            if (file_exists('data/pdf/'.$denpyoNo.'.pdf')) {
+            if (file_exists('data/pdf/' . $denpyoNo . '.pdf')) {
                 return false;
             }
-            $pdf->Output('data/pdf/'.$denpyoNo.'.pdf', 'F');
-            if (file_exists('data/pdf/'.$denpyoNo.'.pdf')) {
+            $pdf->Output('data/pdf/' . $denpyoNo . '.pdf', 'F');
+            if (file_exists('data/pdf/' . $denpyoNo . '.pdf')) {
                 return true;
             }
         } else {
             utilities::createFolder('data/tmp');
-			$name = 'draft-' . md5( uniqid( mt_rand(), true ) ) . '.pdf';
-			$filename = "data/tmp/$name";
+            $name = 'draft-' . md5(uniqid(mt_rand(), true)) . '.pdf';
+            $filename = "data/tmp/$name";
             $pdf->Output($filename, 'F');
             return $filename;
         }
-
     }
+
     public function checkExists($denpyoNo)
     {
-        return file_exists('data/pdf/'.$denpyoNo.'.pdf');
+        return file_exists('data/pdf/' . $denpyoNo . '.pdf');
     }
 }

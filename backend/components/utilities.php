@@ -7,10 +7,10 @@ class utilities
     {
         $api = new api();
         $ss = $api->getSsName();
-        $all_branch = array();
-        $all_ss = array();
-        $ss_address = array();
-        $ss_tel = array();
+        $all_branch = [];
+        $all_ss = [];
+        $ss_address = [];
+        $ss_tel = [];
         foreach ($ss as $k => $v) {
             $all_branch[$v['branch_code']] = $v['branch_name'];
             $all_ss[$v['sscode']] = $v['ss_name'];
@@ -34,14 +34,14 @@ class utilities
     {
         $data = file_get_contents($file);
         if (mb_detect_encoding($data, 'UTF-8', true) === false) {
-            $encode_ary = array(
+            $encode_ary = [
                 'ASCII',
                 'JIS',
                 'eucjp-win',
                 'sjis-win',
                 'EUC-JP',
                 'UTF-8',
-            );
+            ];
             $data = mb_convert_encoding($data, 'UTF-8', $encode_ary);
         }
 
@@ -55,14 +55,14 @@ class utilities
     {
         $data = file_get_contents($file);
         if (mb_detect_encoding($data, 'SJIS', true) === false) {
-            $encode_ary = array(
+            $encode_ary = [
                 'ASCII',
                 'JIS',
                 'eucjp-win',
                 'sjis-win',
                 'EUC-JP',
                 'UTF-8',
-            );
+            ];
             $data = mb_convert_encoding($data, 'SJIS', $encode_ary);
         }
 

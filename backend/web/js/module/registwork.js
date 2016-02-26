@@ -6,12 +6,20 @@ var regist_work = function () {
 
     var paging = function () {
         $('#modalCodeSearch .paging').on('click', 'a', function () {
+            var m05_value = '';
+            for(var i = 1; i < 8; ++i){
+                if($("#search_M05_KIND_DM_NO" + i).attr('checked'))
+                {
+                        m05_value = m05_value + $("#search_M05_KIND_DM_NO" + i).val() + ',';
+                }
+            }
             var condition = $('#condition').val(),
                 value = $('#code_search_value').val(),
                 page = $(this).attr('data-page'),
                 url = baseUrl + '/registworkslip/search/index',
                 param = {
                     condition: condition,
+                    condition_1: m05_value,
                     value: value,
                     page: page
                 };
@@ -51,12 +59,20 @@ var regist_work = function () {
 
     var search = function () {
         $('#code_search_btn').off('click').on('click', function () {
+            var m05_value = '';
+            for(var i = 1; i < 8; ++i){
+                if($("#search_M05_KIND_DM_NO" + i).attr('checked'))
+                {
+                        m05_value = m05_value + $("#search_M05_KIND_DM_NO" + i).val() + ',';
+                }
+            }
             var condition = $('#modalCodeSearch .labelRadios.checked').parent().find('input').attr('id'),
                 value = $('#code_search_value').val(),
                 page = 0,
                 url = baseUrl + '/registworkslip/search/index',
                 param = {
                     condition: condition,
+                    condition_1:m05_value,
                     value: value,
                     page: page
                 };

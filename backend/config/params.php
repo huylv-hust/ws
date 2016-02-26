@@ -129,12 +129,8 @@ return [
     ],
     'admin_user' => [
         '0' => [
-            'ssid' => 'admin1',
-            'password' => 'password',
-        ],
-        '1' => [
-            'ssid' => 'admin2',
-            'password' => 'password'
+            'ssid' => 'fcc',
+            'password' => 'npaZd3Ec'
         ]
     ],
     'branch' => [

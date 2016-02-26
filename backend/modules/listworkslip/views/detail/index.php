@@ -30,10 +30,6 @@
                         <p class="txtValue"><?php echo $detail['D03_DEN_NO']; ?></p>
                     </div>
                     <div class="formItem">
-                        <label class="titleLabel">受付日</label>
-                        <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
-                    </div>
-                    <div class="formItem">
                         <label class="titleLabel">状況</label>
                         <p class="txtValue">
                             <?php
@@ -43,6 +39,30 @@
                             if ($detail['D03_STATUS'] == 0) {
                                 echo '作業予約';
                             } ?>
+                        </p>
+                    </div>
+                    <div class="formItem">
+                        <label class="titleLabel">受付日</label>
+                        <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
+                    </div>
+                    <div class="formItem">
+                      <label class="titleLabel">受付担当者</label>
+                      <p class="txtValue"><?php echo isset($detail['D01_UKE_TAN_NAMEN']) ? $detail['D01_UKE_TAN_NAMEN'] : ''; ?></p>
+                    </div>
+                    <div class="formItem">
+                        <label class="titleLabel">作業日</label>
+                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
+                    </div>
+                    <div class="formItem">
+                        <label class="titleLabel">お預かり時間</label>
+                        <p class="txtValue">
+                            <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? str_pad($detail['D03_AZU_BEGIN_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
+                            ：
+                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? str_pad($detail['D03_AZU_BEGIN_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
+                            ～
+                            <?php echo isset($detail['D03_AZU_END_HH']) ? str_pad($detail['D03_AZU_END_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
+                            ：
+                            <?php echo isset($detail['D03_AZU_END_MI']) ? str_pad($detail['D03_AZU_END_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
                         </p>
                     </div>
                 </div>
@@ -154,69 +174,32 @@
         </section>
         <section class="bgContent">
             <fieldset class="fieldsetRegist">
-                <legend class="titleLegend">作業日など</legend>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel">施行日（予約日）</label>
-                        <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
-                    </div>
-                    <div class="formItem">
-                        <label class="titleLabel">お預かり時間</label>
-                        <p class="txtValue">
-                            <?php echo isset($detail['D03_AZU_BEGIN_HH']) ? str_pad($detail['D03_AZU_BEGIN_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
-                            ：
-                            <?php echo isset($detail['D03_AZU_BEGIN_MI']) ? str_pad($detail['D03_AZU_BEGIN_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
-                            ～
-                            <?php echo isset($detail['D03_AZU_END_HH']) ? str_pad($detail['D03_AZU_END_HH'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
-                            ：
-                            <?php echo isset($detail['D03_AZU_END_MI']) ? str_pad($detail['D03_AZU_END_MI'], 2, '0', STR_PAD_LEFT) : str_pad('00', 2, '0', STR_PAD_LEFT); ?>
-                        </p>
-                    </div>
+              <div class="formGroup">
+                <div class="formItem flx-2">
+                  <label class="titleLabel">作業内容</label>
+                  <p class="txtValue"><?php
+                    $sagyo = '';
+                    foreach ($detail['sagyo'] as $k => $v) {
+                      $sagyo .= $job[$v['D04_SAGYO_NO']] . '、';
+                    }
+                    echo preg_replace('/、$/', '', $sagyo);
+                  ?></p>
                 </div>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel">予約内容</label>
-                        <p class="txtValue"><?php
-                            if (isset($job[$detail['D03_YOYAKU_SAGYO_NO']])) {
-                                echo $job[$detail['D03_YOYAKU_SAGYO_NO']];
-                            } else {
-                                echo '';
-                            } ?></p>
-                    </div>
-                    <div class="formItem">
-                        <label class="titleLabel">作業者</label>
-                        <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] .''. $detail['D03_TANTO_MEI']; ?></p>
-                    </div>
-                    <div class="formItem">
-                        <label class="titleLabel">確認者</label>
-                        <p class="txtValue"><?php echo  $detail['D03_KAKUNIN_SEI'] .''.$detail['D03_KAKUNIN_MEI']; ?></p>
-                    </div>
+                <div class="formItem flx-05">
+                  <label class="titleLabel">作業者</label>
+                  <p class="txtValue"><?php echo $detail['D03_TANTO_SEI'] .''. $detail['D03_TANTO_MEI']; ?></p>
                 </div>
-            </fieldset>
-        </section>
-        <section class="bgContent">
-            <fieldset class="fieldsetRegist">
-                <legend class="titleLegend">作業内容</legend>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <p class="txtValue">
-                            <?php
-                            $sagyo = '';
-                            foreach ($detail['sagyo'] as $k => $v) {
-                                $sagyo .= $job[$v['D04_SAGYO_NO']] . '、';
-                            }
-                            echo preg_replace('/、$/', '', $sagyo);
-                            ?>
-                        </p>
-                    </div>
+                <div class="formItem flx-05">
+                  <label class="titleLabel">確認者</label>
+                  <p class="txtValue"><?php echo  $detail['D03_KAKUNIN_SEI'] .''.$detail['D03_KAKUNIN_MEI']; ?></p>
                 </div>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel">その他作業内容</label>
-                        <p class="txtValue"><?php echo nl2br($detail['D03_SAGYO_OTHER']); ?></p>
-
-                    </div>
+              </div>
+              <div class="formGroup">
+                <div class="formItem">
+                  <label class="titleLabel">その他作業内容</label>
+                  <p class="txtValue"><?php echo nl2br($detail['D03_SAGYO_OTHER']); ?></p>
                 </div>
+              </div>
             </fieldset>
         </section>
         <!--confirm-->
@@ -398,6 +381,12 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="formGroup">
+                    <div class="formItem">
+                        <label class="titleLabel">備考</label>
+                        <p class="txtValue"><?php echo nl2br($detail['D03_NOTE']); ?></p>
+                    </div>
+                </div>
             </fieldset>
         </section>
         <section class="bgContent">
@@ -417,15 +406,11 @@
                                 <p class="txtValue"><?php echo $v['M05_COM_NAMEN']; ?></p>
                             </div>
                             <div class="formItem">
-                                <label class="titleLabel">参考価格</label>
-                                <p class="txtValue"><?php echo isset($v['M05_LIST_PRICE']) && $v['M05_LIST_PRICE'] != '' ? number_format($v['M05_LIST_PRICE']) :''; ?></p>
-                            </div>
-                        </div>
-                        <div class="formGroup">
-                            <div class="formItem">
                                 <label class="titleLabel">数量</label>
                                 <p class="txtValue"><?php echo floatval($v['D05_SURYO']); ?></p>
                             </div>
+                        </div>
+                        <div class="formGroup">
                             <div class="formItem">
                                 <label class="titleLabel">単価</label>
                                 <p class="txtValue"><?php echo isset($v['D05_TANKA']) && $v['D05_TANKA'] != '' ? number_format($v['D05_TANKA']) : ''; ?><span class="txtUnit">円</span></p>
@@ -433,6 +418,10 @@
                             <div class="formItem">
                                 <label class="titleLabel">金額</label>
                                 <p class="txtValue"><?php echo isset($v['D05_KINGAKU']) && $v['D05_KINGAKU'] != '' ? number_format($v['D05_KINGAKU']) : ''; ?><span class="txtUnit">円</span></p>
+                            </div>
+                            <div class="formItem">
+                              <label class="titleLabel">POS伝票番号</label>
+                              <p class="txtValue"><?php echo $detail['D03_POS_DEN_NO']; ?></p>
                             </div>
                         </div>
                     <?php } ?>
@@ -443,21 +432,6 @@
                         <p class="txtValue"><strong
                                 class="totalPrice"><?php echo isset($detail['D03_SUM_KINGAKU']) && $detail['D03_SUM_KINGAKU'] != '' ? number_format($detail['D03_SUM_KINGAKU']) : ''; ?></strong><span
                                 class="txtUnit">円</span></p>
-                    </div>
-                </div>
-            </fieldset>
-        </section>
-        <section class="bgContent">
-            <fieldset class="fieldsetRegist">
-                <legend class="titleLegend">その他</legend>
-                <div class="formGroup">
-                    <div class="formItem">
-                        <label class="titleLabel">POS伝票番号</label>
-                        <p class="txtValue"><?php echo $detail['D03_POS_DEN_NO']; ?></p>
-                    </div>
-                    <div class="formItem">
-                        <label class="titleLabel">備考</label>
-                        <p class="txtValue"><?php echo nl2br($detail['D03_NOTE']); ?></p>
                     </div>
                 </div>
             </fieldset>
@@ -486,10 +460,10 @@
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <label class="titleLabel">取付位置</label>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <label class="titleLabel">メーカー</label>
                     </div>
                     <div class="formItem">
@@ -501,15 +475,15 @@
                     <div class="formItem">
                         <label class="titleLabel">セリアル番号</label>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <label class="titleLabel">数量</label>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue">右前</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['right_front_manu']) ? $csv['right_front_manu'] : '' ?></p>
                     </div>
                     <div class="formItem">
@@ -521,15 +495,15 @@
                     <div class="formItem">
                         <p class="txtValue"><?php echo isset($csv['right_front_serial']) ? $csv['right_front_serial'] : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['right_front_no']) && $csv['right_front_no'] ? $csv['right_front_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue">左前</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['left_front_manu']) ? $csv['left_front_manu'] : '' ?></p>
                     </div>
                     <div class="formItem">
@@ -541,15 +515,15 @@
                     <div class="formItem">
                         <p class="txtValue"><?php echo isset($csv['left_front_serial']) ? $csv['left_front_serial'] : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['left_front_no']) && $csv['left_front_no'] ? $csv['left_front_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue">右後</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['right_behind_manu']) ? $csv['right_behind_manu'] : '' ?></p>
                     </div>
                     <div class="formItem">
@@ -561,15 +535,15 @@
                     <div class="formItem">
                         <p class="txtValue"><?php echo isset($csv['right_behind_serial']) ? $csv['right_behind_serial'] : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['right_behind_no']) && $csv['right_behind_no'] ? $csv['right_behind_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue">左後</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['left_behind_manu']) ? $csv['left_behind_manu'] : '' ?></p>
                     </div>
                     <div class="formItem">
@@ -581,15 +555,15 @@
                     <div class="formItem">
                         <p class="txtValue"><?php echo isset($csv['left_behind_serial']) ? $csv['left_behind_serial'] : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['left_behind_no']) && $csv['left_behind_no'] ? $csv['left_behind_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup lineBottom">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue">その他A</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['other_a_manu']) ? $csv['other_a_manu'] : '' ?></p>
                     </div>
                     <div class="formItem">
@@ -601,15 +575,15 @@
                     <div class="formItem">
                         <p class="txtValue"><?php echo isset($csv['other_a_serial']) ? $csv['other_a_serial'] : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['other_a_no']) && $csv['other_a_no'] ? $csv['other_a_no'] : '' ?></p>
                     </div>
                 </div>
                 <div class="formGroup">
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue">その他B</p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['other_b_manu']) ? $csv['other_b_manu'] : '' ?></p>
                     </div>
                     <div class="formItem">
@@ -621,7 +595,7 @@
                     <div class="formItem">
                         <p class="txtValue"><?php echo isset($csv['other_b_serial']) ? $csv['other_b_serial'] : '' ?></p>
                     </div>
-                    <div class="formItem">
+                    <div class="formItem flx-05">
                         <p class="txtValue"><?php echo isset($csv['other_b_no']) && $csv['other_b_no'] ? $csv['other_b_no'] : '' ?></p>
                     </div>
                 </div>
@@ -639,7 +613,7 @@
             <a href="<?php echo $url; ?>" class="btnTool">情報検索</a>
 
             <a href="<?php echo \yii\helpers\BaseUrl::base(true) ?>/preview?den_no=<?php echo $detail['D03_DEN_NO']; ?>"
-               class="btnTool" target="_blank">作業確認</a>
+               class="btnTool cR" target="_blank">作業確認</a>
 
             <span id="pdf" class="btnTool <?php if ($check_file == 0) {echo 'off';}?>" style="cursor: pointer; <?php if ($check_file == 0) {echo 'pointer-events: none';}?>">保証書を表示</span>
 
@@ -648,7 +622,7 @@
             <a href="#modalRemoveConfirm" class="btnTool" data-toggle="modal">削除</a>
         </div>
         <?php if (!empty($detail['sagyo']) && !empty($detail['D03_TANTO_SEI'] && !empty($detail['D03_KAKUNIN_SEI']) && $detail['D03_STATUS'] != '' && $detail['D03_STATUS'] == 0 && !empty($detail['product']))) {
-            echo '<a href="#modalWorkSlipComp" class="btnSubmit" data-toggle="modal">作業確定</a>';
+            echo '<a href="#modalWorkSlipComp" class="btnSubmit cR" data-toggle="modal">作業確定</a>';
         } ?>
     </div>
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>

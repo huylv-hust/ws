@@ -10,7 +10,7 @@ use linslin\yii2\curl;
 
 class api
 {
-    public static $api = array();
+    public static $api = [];
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class api
     protected static function _api($url, $params, $method = 'post')
     {
         $curl = new curl\Curl();
-        $curl->setOption(CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        $curl->setOption(CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
         if (isset(static::$api['proxy'])) {
             $curl->set_option(CURLOPT_PROXY, static::$api['proxy']);
         }
@@ -55,21 +55,21 @@ class api
     public static function updateCar($kaiinCd, $carLength, $carField)
     {
         $url = static::$api['car']['url_update_member_car'];
-        $params = array(
+        $params = [
             'secret' => static::$api['secret'],
             'carLength' => (string)$carLength,
             'kaiinCd' => $kaiinCd,
-        );
+        ];
 
         $temp = [];
         unset($carField['carLength']);
         foreach ($carField as $keys => $vals) {
             foreach ($vals as $key => $val) {
-                if ($key != 'carLength')
+                if ($key != 'carLength') {
                     $temp[$key][] = $val;
+                }
             }
         }
-
         $params = array_merge($params, $temp);
         $res = self::_api($url, $params);
         return $res;
@@ -78,9 +78,9 @@ class api
     public static function getSsName($sscode = '')
     {
 
-        if ($sscode === '')
+        if ($sscode === '') {
             $url = static::$api['ss']['url_ss'];
-        else {
+        } else {
             $url = static::$api['ss']['url_ss'] . '?sscode=' . $sscode;
         }
 
@@ -88,7 +88,7 @@ class api
             return $res;
         }
 
-        $res = self::_api($url, array(), 'get');
+        $res = self::_api($url, [], 'get');
         \Yii::$app->cache->set('ss' . $sscode, $res, 300);
         return $res;
     }
@@ -96,10 +96,10 @@ class api
     public static function search($branch_code = '', $keywork = '')
     {
         $url = static::$api['ss']['url_ss'];
-        $params = array(
+        $params = [
             'branch_code' => $branch_code,
             'keyword' => $keywork,
-        );
+        ];
         $res = self::_api($url, $params, 'get');
         return $res;
     }
@@ -112,21 +112,22 @@ class api
     public static function getInfoCard($card_no)
     {
         $url = static::$api['member']['url_card'];
-        $params = array(
+        $params = [
             'secret' => static::$api['secret'],
             'cardNo' => $card_no,
-        );
+        ];
 
         $res = self::_api($url, $params);
-        if (count($res) == 0)
-            return array('result' => 500);
+        if (count($res) == 0) {
+            return ['result' => 500];
+        }
 
         if (array_key_exists('member_kaiinCd', $res)) {
             $res['result'] = 1;
             return $res;
         }
 
-        return array('result' => 3);
+        return ['result' => 3];
 
     }
 
@@ -153,15 +154,16 @@ class api
     public static function getInfoListCar($kaiinCd)
     {
         $url = static::$api['car']['url_car_info'];
-        $params = array(
+        $params = [
             'secret' => static::$api['secret'],
             'kaiinCd' => $kaiinCd,
-        );
+        ];
 
         $res = self::_api($url, $params);
 
-        if (count($res) == 0)
+        if (count($res) == 0) {
             return false;
+        }
 
         return $res;
     }
@@ -174,15 +176,16 @@ class api
     public static function getInfoListCard($kaiinCd)
     {
         $url = static::$api['car']['url_card_info'];
-        $params = array(
+        $params = [
             'secret' => static::$api['secret'],
             'kaiinCd' => $kaiinCd,
-        );
+        ];
 
         $res = self::_api($url, $params);
 
-        if (count($res) == 0)
+        if (count($res) == 0) {
             return false;
+        }
 
         return $res;
     }
@@ -195,7 +198,7 @@ class api
     public static function updateCardNumber($kaiinCd, $info_card)
     {
         $url = static::$api['car']['url_update_member_card'];
-        $params = array(
+        $params = [
             'secret' => static::$api['secret'],
             'kaiinCd' => $kaiinCd,
             'cardLength' => $info_card['cardLength'],
@@ -204,12 +207,14 @@ class api
             'card_cardKbn' => $info_card['card_cardKbn'],
             'card_cardSort' => $info_card['card_cardSort'],
             'card_upCreFlg' => $info_card['card_upCreFlg'],
-        );
+        ];
 
         $res = self::_api($url, $params);
 
-        if (count($res))
+        if (count($res)) {
             return true;
+        }
+
 
         return false;
     }
@@ -220,14 +225,15 @@ class api
      * @param type $values
      * @return array
      */
-    public static function updateMemberBasic($kaiincd, $values = array())
+    public static function updateMemberBasic($kaiincd, $values = [])
     {
         $url = static::$api['member']['url_update_member'];
         $values['secret'] = static::$api['secret'];
         $values['kaiinCd'] = $kaiincd;
         $res = self::_api($url, $values);
-        if (count($res))
+        if (count($res)) {
             return true;
+        }
 
         return false;
     }
@@ -246,7 +252,7 @@ class api
             return -1;
         }
 
-        $values = array();
+        $values = [];
         $url = static::$api['member']['url_member'];
         $values['secret'] = static::$api['secret'];
         if ($member_id != '') {
@@ -285,7 +291,7 @@ class api
         }
 
         $url = static::$api['car']['url_car'];
-        $res = self::_api($url, array(), 'get');
+        $res = self::_api($url, [], 'get');
         if (count($res)) {
             \Yii::$app->cache->set('list_maker', $res, 3600 * 24);
             return $res;
@@ -331,7 +337,7 @@ class api
     private static function getCarInfo($maker_code = '', $model_code = '', $year = '', $type_code = '')
     {
         $url = static::$api['car']['url_car'];
-        $values = array();
+        $values = [];
         if ($maker_code != '') {
             $values['maker_code'] = $maker_code;
         }
@@ -365,7 +371,7 @@ class api
         }
 
 
-        $member = array();
+        $member = [];
         if (array_key_exists('members_kaiinCd', $res)) {
             $members_kaiincd = $res['members_kaiinCd'];
             for ($i = 0; $i < count($members_kaiincd); ++$i) {
@@ -403,16 +409,11 @@ class api
     public function getAddrFromZipcode($zipcode)
     {
         $url = static::$api['zipcode']['url_addr'];
-        $params = array(
-            'zipcode' => $zipcode
-        );
-
+        $params = ['zipcode' => $zipcode];
         $res = self::_api($url, $params, 'get');
-
         if (count($res) == 0) {
             return false;
         }
-
         return $res;
     }
 }

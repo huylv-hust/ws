@@ -40,7 +40,6 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
             [['D05_SURYO'], 'number'],
             [['D05_COM_CD'], 'string', 'max' => 6],
             [['D05_NST_CD'], 'string', 'max' => 3],
-            [['D05_INP_DATE', 'D05_UPD_DATE'], 'string'],
             [['D05_INP_USER_ID', 'D05_UPD_USER_ID'], 'string', 'max' => 20],
             [['D05_DEN_NO', 'D05_COM_CD', 'D05_NST_CD', 'D05_COM_SEQ'], 'unique', 'targetAttribute' => ['D05_DEN_NO', 'D05_COM_CD', 'D05_NST_CD', 'D05_COM_SEQ'], 'message' => 'The combination of D05  Den  No, D05  Com  Cd, D05  Nst  Cd and D05  Com  Seq has already been taken.']
         ];
@@ -66,7 +65,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -91,7 +90,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
         return $this->obj->save();
     }
 
-    public function setData($data = array(), $id = null)
+    public function setData($data = [], $id = null)
     {
         $obj = new Sdptd05denpyocom();
         if ($id) {
@@ -106,7 +105,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
         $this->obj = $obj;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('D05_COM_SEQ ASC');
@@ -132,7 +131,7 @@ class Sdptd05denpyocom extends \yii\db\ActiveRecord
     public function setDataDefault()
     {
         $attri = $this->attributeLabels();
-        $data = array();
+        $data = [];
         foreach ($attri as $key => $val) {
             $data[$key] = null;
         }

@@ -8,6 +8,7 @@
 
 namespace app\models;
 
+use yii\db\Expression;
 use yii\db\Query;
 
 class Udenpyo
@@ -145,9 +146,9 @@ class Udenpyo
             'D02_CAR_ID' => '', //
             'D02_HIRA' => '',
             'D02_CAR_NO' => '',
-            'D02_INP_DATE' => date('y-M-d'),
+            'D02_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
             'D02_INP_USER_ID' => '0', //
-            'D02_UPD_DATE' => date('y-M-d'), //
+            'D02_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
             'D02_UPD_USER_ID' => '0', //
             'D02_MAKER_CD' => '0',
             'D02_MODEL_CD' => '0',
@@ -175,8 +176,10 @@ class Udenpyo
 
     public function convertKeyApiDbCar($getCarApi)
     {
-        if (count($getCarApi) == 0)
+        if (count($getCarApi) == 0) {
             return $this->defaultApiCar();
+        }
+
         $carApis = [];
         foreach ($getCarApi as $key => $row) {
             if (is_array($row)) {
@@ -201,9 +204,9 @@ class Udenpyo
                 'D02_CAR_ID' => $car['car_syubetu'], //
                 'D02_HIRA' => $car['car_hiragana'],
                 'D02_CAR_NO' => $car['car_carNo'],
-                'D02_INP_DATE' => date('y-M-d'),
+                'D02_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                 'D02_INP_USER_ID' => 0, //
-                'D02_UPD_DATE' => date('y-M-d'), //
+                'D02_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                 'D02_UPD_USER_ID' => 0, //
                 'D02_MAKER_CD' => $car['car_makerCd'],
                 'D02_MODEL_CD' => $car['car_modelCd'],
@@ -253,15 +256,12 @@ class Udenpyo
         ];
     }
 
-    function getInforCarCusFromApi($uDenpyo, $api, $carDefault, &$cusInfo, &$totalCarOfCus, &$car, $is_new = true)
+    public function getInforCarCusFromApi($uDenpyo, $api, $carDefault, &$cusInfo, &$totalCarOfCus, &$car, $is_new = true)
     {
-
-
-        if ($is_new) { // Insert denpyo is Member
+        if ($is_new) {
             $cusDb = $uDenpyo->getTd01Customer(['D01_KAIIN_CD' => $cusInfo['member_kaiinCd']]);
             $cusDb = current($cusDb);
             $cusInfo = $api->getMemberInfo($cusInfo['member_kaiinCd']);
-
         } else {
             $cusDb = $cusInfo;
             $cusInfo = $api->getMemberInfo($cusInfo['D01_KAIIN_CD']);
@@ -305,7 +305,6 @@ class Udenpyo
     {
         $transaction = $this->car->getDb()->beginTransaction();
         try {
-
             $this->deleteDataObj('car', 'D02_CUST_NO = ' . $custNo);
             if ($this->car->saveDataMuti($data) > 0) {
                 $transaction->commit();
@@ -337,8 +336,9 @@ class Udenpyo
             } else {
                 $res = $this->deleteDataObj('denpyoSagyo', 'D04_DEN_NO = ' . $dataDenpyo['D03_DEN_NO']);
                 $checkSuccess = false;
-                if ($res >= 0)
+                if ($res >= 0) {
                     $checkSuccess = true;
+                }
             }
 
             if ($checkSuccess) {
@@ -348,18 +348,19 @@ class Udenpyo
                 } else {
                     $res = $this->deleteDataObj('denpyoCom', 'D05_DEN_NO = ' . $dataDenpyo['D03_DEN_NO']);
                     $checkSuccess = false;
-                    if ($res >= 0)
+                    if ($res >= 0) {
                         $checkSuccess = true;
+                    }
                 }
             }
         }
 
-        if ($checkSuccess == false)
+        if ($checkSuccess == false) {
             $transaction->rollBack();
-        else
+        } else {
             $transaction->commit();
+        }
 
         return $checkSuccess;
     }
-
 }

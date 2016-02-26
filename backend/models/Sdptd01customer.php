@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\db\Expression;
 use yii\db\Query;
 use Yii;
 
@@ -52,7 +53,7 @@ class Sdptd01customer extends \yii\db\ActiveRecord
             [['D01_UKE_TAN_NAMEN'], 'string', 'max' => 100],
             [['D01_CUST_NAMEN'], 'string', 'max' => 45],
             [['D01_CUST_NAMEK'], 'string', 'max' => 60],
-            [['D01_YUBIN_BANGO', 'D01_INP_DATE', 'D01_UPD_DATE'], 'string'],
+            [['D01_YUBIN_BANGO'], 'string'],
             [['D01_ADDR'], 'string', 'max' => 70],
             [['D01_NOTE'], 'string', 'max' => 2000],
             [['D01_SS_CD'], 'string', 'max' => 6],
@@ -90,41 +91,42 @@ class Sdptd01customer extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
 
         //$query->where('status=:status', [':status' => $status]);
-        if (isset($filters['D01_KAIIN_CD']) && $filters['D01_KAIIN_CD'])
+        if (isset($filters['D01_KAIIN_CD']) && $filters['D01_KAIIN_CD']) {
             $query->andwhere('D01_KAIIN_CD = ' . $filters['D01_KAIIN_CD']);
+        }
 
-        if (isset($filters['D01_CUST_NO']) && $filters['D01_CUST_NO'])
+        if (isset($filters['D01_CUST_NO']) && $filters['D01_CUST_NO']) {
             $query->andwhere('D01_CUST_NO = ' . $filters['D01_CUST_NO']);
-
+        }
         if (isset($filters['D01_KAKE_CARD_NO']) && $filters['D01_KAKE_CARD_NO']) {
             $query->where(['D01_KAKE_CARD_NO' => $filters['D01_KAKE_CARD_NO']]);
         }
 
-        if (isset($filters['offset']) && $filters['offset'])
+        if (isset($filters['offset']) && $filters['offset']) {
             $query->offset($filters['offset']);
-
-        if (isset($filters['limit']) && $filters['limit'])
+        }
+        if (isset($filters['limit']) && $filters['limit']) {
             $query->limit($filters['limit']);
+        }
 
         return $query;
     }
 
     public function saveData()
     {
-
         return $this->obj->save();
     }
 
-    public function setData($data = array(), &$id = null)
+    public function setData($data = [], &$id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
-        $data['D01_UPD_DATE'] = date('d-M-y');
+        $data['D01_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
         $data['D01_UPD_USER_ID'] = $login_info['M50_USER_ID'];
         if ($id) {
             $obj = static::findOne($id);
@@ -132,20 +134,24 @@ class Sdptd01customer extends \yii\db\ActiveRecord
             $obj = new Sdptd01customer();
             $data['D01_CUST_NO'] = $obj->getSeq();
             $id = $data['D01_CUST_NO'];
-            $data['D01_INP_DATE'] = date('d-M-y');
+            $data['D01_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
             $data['D01_INP_USER_ID'] = $login_info['M50_USER_ID'];
 
         }
 
         $obj->attributes = $data;
         foreach ($obj->attributes as $k => $v) {
-            $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            if ($k != 'D01_UPD_DATE' && $k != 'D01_INP_DATE') {
+                $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            } else {
+                $obj->{$k} = $v;
+            }
         }
 
         $this->obj = $obj;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('D01_CUST_NO ASC');
@@ -155,7 +161,7 @@ class Sdptd01customer extends \yii\db\ActiveRecord
     public function setDataDefault()
     {
         $attri = $this->attributeLabels();
-        $data = array();
+        $data = [];
         foreach ($attri as $key => $val) {
             $data[$key] = null;
         }

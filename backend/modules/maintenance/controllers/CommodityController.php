@@ -24,7 +24,7 @@ class CommodityController extends WsController
     public function createDataExport()
     {
         $obj = new Sdptm05com();
-        $product = $obj->getData(array(), 'M05_COM_CD, M05_NST_CD, M05_KIND_COM_NO, M05_LARGE_COM_NO, M05_MIDDLE_COM_NO, M05_KIND_DM_NO, M05_COM_NAMEN, M05_LIST_PRICE, M05_ORDER, M05_MEMO');
+        $product = $obj->getData([], 'M05_COM_CD, M05_NST_CD, M05_KIND_COM_NO, M05_LARGE_COM_NO, M05_MIDDLE_COM_NO, M05_KIND_DM_NO, M05_COM_NAMEN, M05_LIST_PRICE, M05_ORDER, M05_MEMO');
         return $product;
     }
 

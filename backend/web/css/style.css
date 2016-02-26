@@ -79,7 +79,7 @@ ul li {
 	list-style: outside none none;
 }
 body {
-	font: 20px/1.6 "Meiryo UI",Avenir,"Open Sans","Helvetica Neue",Helvetica,Arial,Verdana,Roboto,"游ゴシック","Yu Gothic","游ゴシック体","YuGothic","ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック","MS PGothic",sans-serif;
+	font: 24px/1.6 "Meiryo UI",Avenir,"Open Sans","Helvetica Neue",Helvetica,Arial,Verdana,Roboto,"游ゴシック","Yu Gothic","游ゴシック体","YuGothic","ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック","MS PGothic",sans-serif;
 }
 #header {
 	background: #d0111b none repeat scroll 0 0;
@@ -93,7 +93,7 @@ body {
 }
 .titlePage {
 	color: #fff;
-	font-size: 23px;
+	font-size: 28px;
 	font-weight: bold;
 	line-height: 70px;
 	margin: 0 35%;
@@ -120,13 +120,14 @@ body {
 	font-size: 16px;
 	margin-right: 10px;
 	padding-left: 17px;
+  font-size: 19px;
 }
 .iconLogout {
 	background: #970e15 url("../img/icon_logout.png") no-repeat scroll 10px center;
 	border-radius: 5px;
 	color: #fff !important;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 19px;
 	font-weight: bold;
 	line-height: 50px;
 	min-height: 50px;
@@ -148,13 +149,14 @@ body {
 	display: table;
 	padding: 20px 0;
 	width: 100%;
+  font: 24px/30px;
 }
 .readme p {
 	margin: 0 20px;
 }
 .titleContent {
 	float: left;
-	font-size: 20px;
+	font-size: 24px;
 	font-weight: bold;
 	line-height: 1.6;
 	margin-left: 20px;
@@ -209,7 +211,7 @@ body {
 #footer {
 	bottom: 0;
 	clear: both;
-	height: 66px;
+	height: 76px;
 	left: 0;
 	position: fixed;
 	width: 100%;
@@ -217,8 +219,8 @@ body {
 }
 .toolbar {
 	background: rgba(0, 0, 0, 0.8) none repeat scroll 0 0;
-	font-size: 17px;
-	height: 50px;
+	font-size: 20px;
+	height: 60px;
 	width: 100%;
 }
 .copyright {
@@ -231,6 +233,7 @@ body {
 	margin: 0 auto;
 	text-align: center;
 }
+.sidr a { font-size: 18px; }
 #navSideMenu {
 	background: rgba(0, 0, 0, 0) url("../img/btn_side_menu.png") no-repeat scroll 0 0 / 50px 50px;
 	display: block;
@@ -263,7 +266,7 @@ body {
 	width: 100%;
 }
 .tableList th, .tableList td {
-	font-size: 18px;
+	font-size: 22px;
 }
 .tableList th {
 	background: #696969 none repeat scroll 0 0;
@@ -296,12 +299,11 @@ body {
 	padding: 4px 10px;
 	text-align: center;
 }
-.tablePrint td.wd30 {
-	width: 30%;
-}
-.tablePrint td.wd35 {
-	width: 35%;
-}
+.tablePrint td.wd15 { width: 15%; }
+.tablePrint td.wd20 { width: 20%; }
+.tablePrint td.wd30 { width: 30%; }
+.tablePrint td.wd35 { width: 35%; }
+.tablePrint td.wd40 { width: 40%; }
 .tablePrint td.hg140 {
 	min-height: 140px;
 }
@@ -310,7 +312,7 @@ body {
 }
 .mini td {
 	box-sizing: content-box;
-	height: 60px;
+	height: 30px;
 }
 .vMiddle {
 	vertical-align: middle;
@@ -335,7 +337,7 @@ td.tdLeft {
 	background-color: #6a6a6a;
 	color: #fff;
 	float: left;
-	font-size: 14px;
+	font-size: 17px;
 	line-height: 33px;
 	position: relative;
 	text-align: center;
@@ -371,13 +373,13 @@ td.tdLeft {
 }
 .must {
 	color: #ff2e39;
-	font-size: 20px;
+	font-size: 24px;
 }
 .textForm {
 	background: #fff none repeat scroll 0 0;
 	border: 2px solid #008321;
 	border-radius: 10px;
-	font-size: 18px;
+	font-size: 22px;
 	height: 38px;
 	line-height: 38px;
 	max-width: 95%;
@@ -394,7 +396,7 @@ td.tdLeft {
 	background: #fff none repeat scroll 0 0;
 	border: 2px solid #008321;
 	border-radius: 10px;
-	font-size: 18px;
+	font-size: 22px;
 	height: 76px;
 	padding: 0 5px;
 	width: 90%;
@@ -407,14 +409,14 @@ td.tdLeft {
 	border: 2px solid #008321;
 	border-radius: 10px;
 	box-sizing: border-box;
-	font-size: 18px;
+	font-size: 22px;
 	height: 42px;
 	line-height: 38px;
 	padding: 0 48px 0 5px;
 	vertical-align: middle;
 }
 .formWidthXXS {
-	width: 30px;
+	width: 42px;
 }
 .formWidthXS {
 	width: 68px;
@@ -422,17 +424,22 @@ td.tdLeft {
 .formWidthS {
 	width: 100px;
 }
+.formWidthSM {
+	width: 150px;
+}
 .formWidthM {
 	width: 238px;
 }
+.formWidthFull { width: 100%; }
 .txtNormal {
 	font-weight: normal;
 }
 .txtExample {
 	color: #666;
-	font-size: 14px;
+	font-size: 17px;
 	margin-left: 5px;
 }
+.txtSmall { font-size: 60% !important; }
 .txtSub {
 	font-size: 80%;
 }
@@ -441,7 +448,7 @@ td.tdLeft {
 }
 .txtPrintCheck {
 	color: #333;
-	font-size: 18px;
+	font-size: 22px;
 	padding-left: 32px;
 }
 .checkPrint {
@@ -453,7 +460,7 @@ td.tdLeft {
 	position: relative;
 }
 .titleLegend {
-	font-size: 20px;
+	font-size: 24px;
 	font-weight: bold;
 	text-shadow: 0 1px 0 #fff;
 }
@@ -465,7 +472,7 @@ td.tdLeft {
 }
 .titleLabel {
 	display: block;
-	font-size: 17px;
+	font-size: 20px;
 	font-weight: bold;
 	line-height: 32px;
 	padding: 0;
@@ -476,7 +483,7 @@ td.tdLeft {
 }
 .titleLabelTotal {
 	display: block;
-	font-size: 17px;
+	font-size: 20px;
 	font-weight: bold;
 	line-height: 32px;
 	padding: 0;
@@ -486,11 +493,12 @@ td.tdLeft {
 	line-height: 44px;
 }
 .totalPrice {
-	font-size: 20px;
+	font-size: 24px;
 	margin-right: 5px;
 }
 .formGroup {
 	display: flex;
+  display: -ms-flexbox;
 }
 .pContent .formGroup {
 	background: #ccc none repeat scroll 0 0;
@@ -518,16 +526,24 @@ td.tdLeft {
 	text-align: center;
 }
 .flexRight {
-	flex: 1 1 0;
+	box-flex: 1; flex: 1; -ms-flex: 1;
 	margin-bottom: 20px;
 	text-align: right;
 }
 .flexHorizontal {
 	display: flex;
+  display: -ms-flexbox;
 }
 .itemFlex {
-	flex: 1 1 0;
+	box-flex: 1; flex: 1; -ms-flex: 1;
 }
+.formItem.initial, .itemFlex.initial { padding: 0 30px 0 0; box-flex: initial; flex: initial; -ms-flex: initial; width: 300px; min-width: 200px; }
+.formItem.flx-2, .itemFlex.flx-2 { box-flex: 2; flex: 2; -ms-flex: 2; }
+.formItem.flx-2 .textForm, .itemFlex.flx-2 .textForm { width: 85%; }
+.formItem.flx-05, .itemFlex.flx-05 { box-flex: 0.5; flex: 0.5; -ms-flex: 0.5; }
+.formSearchList .labelRadios { font-size: 20px; line-height: 32px; }
+.formSearchList .itemFlex.initial { width: 240px; }
+.formSearchList .itemFlex .textForm { width: 410px; }
 .txtValue {
 	line-height: 42px;
 	min-height: 42px;
@@ -548,6 +564,7 @@ td.tdLeft {
 	outline: medium none;
 	position: absolute;
 }
+.btnFormSub { margin-right: 5px; padding: 5px 15px; border-radius: 7px; color: #000 !important; background: #ccc; cursor: pointer; float: left; font-size: 20px; font-weight: bold; line-height: 32px; box-shadow: 0 2px 0 #999; }
 .labelRadios {
 	background: #ccc none repeat scroll 0 0;
 	border-left: 1px solid #fff;
@@ -555,10 +572,11 @@ td.tdLeft {
 	box-shadow: 0 2px 0 #999;
 	cursor: pointer;
 	float: left;
-	font-size: 17px;
-	line-height: 32px;
+	font-size: 28px;
+	line-height: 48px;
 	margin: 0 0 2px;
 	padding: 5px 15px;
+  border-radius: 7px; color: #000 !important;
 }
 .labelRadios.checked {
 	background: #4cd647 none repeat scroll 0 0;
@@ -585,7 +603,8 @@ td.tdLeft {
 	box-shadow: 0 2px 0 #999;
 	cursor: pointer;
 	float: left;
-	line-height: 32px;
+  font-size: 28px;
+	line-height: 48px;
 	margin: 0 0 2px;
 	padding: 5px 15px;
 }
@@ -604,11 +623,13 @@ td.tdLeft {
 	border-radius: 0 7px 7px 0;
 	border-right: 0 none;
 }
+.checkItem.checkSingle { border-radius: 7px; display: inline-block; height: 58px; background: #ccc; box-shadow: 0 2px 0 #999; }
 .labelSingleCheck {
 	float: left;
-	line-height: 32px;
-	margin-right: 15px;
-	padding-left: 28px;
+  font-size: 28px;
+	line-height: 58px;
+  padding-right: 17px;
+	padding-left: 35px;
 	position: relative;
 }
 .labelSingleCheck::before {
@@ -621,15 +642,15 @@ td.tdLeft {
 	font-family: "FontAwesome";
 	font-size: 20px;
 	height: 24px;
-	left: 0;
+	left: 7px;
 	line-height: 22px;
 	padding-left: 1px;
 	position: absolute;
-	top: 4px;
+	top: 15px;
 	width: 24px;
 }
 .labelSingleCheck.checked::before {
-	content: "";
+	content: "";
 }
 .labelPrintCheck {
 	font-size: 16px;
@@ -646,7 +667,7 @@ td.tdLeft {
 }
 .labelPrintCheck input[type="checkbox"]:checked::before {
 	color: #333;
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 	font-size: 17px;
 }
@@ -661,7 +682,7 @@ td.tdLeft {
 }
 .itemPrintCheck.FR {
 	left: 20px;
-	top: 1px;
+	top: -8px;
 }
 .itemPrintCheck.FL {
 	bottom: 8px;
@@ -669,7 +690,7 @@ td.tdLeft {
 }
 .itemPrintCheck.RR {
 	right: -5px;
-	top: 1px;
+	top: -8px;
 }
 .itemPrintCheck.RL {
 	bottom: 8px;
@@ -687,7 +708,7 @@ td.tdLeft {
 	min-height: 26px;
 }
 .inputFile {
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 17px;
 }
 .commodityBox {
@@ -759,12 +780,12 @@ td.tdLeft {
 .btnNavBasic {
 	color: #045683;
 	display: block;
-	font-size: 20px;
+	font-size: 24px;
 	font-weight: bold;
 	left: 0;
-	line-height: 24px;
+	line-height: 28px;
 	outline: medium none;
-	padding-top: 110px;
+	padding-top: 105px;
 	position: relative;
 	text-align: center;
 	text-decoration: none;
@@ -790,7 +811,7 @@ td.tdLeft {
 .btnNavOther {
 	color: #326313 !important;
 	display: block;
-	font-size: 20px;
+	font-size: 24px;
 	font-weight: bold;
 	left: 0;
 	line-height: 24px;
@@ -819,31 +840,31 @@ td.tdLeft {
 	width: 100px;
 }
 .iconCard::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconRegistWork::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconSearchWork::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconMainte::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconReserve::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconOldCar::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconList::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconPrint {
@@ -853,7 +874,7 @@ td.tdLeft {
 	text-decoration: none;
 }
 .iconPrint::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 	margin-right: 5px;
 }
@@ -864,19 +885,20 @@ td.tdLeft {
 	text-decoration: none;
 }
 .iconClose::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 	margin-right: 5px;
 }
 .iconXls::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 }
 .iconPreview {
 	margin-left: 10px;
+  font-size: 18px;
 }
 .iconPreview::before {
-	content: "";
+	content: "";
 	font-family: "FontAwesome";
 	margin-right: 5px;
 }
@@ -887,9 +909,9 @@ td.tdLeft {
 	color: #fff !important;
 	display: block;
 	font-weight: bold;
-	height: 36px;
+	height: 46px;
 	left: 10px;
-	line-height: 36px;
+	line-height: 46px;
 	position: absolute;
 	text-align: center;
 	text-decoration: none;
@@ -906,8 +928,8 @@ td.tdLeft {
 	color: #fff !important;
 	display: block;
 	font-weight: bold;
-	height: 36px;
-	line-height: 36px;
+	height: 46px;
+	line-height: 46px;
 	position: absolute;
 	right: 10px;
 	text-align: center;
@@ -926,8 +948,8 @@ td.tdLeft {
 	color: #fff !important;
 	display: block;
 	font-weight: bold;
-	height: 36px;
-	line-height: 36px;
+	height: 46px;
+	line-height: 46px;
 	margin: 0 auto;
 	text-align: center;
 	text-decoration: none;
@@ -939,6 +961,7 @@ td.tdLeft {
 .btnSubmit.wide {
 	width: 220px;
 }
+.btnSubmit.cR { background: #830007; box-shadow: 0 3px 0 #540005; }
 .btnCancel {
 	background: #999 none repeat scroll 0 0;
 	border: 0 none;
@@ -976,7 +999,7 @@ td.tdLeft {
 	box-shadow: 0 2px 0 #38732c;
 	color: #fff !important;
 	display: inline-block;
-	font-size: 13px;
+	font-size: 16px;
 	font-weight: bold;
 	height: 28px;
 	line-height: 28px;
@@ -985,6 +1008,8 @@ td.tdLeft {
 	text-align: center;
 	text-decoration: none;
 }
+.btnFormTool.searchGoods { position: relative; left: 5px; top: -5px; font-weight: normal; text-shadow: none; }
+.btnFormTool.large { padding: 5px 15px; box-sizing: content-box; font-size: 20px; line-height: 32px; }
 .areaSearch {
 	margin: 20px auto;
 	text-align: center;
@@ -1011,8 +1036,8 @@ td.tdLeft {
 	border: 1px solid #fff;
 	color: #fff !important;
 	display: block;
-	height: 30px;
-	line-height: 30px;
+	height: 40px;
+	line-height: 36px;
 	margin: 0;
 	padding: 0 10px;
 	text-align: center;
@@ -1051,8 +1076,8 @@ li:last-child .btnPaging {
 	display: block;
 	float: left;
 	font-weight: bold;
-	height: 36px;
-	line-height: 36px;
+	height: 46px;
+	line-height: 46px;
 	margin: 0 7px;
 	text-align: center;
 	text-decoration: none;
@@ -1080,7 +1105,7 @@ li:last-child .btnPaging {
 	color: #fff;
 	content: "+";
 	display: inline-block;
-	font: 24px Arial,Helvetica,sans-serif;
+	font: 29px Arial,Helvetica,sans-serif;
 	height: 27px;
 	margin-right: 5px;
 	text-align: center;
@@ -1102,7 +1127,7 @@ li:last-child .btnPaging {
 	color: #fff;
 	content: "-";
 	display: inline-block;
-	font: 24px Arial,Helvetica,sans-serif;
+	font: 29px Arial,Helvetica,sans-serif;
 	height: 27px;
 	margin-right: 5px;
 	text-align: center;
@@ -1149,9 +1174,10 @@ li:last-child .btnPaging {
 	border-radius: 5px;
 	box-shadow: 0 2px 0 #38732c;
 	color: #fff;
-	content: "";
+	content: "";
 	display: inline-block;
 	font-family: "FontAwesome";
+  font-size: 16px;
 	height: 27px;
 	line-height: 27px;
 	margin-right: 5px;
@@ -1190,8 +1216,9 @@ li:last-child .btnPaging {
 	color: #fff;
 	content: "+";
 	display: inline-block;
-	font: 24px Arial,Helvetica,sans-serif;
+	font: 29px Arial,Helvetica,sans-serif;
 	height: 27px;
+  line-height: 27px;
 	margin-right: 5px;
 	text-align: center;
 	vertical-align: top;
@@ -1201,7 +1228,7 @@ li:last-child .btnPaging {
 	background: #999 none repeat scroll 0 0;
 	box-shadow: 0 2px 0 #505051;
 	content: "-";
-	font-size: 30px;
+	font-size: 36px;
 	line-height: 24px;
 }
 .flexHead {
@@ -1224,9 +1251,10 @@ li:last-child .btnPaging {
 	border-radius: 5px;
 	box-shadow: 0 2px 0 #38732c;
 	color: #fff;
-	content: "";
+	content: "";
 	display: inline-block;
 	font-family: "FontAwesome";
+  font-size: 16px;
 	height: 27px;
 	line-height: 27px;
 	margin-right: 5px;
@@ -1238,7 +1266,7 @@ li:last-child .btnPaging {
 	width: 90%;
 }
 .modal-dialog.widthS {
-	width: 700px;
+	width: 940px;
 }
 .close, .close span {
 	font-size: 30px;
@@ -1261,6 +1289,7 @@ li:last-child .btnPaging {
 .pt50 {
 	padding-top: 50px;
 }
+.pl10 { padding-left: 10px; }
 @page {
 	margin: 20px 10px 10px;
 }
@@ -1348,6 +1377,7 @@ li:last-child .btnPaging {
 	.labelPrintCheck input[type="checkbox"] {
 		height: 12px;
 		width: 12px;
+    vertical-align: tpp;
 	}
 	.itemPrintAir {
 		margin-top: 10px;
@@ -1363,6 +1393,7 @@ li:last-child .btnPaging {
 		bottom: 0;
 		left: 10px;
 	}
+  .itemPrintCheck.RR { top: 1px; }
 }
 .bgGray {
 	background-color: #e8e8e8;
@@ -1385,7 +1416,7 @@ button {
 }
 label {
 	color: #000;
-	font-size: 17px;
+	font-size: 20px;
 	padding-left: 3px;
 }
 .noti {
@@ -1395,7 +1426,7 @@ label {
 	background: #f1b7ba none repeat scroll 0 0;
 	color: #9d0d14;
 	display: none;
-	font-size: 13px;
+	font-size: 16px;
 	padding: 5px 25px;
 	position: absolute;
 	right: -5%;
@@ -1439,7 +1470,7 @@ label {
 	border-spacing: 2px;
 	display: table;
 	margin: 0 auto;
-	width: 530px;
+	width: 700px;
 }
 .modal-body .frmContent {
 	width: 100%;
@@ -1470,7 +1501,7 @@ label {
 	border: medium none;
 	box-shadow: 0 3px 0 #2d6322;
 	display: block;
-	font-size: 18px;
+	font-size: 22px;
 	margin-top: 15px;
 	padding: 9px 35px;
 }

@@ -29,9 +29,9 @@ return [
         ]
     ],
     'components' => [
-        'request'=>array(
+        'request'=> [
             'enableCsrfValidation'=>false,
-        ),
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

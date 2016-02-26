@@ -26,20 +26,20 @@ class StaffController extends WsController
     {
         $ss = utilities::getAllBranch();
         $login_info = Yii::$app->session->get('login_info');
-        $data['all_branch'] = array('' => '') + $ss['all_branch'];
+        $data['all_branch'] = ['' => ''] + $ss['all_branch'];
         $data['all_ss'] = $ss['all_ss'];
         $request = Yii::$app->request;
         $filters = $request->get();
         $query_string = empty($filters) ? '' : '?'.http_build_query($filters);
         $data['filters'] = (!isset($filters['M08_HAN_CD']) || !isset($filters['M08_SS_CD']))
-            ? array(
+            ? [
                 'M08_HAN_CD' => $ss['all_ss_branch'][$login_info['M50_SS_CD']],
                 'M08_SS_CD' => $login_info['M50_SS_CD']
-            )
+            ]
             : $filters;
 
         Yii::$app->session->set('url_list_staff', BaseUrl::base().'/list-staff'.$query_string);
-        $data['all_ss_search'] = array('' => '') + $this->processGetss($data['filters']['M08_HAN_CD'], $ss);
+        $data['all_ss_search'] = ['' => ''] + $this->processGetss($data['filters']['M08_HAN_CD'], $ss);
         $obj = new Sdptm08sagyosya();
 
         $count = $obj->counData($data['filters']);
@@ -82,8 +82,8 @@ class StaffController extends WsController
         if ($branch_id == '') {
             return $ss['all_ss'];
         }
-        $branch_ss = isset($ss['all_branch_ss'][$branch_id]) ? $ss['all_branch_ss'][$branch_id] : array();
-        $array_ss = array();
+        $branch_ss = isset($ss['all_branch_ss'][$branch_id]) ? $ss['all_branch_ss'][$branch_id] : [];
+        $array_ss = [];
         foreach ($branch_ss as $k => $v) {
             $array_ss[$v] = $ss['all_ss'][$v];
         }
@@ -98,18 +98,17 @@ class StaffController extends WsController
     {
         $request = Yii::$app->request;
         $data['api'] = utilities::getAllBranch();
-        $data['all_branch'] = array('' => '') + $data['api']['all_branch'];
+        $data['all_branch'] = ['' => ''] + $data['api']['all_branch'];
         $login_info = Yii::$app->session->get('login_info');
-        $data['default_value'] =  array(
+        $data['default_value'] =  [
             'M08_HAN_CD' => $data['api']['all_ss_branch'][$login_info['M50_SS_CD']],
-            'M08_SS_CD' => $login_info['M50_SS_CD']);
-
+            'M08_SS_CD' => $login_info['M50_SS_CD']];
         if ($request->get('branch') && $request->get('ss') && $request->get('cd')) {
-            $primary = array(
+            $primary = [
                 'M08_HAN_CD' => $request->get('branch'),
                 'M08_SS_CD' => $request->get('ss'),
                 'M08_JYUG_CD' => $request->get('cd'),
-            );
+            ];
             $data['model'] = Sdptm08sagyosya::findOne($primary);
             if (!$data['model']) {
                 return $this->redirect(BaseUrl::base().'/list-staff');
@@ -128,7 +127,7 @@ class StaffController extends WsController
             Yii::$app->view->title = '作業者登録';
         }
 
-        $data['all_ss'] = array('' => '') + $all_ss;
+        $data['all_ss'] = ['' => ''] + $all_ss;
         if ($request->isPost) {
             $data['model']->setData($request->post('Sdptm08sagyosya'), $primary);
             if ($data['model']->saveData()) {

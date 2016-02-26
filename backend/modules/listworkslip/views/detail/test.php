@@ -47,7 +47,7 @@
                             <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : date('Y/m/d'); ?></p>
                         </td>
                         <td>
-                            <p class="txtValue"><?php echo isset($detail['D01_UKE_TAN_NAMEN']) ? $detail['D01_UKE_TAN_NAMEN'] : ''; ?></p>
+                            <p class="txtValue">担当者の名前</p>
                         </td>
                         <td>
                             <p class="txtValue"><?php echo $detail['D03_SEKOU_YMD'] != '' ? Yii::$app->formatter->asDate(date('d-M-y', strtotime($detail['D03_SEKOU_YMD'])), 'yyyy/MM/dd') : '' ?></p>
@@ -508,10 +508,10 @@
                         </td>
                     </tr>
                     <tr>
-                      <th colspan="4">備考</th>
+                        <th colspan="4">備考</th>
                     </tr>
                     <tr>
-                      <td colspan="4"><p class="txtValue"></p></td>
+                        <td colspan="4"><p class="txtValue"></p></td>
                     </tr>
                 </table>
             </fieldset>

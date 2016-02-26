@@ -63,12 +63,11 @@ class Sdptm03largecom extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
         if (count($filters)) {
-
             foreach ($filters as $field => $val) {
                 if ($field != 'offset' && $field != 'limit') {
                     $query->andwhere($field . ' = ' . $val);
@@ -76,11 +75,13 @@ class Sdptm03largecom extends \yii\db\ActiveRecord
             }
         }
         //$query->where('status=:status', [':status' => $status]);
-        if (isset($filters['offset']) && $filters['offset'])
+        if (isset($filters['offset']) && $filters['offset']) {
             $query->offset($filters['offset']);
+        }
 
-        if (isset($filters['limit']) && $filters['limit'])
+        if (isset($filters['limit']) && $filters['limit']) {
             $query->limit($filters['limit']);
+        }
 
         return $query;
     }
@@ -90,7 +91,7 @@ class Sdptm03largecom extends \yii\db\ActiveRecord
         return $this->obj->save();
     }
 
-    public function setData($data = array(), $id = null)
+    public function setData($data = [], $id = null)
     {
         $obj = new Sdptd04denpyosagyo();
         if ($id) {
@@ -105,7 +106,7 @@ class Sdptm03largecom extends \yii\db\ActiveRecord
         $this->obj = $obj;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('M03_KIND_COM_NO ASC');

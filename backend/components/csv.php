@@ -4,10 +4,8 @@ namespace backend\components;
 
 class csv
 {
-
-    public static function writecsv($post = array())
+    public static function writecsv($post = [])
     {
-
         $branch = utilities::getAllBranch();
         $branch_code = isset($branch['all_ss_branch'][$post['D01_SS_CD']]) ? $branch['all_ss_branch'][$post['D01_SS_CD']] : '';
         $branch_name = isset($branch['all_branch'][$branch_code]) ? $branch['all_branch'][$branch_code] : '';
@@ -15,18 +13,15 @@ class csv
 
         if ($post['D01_MOBTEL_NO'] && $post['D01_TEL_NO']) {
             $post['TEL_NUMBER'] = $post['D01_TEL_NO'] . ',' . $post['D01_MOBTEL_NO'];
-        }
-        elseif($post['D01_MOBTEL_NO'])
-        {
+        } elseif ($post['D01_MOBTEL_NO']) {
             $post['TEL_NUMBER'] = $post['D01_MOBTEL_NO'];
-        }
-        elseif($post['D01_TEL_NO']) {
+        } elseif ($post['D01_TEL_NO']) {
             $post['TEL_NUMBER'] = $post['D01_TEL_NO'];
         } else {
             $post['TEL_NUMBER'] = '';
         }
 
-        $data[0] = array(
+        $data[0] = [
             '保証書番号',
             '保証期間',
             '購入日',
@@ -74,21 +69,19 @@ class csv
             'SSコード',
             'SS名',
             '作業伝票番号',
-        );
-
-
-        $data[1] = array(
+        ];
+        $data[1] = [
             'warranty_card_number' => isset($post['M09_WARRANTY_NO']) ? $post['M09_WARRANTY_NO'] : '',
             'warranty_period' => isset($post['warranty_period']) ? $post['warranty_period'] : '',
             'purchase_date' => isset($post['M09_INP_DATE']) ? $post['M09_INP_DATE'] : '',
             'purchase_no' => isset($post['D05_SURYO']) ? $post['D05_SURYO'] : '',
             'D01_CUST_NAMEN' => isset($post['D01_CUST_NAMEN']) ? $post['D01_CUST_NAMEN'] : '',
             'D01_CUST_NAMEK' => isset($post['D01_CUST_NAMEK']) ? $post['D01_CUST_NAMEK'] : '',
-            'D01_YUBIN_BANGO' => isset($post['D01_YUBIN_BANGO']) && trim($post['D01_YUBIN_BANGO']) != '' ? substr($post['D01_YUBIN_BANGO'],0,3).'-'.substr($post['D01_YUBIN_BANGO'],3,4) : '',
+            'D01_YUBIN_BANGO' => isset($post['D01_YUBIN_BANGO']) && trim($post['D01_YUBIN_BANGO']) != '' ? substr($post['D01_YUBIN_BANGO'], 0, 3) . '-' . substr($post['D01_YUBIN_BANGO'], 3, 4) : '',
             'D01_ADDR' => isset($post['D01_ADDR']) ? $post['D01_ADDR'] : '',
             'TEL_NUMBER' => $post['TEL_NUMBER'],
             'D02_MODEL_CD' => isset($post['D02_CAR_NAMEN_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_CAR_NAMEN_' . $post['D02_CAR_SEQ_SELECT']] : '',
-            'D02_CAR_NO' => isset($post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_RIKUUN_NAMEN_' . $post['D02_CAR_SEQ_SELECT']].' '.$post['D02_CAR_ID_' . $post['D02_CAR_SEQ_SELECT']].' '.$post['D02_HIRA_' . $post['D02_CAR_SEQ_SELECT']].' '.$post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']] : '',
+            'D02_CAR_NO' => isset($post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']]) ? $post['D02_RIKUUN_NAMEN_' . $post['D02_CAR_SEQ_SELECT']] . ' ' . $post['D02_CAR_ID_' . $post['D02_CAR_SEQ_SELECT']] . ' ' . $post['D02_HIRA_' . $post['D02_CAR_SEQ_SELECT']] . ' ' . $post['D02_CAR_NO_' . $post['D02_CAR_SEQ_SELECT']] : '',
             'right_front_manu' => isset($post['right_front_manu']) ? $post['right_front_manu'] : '',
             'right_front_product' => isset($post['right_front_product']) ? $post['right_front_product'] : '',
             'right_front_size' => isset($post['right_front_size']) ? $post['right_front_size'] : '',
@@ -125,28 +118,26 @@ class csv
             'D01_SS_CD' => isset($post['D01_SS_CD']) ? $post['D01_SS_CD'] : '',
             'ss_name' => $ss_name,
             'D03_DEN_NO' => isset($post['D03_DEN_NO']) ? $post['D03_DEN_NO'] : '',
-        );
+        ];
         utilities::createFolder('data/csv/');
         $fp = fopen(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
         foreach ($data as $key => $value) {
             fputcsv($fp, $value);
         }
-
         fclose($fp);
     }
 
-    public static function readcsv($post = array())
+    public static function readcsv($post = [])
     {
         if (file_exists(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv')) {
             $data = file_get_contents(getcwd() . '/data/csv/' . $post['D03_DEN_NO'] . '.csv');
-
             if (substr($data, 0, 3) == "\xEF\xBB\xBF") {
                 $data = substr($data, 3);
             }
 
             if (mb_detect_encoding($data, "UTF-8", true) === false) {
-                $encode_ary = array("ASCII", "JIS", "eucjp-win", "sjis-win", "EUC-JP", "UTF-8");
+                $encode_ary = ["ASCII", "JIS", "eucjp-win", "sjis-win", "EUC-JP", "UTF-8"];
                 $data = mb_convert_encoding($data, 'UTF-8', $encode_ary);
             }
 
@@ -156,7 +147,7 @@ class csv
 
             $title = fgetcsv($fp);
             $data = fgetcsv($fp);
-            $result = array(
+            $result = [
                 'M09_WARRANTY_NO' => $data['0'],
                 'warranty_period' => $data['1'],
                 'M09_INP_DATE' => $data['2'],
@@ -204,13 +195,13 @@ class csv
                 'D01_SS_CD' => $data['44'],
                 'ss_name' => $data['45'],
                 'D03_DEN_NO' => $data['46'],
-            );
+            ];
             return $result;
         }
         return self::defaultcsv();
     }
 
-    public static function deletecsv($post = array())
+    public static function deletecsv($post = [])
     {
         if (isset($post['D03_DEN_NO']) && file_exists('data/csv/' . $post['D03_DEN_NO'] . '.csv')) {
             return unlink('data/csv/' . $post['D03_DEN_NO'] . '.csv');
@@ -220,7 +211,7 @@ class csv
 
     public function defaultcsv()
     {
-        $result = array(
+        $result = [
             'M09_WARRANTY_NO' => '',
             'warranty_period' => '',
             'M09_INP_DATE' => '',
@@ -268,8 +259,7 @@ class csv
             'D01_SS_CD' => '',
             'ss_name' => '',
             'D03_DEN_NO' => '',
-        );
+        ];
         return $result;
     }
-
 }

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Expression;
 use yii\db\Query;
 
 /**
@@ -43,7 +44,6 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
             [['M08_HAN_CD', 'M08_SS_CD'], 'string', 'max' => 6],
             [['M08_JYUG_CD'], 'string', 'max' => 10],
             [['M08_NAME_SEI', 'M08_NAME_MEI'], 'string', 'max' => 30],
-            [['M08_INP_DATE', 'M08_UPD_DATE'], 'string'],
             [['M08_INP_USER_ID', 'M08_UPD_USER_ID'], 'string', 'max' => 20],
             [
                 ['M08_HAN_CD', 'M08_SS_CD', 'M08_JYUG_CD'],
@@ -78,7 +78,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
      * @param string $select
      * @return Query
      */
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -107,7 +107,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
      * @param string $select
      * @return array
      */
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('M08_ORDER ASC');
@@ -119,7 +119,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
      * @param string $select
      * @return int|string
      */
-    public function counData($filters = array(), $select = '*')
+    public function counData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         return $query->count();
@@ -129,26 +129,26 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
      * @param array $data
      * @param array $id
      */
-    public function setData($data = array(), $id = array())
+    public function setData($data = [], $id = [])
     {
         $login_info = Yii::$app->session->get('login_info');
-        $data['M08_UPD_DATE'] = date('d-M-y');
         $data['M08_UPD_USER_ID'] = $login_info['M50_USER_ID'];
-
         if ($id['M08_HAN_CD'] && $id['M08_SS_CD'] && $id['M08_JYUG_CD']) {
             $obj = static::findOne($id);
         } else {
             $obj = new Sdptm08sagyosya();
-            $data['M08_INP_DATE'] = date('d-M-y');
             $data['M08_INP_USER_ID'] = $login_info['M50_USER_ID'];
+            $obj->M08_INP_DATE = new Expression("to_date('" . date('d-M-y') . "')");
         }
 
         $obj->attributes = $data;
-
         foreach ($obj->attributes as $k => $v) {
-            $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            if ($k != 'M08_INP_DATE' && $k != 'M08_UPD_DATE') {
+                $obj->{$k} = trim($v) != '' ? trim($v) : null;
+            }
         }
 
+        $obj->M08_UPD_DATE = new Expression("to_date('" . date('d-M-y') . "')");
         $this->obj = $obj;
     }
 
@@ -160,6 +160,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
     {
         return $this->obj->save();
     }
+
 
     /**
      * get insert id
@@ -176,7 +177,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
      * @return bool|false|int
      * @throws \Exception
      */
-    public function deleteData($primaryKey = array())
+    public function deleteData($primaryKey = [])
     {
         if (!isset($primaryKey['M08_HAN_CD'])
             || !isset($primaryKey['M08_SS_CD'])

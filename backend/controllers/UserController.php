@@ -106,5 +106,4 @@ class UserController extends Controller
         $this->layout = '@backend/views/layouts/error';
         return $this->render('error');
     }
-
 }

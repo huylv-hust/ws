@@ -2,6 +2,7 @@
 namespace backend\modules\registworkslip\controllers;
 
 use app\models\Sdptm01sagyo;
+use app\models\Udenpyo;
 use backend\components\utilities;
 use backend\controllers\WsController;
 use yii\helpers\BaseUrl;
@@ -47,6 +48,9 @@ class PreviewController extends WsController
                 $data['post']['kakunin'] = $kakunin[0] . $kakunin[1];
             }
 
+            $data['post']['ss_user'] = $this->getssUser($data['post']['D01_SS_CD']);
+            $data['ss_user'] = $data['post']['M08_NAME_MEI_M08_NAME_SEI'] ? $data['post']['ss_user'][$data['post']['M08_NAME_MEI_M08_NAME_SEI']] : '';
+
             $this->layout = '@app/views/layouts/print';
             \Yii::$app->view->title = '作業確認書';
             \Yii::$app->params['titlePage'] = '作業確認書';
@@ -55,5 +59,16 @@ class PreviewController extends WsController
         }
         return $this->redirect(BaseUrl::base(true) . '/regist-workslip');
     }
-
+    public function getssUser($sscode)
+    {
+        $uDenpyo = new Udenpyo();
+        $tm08Sagyosya = $uDenpyo->getTm08Sagyosya(['M08_SS_CD' => $sscode]);
+        $ssUser = [];
+        if (count($tm08Sagyosya)) {
+            foreach ($tm08Sagyosya as $tmp) {
+                $ssUser[$tmp['M08_JYUG_CD']] = $tmp['M08_NAME_SEI'] . $tmp['M08_NAME_MEI'];
+            }
+        }
+        return $ssUser;
+    }
 }

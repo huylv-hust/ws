@@ -54,7 +54,6 @@ class Sdptd02car extends \yii\db\ActiveRecord
             [['D02_CAR_ID', 'D02_GRADE_CD'], 'string', 'max' => 3],
             [['D02_HIRA'], 'string', 'max' => 2],
             [['D02_CAR_NO', 'D02_MAKER_CD', 'D02_TYPE_CD'], 'string', 'max' => 4],
-            [['D02_INP_DATE', 'D02_UPD_DATE'], 'string'],
             [['D02_INP_USER_ID', 'D02_UPD_USER_ID'], 'string', 'max' => 20],
             [['D02_SHONENDO_YM'], 'string', 'max' => 6],
             [['D02_CUST_NO', 'D02_CAR_SEQ'], 'unique', 'targetAttribute' => ['D02_CUST_NO', 'D02_CAR_SEQ'], 'message' => 'The combination of D02  Cust  No and D02  Car  Seq has already been taken.']
@@ -89,7 +88,7 @@ class Sdptd02car extends \yii\db\ActiveRecord
         ];
     }
 
-    private function getWhere($filters = array(), $select = '*')
+    private function getWhere($filters = [], $select = '*')
     {
         $query = new Query();
         $query->select($select)->from(static::tableName());
@@ -133,7 +132,7 @@ class Sdptd02car extends \yii\db\ActiveRecord
         return $insertCount;
     }
 
-    public function setData($data = array(), $id = null)
+    public function setData($data = [], $id = null)
     {
         $obj = new Sdptd04denpyosagyo();
         if ($id) {
@@ -148,7 +147,7 @@ class Sdptd02car extends \yii\db\ActiveRecord
         $this->obj = $obj;
     }
 
-    public function getData($filters = array(), $select = '*')
+    public function getData($filters = [], $select = '*')
     {
         $query = $this->getWhere($filters, $select);
         $query->orderBy('D02_CAR_SEQ ASC');
@@ -158,7 +157,7 @@ class Sdptd02car extends \yii\db\ActiveRecord
     public function setDataDefault()
     {
         $attri = $this->attributeLabels();
-        $data = array();
+        $data = [];
         foreach ($attri as $key => $val) {
             $data[$key] = null;
         }

@@ -11,6 +11,7 @@ use app\models\Sdptd03denpyo;
 use app\models\Sdptd01custommerseq;
 use backend\modules\pdf\controllers\PdfController;
 use yii\data\Pagination;
+use yii\db\Expression;
 use yii\helpers\BaseUrl;
 use yii\web\Cookie;
 use backend\components\confirm;
@@ -20,7 +21,6 @@ class DefaultController extends WsController
 
     public function actionIndex()
     {
-
         $api = new api();
         $uDenpyo = new Udenpyo();
         $cusObj = new Sdptd01customer();
@@ -28,7 +28,6 @@ class DefaultController extends WsController
         $cookie = \Yii::$app->request->cookies; // get info cus from cookie
         $cusInfo = $cookie->getValue('cus_info', ['type_redirect' => 3]);
         if ($cusInfo['type_redirect'] == 1) {
-            //Insert db
             if (count($cusObj->getData(['D01_KAIIN_CD' => $cusInfo['member_kaiinCd']])) == 0) {
                 $dataInsert = $uDenpyo->convertKeyApiDB($cusInfo);
                 $cusObj->setData($dataInsert);
@@ -42,7 +41,6 @@ class DefaultController extends WsController
         if (Yii::$app->request->isPost && !$addCus) {
             $denpyoDataPost = [];
             $rs = $this->saveDataDenpyo($d03DenNo, $denpyoDataPost);
-
             if ($rs) {
                 $this->saveCsv($denpyoDataPost);
                 if (isset($denpyoDataPost['checkClickWarranty']) && $denpyoDataPost['checkClickWarranty'] == 1) {
@@ -73,19 +71,18 @@ class DefaultController extends WsController
         $data['csv'] = \backend\components\csv::readcsv(['D03_DEN_NO' => $d03DenNo]);
         $data['confirm'] = \backend\components\confirm::readconfirm(['D03_DEN_NO' => $d03DenNo]);
         if ($d03DenNo) {
-            $denpyo = $uDenpyo->getDenpyo(['D03_DEN_NO' => $d03DenNo]);
-            $denpyo = current($denpyo);
+            $denpyo = current($uDenpyo->getDenpyo(['D03_DEN_NO' => $d03DenNo]));
             $cusDb = $uDenpyo->getTd01Customer(['D01_CUST_NO' => $denpyo['D03_CUST_NO']]);
             if (count($cusDb)) {
                 $cusInfo = current($cusDb);
-                if (!$cusInfo['D01_KAIIN_CD']) { // get db
+                if (!$cusInfo['D01_KAIIN_CD']) {
                     $car = $uDenpyo->getCar($cusInfo['D01_CUST_NO']);
                     $totalCarOfCus = count($car);
                     $car = array_pad($car, 5, $carDefault);
-                } else { // get Api
+                } else {
                     $uDenpyo->getInforCarCusFromApi($uDenpyo, $api, $carDefault, $cusInfo, $totalCarOfCus, $car, false);
                 }
-            } else { // No exit Infor Cust
+            } else {
                 return false;
             }
 
@@ -120,7 +117,6 @@ class DefaultController extends WsController
                 $uDenpyo->getInforCarCusFromApi($uDenpyo, $api, $carDefault, $cusInfo, $totalCarOfCus, $car);
                 $cusInfo['type_redirect'] = 1;
             } else {
-
                 if ($cusInfo['type_redirect'] == 3) {
                     $cusInfo = $uDenpyo->setDefaultDataObj('customer');
                     if ($custNo) {
@@ -227,19 +223,19 @@ class DefaultController extends WsController
         $dataDenpyoCom = [];
         $k = 1;
         for ($i = 1; $i < 11; ++$i) {
-            if ($dataTemp['code_search' . $i] != '') {
+            if (isset($dataTemp['code_search' . $i]) && $dataTemp['code_search' . $i] != '') {
                 $dataDenpyoCom[$k]['D05_DEN_NO'] = $dataDenpyo['D03_DEN_NO'];
-				//$dataDenpyoCom[$k]['D05_COM_CD'] = $dataTemp['D05_COM_CD' . $i];
+                //$dataDenpyoCom[$k]['D05_COM_CD'] = $dataTemp['D05_COM_CD' . $i];
                 //$dataDenpyoCom[$k]['D05_NST_CD'] = $dataTemp['D05_NST_CD' . $i];
-                $dataDenpyoCom[$k]['D05_COM_CD'] = str_pad(substr($dataTemp['code_search' . $i],0,6),6,'0',STR_PAD_LEFT);
-				$dataDenpyoCom[$k]['D05_NST_CD'] = str_pad(substr($dataTemp['code_search' . $i],6,3),3,'0',STR_PAD_LEFT);
-				$dataDenpyoCom[$k]['D05_COM_SEQ'] = $k;
+                $dataDenpyoCom[$k]['D05_COM_CD'] = str_pad(substr($dataTemp['code_search' . $i], 0, 6), 6, '0', STR_PAD_LEFT);
+                $dataDenpyoCom[$k]['D05_NST_CD'] = str_pad(substr($dataTemp['code_search' . $i], 6, 3), 3, '0', STR_PAD_LEFT);
+                $dataDenpyoCom[$k]['D05_COM_SEQ'] = $k;
                 $dataDenpyoCom[$k]['D05_SURYO'] = $dataTemp['D05_SURYO' . $i];
                 $dataDenpyoCom[$k]['D05_TANKA'] = $dataTemp['D05_TANKA' . $i];
                 $dataDenpyoCom[$k]['D05_KINGAKU'] = $dataTemp['D05_KINGAKU' . $i];
-                $dataDenpyoCom[$k]['D05_INP_DATE'] = date('y-M-d');
+                $dataDenpyoCom[$k]['D05_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
                 $dataDenpyoCom[$k]['D05_INP_USER_ID'] = $login_info['M50_USER_ID'];
-                $dataDenpyoCom[$k]['D05_UPD_DATE'] = date('y-M-d');
+                $dataDenpyoCom[$k]['D05_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
                 $dataDenpyoCom[$k]['D05_UPD_USER_ID'] = $login_info['M50_USER_ID'];
                 ++$k;
             }
@@ -248,16 +244,16 @@ class DefaultController extends WsController
         $m01SagyoNo = Yii::$app->request->post('M01_SAGYO_NO');
         $dataDenpySagyo = [];
         if (count($m01SagyoNo)) {
-            for ($i = 0; $i < count($m01SagyoNo); ++$i)
+            for ($i = 0; $i < count($m01SagyoNo); ++$i) {
                 $dataDenpySagyo[] = [
                     'D04_DEN_NO' => $dataDenpyo['D03_DEN_NO'],
                     'D04_SAGYO_NO' => $m01SagyoNo[$i],
-                    'D04_UPD_DATE' => date('d-M-y'),
+                    'D04_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                     'D04_UPD_USER_ID' => $login_info['M50_USER_ID'],
-                    'D04_INP_DATE' => date('d-M-y'),
+                    'D04_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                     'D04_INP_USER_ID' => $login_info['M50_USER_ID'],
                 ];
-
+            }
             if ($denpyoNo) {
                 $listDenpyoSagyo = $denpyoSagyo->getData(['D04_DEN_NO' => $denpyoNo]);
                 /* Get input date,input user id of denpyosagyo */
@@ -316,7 +312,7 @@ class DefaultController extends WsController
         $cookie = \Yii::$app->request->cookies;
         $cusInfo = $cookie->getValue('cus_info', ['type_redirect' => 3]);
         $kaiinCd = \Yii::$app->request->post('D01_KAIIN_CD');
-        if ($cusInfo['type_redirect'] == 1) { // is API
+        if ($cusInfo['type_redirect'] == 1) {
             $carLength = count($data);
             $i = 1;
             $carApi = [];
@@ -346,13 +342,12 @@ class DefaultController extends WsController
             }
 
             return ['result' => 0];
-        } else { // is DB
+        } else {
             $denpyoNo = $request->post('D03_DEN_NO');
             $custNo = $request->post('D02_CUST_NO');
-            if (!$request->post('D02_CUST_NO')) { // Is guest not database
+            if (!$request->post('D02_CUST_NO')) {
                 return ['result' => -1];
             } else {
-
                 $dataInsert = [];
                 foreach ($data as $index => $tmp) {
                     foreach ($tmp as $key => $val) {
@@ -360,12 +355,11 @@ class DefaultController extends WsController
                             $dataInsert[$index][$key] = $val;
                             $dataInsert[$index]['D02_CAR_SEQ'] = ($index + 1);
                         }
-
-                        if ($tmp['D02_MAKER_CD'] == '-111' && isset($tmp['MAKER_CD_OTHER']))
+                        if ($tmp['D02_MAKER_CD'] == '-111' && isset($tmp['MAKER_CD_OTHER'])) {
                             $dataInsert[$index]['D02_CAR_NAMEN'] = $tmp['MAKER_CD_OTHER'];
+                        }
                     }
                 }
-
                 return ['result' => (int)$uDenpyo->updateCar($custNo, $dataInsert)];
             }
         }
@@ -391,7 +385,6 @@ class DefaultController extends WsController
             foreach ($list_grade_code as $gra) {
                 $list_grade[$gra['grade_code']] = $gra['grade'];
             }
-
             return $list_grade;
         }
 
@@ -414,7 +407,6 @@ class DefaultController extends WsController
             foreach ($list_model_code as $mod) {
                 $list_model[$mod['model_code']] = $mod['model'];
             }
-
             return $list_model;
         }
     }
@@ -457,37 +449,37 @@ class DefaultController extends WsController
             }
         }
 
-        if ($check == 1 && isset($data['D01_CUST_NO']) &&  $data['D01_CUST_NO']) {
+        if ($check == 1 && isset($data['D01_CUST_NO']) && $data['D01_CUST_NO']) {
             if ($cusDd[0]['D01_CUST_NO'] != $data['D01_CUST_NO']) {
                 $result = ['kake_card_no_exist' => '1'];
                 return $result;
             }
         }
         if ($cusInfo['type_redirect'] == 1) { // Is member
-            $dataCsApi = array(
+            $dataCsApi = [
                 'member_kaiinName' => $request->post('D01_CUST_NAMEN'),
                 'member_kaiinKana' => $request->post('D01_CUST_NAMEK'),
                 'member_telNo1' => $request->post('D01_TEL_NO'),
                 'member_telNo2' => $request->post('D01_MOBTEL_NO'),
                 'member_address' => $request->post('D01_ADDR'),
                 'member_yuubinBangou' => $request->post('D01_YUBIN_BANGO'),
-            );
+            ];
 
             $res = $api->updateMemberBasic($usappyId, $dataCsApi);
             $resDb = 1;
             $cusDb = $cusObj->getData(['D01_KAIIN_CD' => $usappyId]);
             if (count($cusDb)) {
-                $dataDb = array(
+                $dataDb = [
                     'D01_NOTE' => $request->post('D01_NOTE'),
                     'D01_KAKE_CARD_NO' => $request->post('D01_KAKE_CARD_NO')
-                );
+                ];
                 $cusObj->setData($dataDb, $cusDb['0']['D01_CUST_NO']);
                 $resDb = (int)$cusObj->saveData();
             }
             $memberInfo = $api->getMemberInfo($usappyId);
             $memberInfo['type_redirect'] = 1;
             $result = ['result_api' => (int)$res, 'result_db' => $resDb, 'custNo' => 0];
-        } else { // guest insert db or update
+        } else {
             $cusObj->setData($data, $data['D01_CUST_NO']);
             $res = $cusObj->saveData();
             $memberInfo = $cusObj->getData(['D01_CUST_NO' => $data['D01_CUST_NO']]);
@@ -541,23 +533,23 @@ class DefaultController extends WsController
             $dataWarranty = [
                 'M09_SS_CD' => $ssCd,
                 'M09_WARRANTY_NO' => 1,
-                'M09_INP_DATE' => date('d-M-y'),
+                'M09_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                 'M09_INP_USER_ID' => 'SCRADMIN',
-                'M09_UPD_DATE' => date('d-M-y'),
+                'M09_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
                 'M09_UPD_USER_ID' => 'SCRADMIN',
             ];
-
             $tm09Warranty->setData($dataWarranty);
             $tm09Warranty->saveData();
             return ['numberWarrantyNo' => $ssCd . str_pad(1, 4, '0', STR_PAD_LEFT)];
         } else {
             $dataWarranty = current($tm09WarrantyNo);
             $dataWarranty['M09_WARRANTY_NO'] = $dataWarranty['M09_WARRANTY_NO'] + 1;
-            $dataWarranty['M09_UPD_DATE'] = date('d-M-y');
+            $dataWarranty['M09_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
             $dataWarranty['M09_UPD_USER_ID'] = 'SCRADMIN';
             if ($dataWarranty['M09_WARRANTY_NO'] == 10000) {
                 $dataWarranty['M09_WARRANTY_NO'] = 1;
             }
+
             $tm09Warranty->setData($dataWarranty, $ssCd);
             $res = $tm09Warranty->saveData();
             return ['numberWarrantyNo' => $ssCd . str_pad($dataWarranty['M09_WARRANTY_NO'], 4, '0', STR_PAD_LEFT)];
@@ -568,14 +560,13 @@ class DefaultController extends WsController
     {
         //Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $postData = \Yii::$app->request->post();
-        return BaseUrl::base(true).'/'.$this->savePdf('0', $postData, true);
+        return BaseUrl::base(true) . '/' . $this->savePdf('0', $postData, true);
     }
 
     public function savePdf($denpyoNo, $postData, $isView = false)
     {
         $api = new api();
         $uDenpyo = new Udenpyo();
-
         if ($isView == false) {
             $creat_warranty = false;
             for ($i = 1; $i < 11; ++$i) {
@@ -592,14 +583,12 @@ class DefaultController extends WsController
 
         $denpyo = $uDenpyo->setDefaultDataObj('denpyo');
         if ($denpyoNo) {
-            $denpyo = $uDenpyo->getDenpyo(['D03_DEN_NO' => $denpyoNo]);
-            $denpyo = current($denpyo);
+            $denpyo = current($uDenpyo->getDenpyo(['D03_DEN_NO' => $denpyoNo]));
         }
 
         $listSS = $api->getSsName();
         $ssInfo = [];
         foreach ($listSS as $ss) {
-
             if ($ss['sscode'] == $denpyo['D03_SS_CD'] || $ss['sscode'] == $postData['D03_SS_CD']) {
                 $ssInfo = $ss;
                 break;
@@ -682,8 +671,9 @@ class DefaultController extends WsController
 
     public function saveCsv($postData)
     {
-        if (file_exists(getcwd() . '/data/pdf/' . $postData['D03_DEN_NO'] . '.pdf'))
+        if (file_exists(getcwd() . '/data/pdf/' . $postData['D03_DEN_NO'] . '.pdf')) {
             return true;
+        }
         $totalTaisa = 0;
         $totalSuryo = 0;
         for ($i = 1; $i < 11; ++$i) {
@@ -700,5 +690,4 @@ class DefaultController extends WsController
 
         return \backend\components\csv::deletecsv($postData);
     }
-
 }

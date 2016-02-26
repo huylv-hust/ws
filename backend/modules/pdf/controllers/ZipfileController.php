@@ -15,8 +15,8 @@ class ZipfileController extends Controller
     public function beforeAction()
     {
         $session = \Yii::$app->session;
-        if (! $session->get('login_admin_info')) {
-            Yii::$app->response->redirect(BaseUrl::base(true).'/operator/login');
+        if (!$session->get('login_admin_info')) {
+            Yii::$app->response->redirect(BaseUrl::base(true) . '/operator/login');
             return false;
         }
 
@@ -50,16 +50,16 @@ class ZipfileController extends Controller
      */
     private function convertToDateFormat($string)
     {
-        if (! isset($string) or ($s_length = mb_strlen(preg_replace('/\s+/', '', $string))) == 0) {
+        if (!isset($string) or ($s_length = mb_strlen(preg_replace('/\s+/', '', $string))) == 0) {
             return '';
         }
         if ($s_length == 8) {
             //20160729 => 16-Jul-29
-            $string = mb_substr($string, 0, 4).'/'.mb_substr($string, 4, 2).'/'.mb_substr($string, 6, 2);
+            $string = mb_substr($string, 0, 4) . '/' . mb_substr($string, 4, 2) . '/' . mb_substr($string, 6, 2);
             $result = date('y-M-d', strtotime($string));
-        } else if ($s_length == 11) {
+        } elseif ($s_length == 11) {
             //1970年01月01日 => 70-Jan-01
-            $string = mb_substr($string, 0, 4).'/'.mb_substr($string, 5, 2).'/'.mb_substr($string, 8, 2);
+            $string = mb_substr($string, 0, 4) . '/' . mb_substr($string, 5, 2) . '/' . mb_substr($string, 8, 2);
             $result = date('y-M-d', strtotime($string));
         } else {
             $result = $string;
@@ -76,7 +76,7 @@ class ZipfileController extends Controller
     private function getListDenpyoStatusOn()
     {
         $sdpt03denpyo = new Sdptd03denpyo();
-        $listDenpyoNo = $sdpt03denpyo->getData(['D03_STATUS' => 1],'D03_DEN_NO');
+        $listDenpyoNo = $sdpt03denpyo->getData(['D03_STATUS' => 1], 'D03_DEN_NO');
         foreach ($listDenpyoNo as $k => $v) {
             $listDenpyo[] = $v['D03_DEN_NO'];
         }
@@ -90,26 +90,26 @@ class ZipfileController extends Controller
      */
     public function getListFile($start_date = '', $end_date = '', $url_source = '')
     {
-        if (! isset($start_date) ||! isset($end_date)) {
+        if (!isset($start_date) || !isset($end_date)) {
             return false;
         }
         //Check folder exits
-        if (! is_dir($url_source)) {
+        if (!is_dir($url_source)) {
             return false;
         }
-        $arr_files = array();
+        $arr_files = [];
         $list_files = scandir($url_source);
-        $list_files = array_diff($list_files, array('.','..'));
+        $list_files = array_diff($list_files, ['.', '..']);
         //Check file exits in folder
         if (empty($list_files)) {
             return false;
         }
 
         foreach ($list_files as $k => $v) {
-            $filename = explode('.',$v);
-            $create_time_file = date("Ymd", filectime($url_source.$v));
-            if ($this->equal3Time($create_time_file, $start_date, $end_date) and in_array($filename[0],$this->getListDenpyoStatusOn())) {
-                $arr_files[] = $url_source.$v;
+            $filename = explode('.', $v);
+            $create_time_file = date("Ymd", filectime($url_source . $v));
+            if ($this->equal3Time($create_time_file, $start_date, $end_date) and in_array($filename[0], $this->getListDenpyoStatusOn())) {
+                $arr_files[] = $url_source . $v;
             }
         }
         return $arr_files;
@@ -128,7 +128,7 @@ class ZipfileController extends Controller
             die('An error occurred creating your ZIP file.');
         }
         $arr_file = $this->getListFile($start_date, $end_date, $folder_source);
-        if (empty($arr_file) || ! $arr_file) {
+        if (empty($arr_file) || !$arr_file) {
             return false;
         }
         //Add file in zip
@@ -154,11 +154,11 @@ class ZipfileController extends Controller
     public function exportCsv($start_date = null, $end_date = null, $folder_source = 'data/csv/', $tmp_folder = '')
     {
         $arr_file = $this->getListFile($start_date, $end_date, $folder_source);
-        if (empty($arr_file) || ! $arr_file) {
+        if (empty($arr_file) || !$arr_file) {
             return false;
         }
 
-        $csv = array();
+        $csv = [];
         foreach ($arr_file as $key => $value) {
             $file = fopen($value, 'r');
             $csv[0] = fgetcsv($file);
@@ -187,22 +187,21 @@ class ZipfileController extends Controller
     }
 
 
-
     public function actionIndex()
     {
         if ($data = \Yii::$app->request->post()) {
-            $tmp_folder =  'data/tmp/';
+            $tmp_folder = 'data/tmp/';
             utilities::createFolder($tmp_folder);//Create folder data/zip
 
-            $start_date = $data['start_year'].$data['start_month'].$data['start_day'];
-            $end_date = $data['end_year'].$data['end_month'].$data['end_day'];
+            $start_date = $data['start_year'] . $data['start_month'] . $data['start_day'];
+            $end_date = $data['end_year'] . $data['end_month'] . $data['end_day'];
             if ($data['type-download'] == 'csv') {
                 $folder_source = 'data/csv/';
                 $isStatus = $this->exportCsv($start_date, $end_date, $folder_source, $tmp_folder);
                 if ($isStatus) {
                     die;
                 }
-            } else if ($data['type-download'] == 'pdf') {
+            } elseif ($data['type-download'] == 'pdf') {
                 $folder_source = 'data/pdf/';
                 $isStatus = $this->exportPdf($start_date, $end_date, $folder_source, $tmp_folder);
             } else {
@@ -212,7 +211,7 @@ class ZipfileController extends Controller
                 return $this->render('index');
             }
 
-            if (! $isStatus) {
+            if (!$isStatus) {
                 Yii::$app->session->setFlash('error', 'ファイルがありません');
             } else {
                 Yii::$app->session->setFlash('success', 'ＰＤＦファイルを作りました。');
@@ -224,11 +223,11 @@ class ZipfileController extends Controller
         $year = date('Y', strtotime($yesterday));
         $day = date('d', strtotime($yesterday));
         $month = date('m', strtotime($yesterday));
-        $select_date = array('year_now' => array($year_now - 2 => $year_now - 2, $year_now - 1 => $year_now - 1, $year_now => $year_now), 'year' => $year, 'day' => $day, 'month' => $month);
+        $select_date = ['year_now' => [$year_now - 2 => $year_now - 2, $year_now - 1 => $year_now - 1, $year_now => $year_now], 'year' => $year, 'day' => $day, 'month' => $month];
 
         \Yii::$app->params['titlePage'] = 'パンク保証データダウンロード';
         \Yii::$app->view->title = 'パンク保証データダウンロード';
         $this->layout = '@backend/views/layouts/blank';
-        return $this->render('index',array('select_date' => $select_date));
+        return $this->render('index', ['select_date' => $select_date]);
     }
 }

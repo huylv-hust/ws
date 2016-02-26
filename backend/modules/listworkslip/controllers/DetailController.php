@@ -22,7 +22,7 @@ class DetailController extends WsController
     public function actionIndex()
     {
         $api = new api();
-        $data = array();
+        $data = [];
         $filter['detail_no'] = Yii::$app->request->get('den_no');
         $obj = new Sdptd03denpyo();
         $obj_job = new Sdptm01sagyo();
@@ -47,6 +47,7 @@ class DetailController extends WsController
         ]);
 
         $cus_info = $cus->findOne($data['detail']['D03_CUST_NO']);
+        $data['detail']['D01_UKE_TAN_NAMEN'] = $cus_info['D01_UKE_TAN_NAMEN'];
         if (isset($cus_info['D01_KAIIN_CD'])) {
             $info = $api->getMemberInfo($cus_info['D01_KAIIN_CD']);
             $data['detail']['D01_CUST_NAMEN'] = $info['member_kaiinName'];
@@ -76,11 +77,10 @@ class DetailController extends WsController
 
         Yii::$app->params['titlePage'] = '作業伝票詳細';
         Yii::$app->view->title = '作業伝票詳細';
-
         return $this->render('index', $data);
     }
 
-    public function getCar($filters = array())
+    public function getCar($filters = [])
     {
         $obj = new Sdptd02car();
         $car_info = $obj->getData($filters);
@@ -95,7 +95,7 @@ class DetailController extends WsController
     {
         $obj = new Sdptd04denpyosagyo();
         $job_info = $obj->getData(['D04_DEN_NO' => $den_no]);
-        $job = array();
+        $job = [];
         foreach ($job_info as $k => $v) {
             $job[$k]['D04_SAGYO_NO'] = $v['D04_SAGYO_NO'];
         }
@@ -106,7 +106,7 @@ class DetailController extends WsController
     {
         $obj = new Sdptd05denpyocom();
         $product_info = $obj->getData(['D05_DEN_NO' => $den_no]);
-        $product = array();
+        $product = [];
         foreach ($product_info as $k => $v) {
             $product[$k]['D05_SURYO'] = $v['D05_SURYO'];
             $product[$k]['D05_TANKA'] = $v['D05_TANKA'];
@@ -114,7 +114,7 @@ class DetailController extends WsController
             $product[$k]['D05_COM_CD'] = $v['D05_COM_CD'];
             $product[$k]['D05_NST_CD'] = $v['D05_NST_CD'];
 
-            $obj_sdptm05com = Sdptm05com::findOne(array($v['D05_COM_CD'], $v['D05_NST_CD']));
+            $obj_sdptm05com = Sdptm05com::findOne([$v['D05_COM_CD'], $v['D05_NST_CD']]);
             $product[$k]['M05_COM_NAMEN'] = $obj_sdptm05com['M05_COM_NAMEN'];
             $product[$k]['M05_LIST_PRICE'] = $obj_sdptm05com['M05_LIST_PRICE'];
         }
@@ -182,7 +182,7 @@ class DetailController extends WsController
         $tel = $branch['ss_tel'];
 
         $api = new api();
-        $data = array();
+        $data = [];
         $filter['detail_no'] = Yii::$app->request->get('den_no');
         $cus = new Sdptd01customer();
         $obj = new Sdptd03denpyo();
@@ -207,6 +207,7 @@ class DetailController extends WsController
         ]);
 //getCustomer_API
         $cus_info = $cus->findOne($data['detail']['D03_CUST_NO']);
+        $data['detail']['D01_UKE_TAN_NAMEN'] = $cus_info['D01_UKE_TAN_NAMEN'];
         if (isset($cus_info['D01_KAIIN_CD'])) {
             $info = $api->getMemberInfo($cus_info['D01_KAIIN_CD']);
             $data['detail']['D01_CUST_NAMEN'] = $info['member_kaiinName'];
@@ -259,7 +260,7 @@ class DetailController extends WsController
         $post['D03_DEN_NO'] = $den_no;
         $post['status'] = Yii::$app->request->post('status');
         confirm::writeconfirm($post);
-        $link = BaseUrl::base(true).'/data/pdf/'.$den_no.'.pdf';
+        $link = BaseUrl::base(true) . '/data/pdf/' . $den_no . '.pdf';
         return $link;
     }
 }

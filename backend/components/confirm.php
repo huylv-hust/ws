@@ -1,10 +1,9 @@
 <?php
 namespace backend\components;
 
-
 class confirm
 {
-    public static function writeconfirm($post = array())
+    public static function writeconfirm($post = [])
     {
 
         $confirm = confirm::readconfirm(['D03_DEN_NO' => $post['D03_DEN_NO']]);
@@ -15,7 +14,7 @@ class confirm
             $post['date'] = str_pad($post['date_1'], 4, '0', STR_PAD_LEFT) . str_pad($post['date_2'], 2, '0', STR_PAD_LEFT) . str_pad($post['date_3'], 2, '0', STR_PAD_LEFT);
         }
 
-        $data[0] = array(
+        $data[0] = [
             'タイヤ交換図1',
             'タイヤ交換図2',
             'タイヤ交換図3',
@@ -39,9 +38,9 @@ class confirm
             'バックアップ',
             'スタートアップ',
             'status',
-        );
+        ];
 
-        $data[1] = array(
+        $data[1] = [
             'tire_1' => isset($post['tire_1']) && $post['tire_1'] ? 1 : 0,
             'tire_2' => isset($post['tire_2']) && $post['tire_2'] ? 1 : 0,
             'tire_3' => isset($post['tire_3']) && $post['tire_3'] ? 1 : 0,
@@ -65,7 +64,7 @@ class confirm
             'backup' => isset($post['backup']) && $post['backup'] ? 1 : 0,
             'startup' => isset($post['startup']) && $post['startup'] ? 1 : 0,
             'status' => isset($post['status']) && $post['status'] ? $post['status'] : 0,
-        );
+        ];
         utilities::createFolder('data/confirm/');
         $fp = fopen(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv', 'w+');
         fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
@@ -75,7 +74,7 @@ class confirm
         fclose($fp);
     }
 
-    public static function readconfirm($post = array())
+    public static function readconfirm($post = [])
     {
         if (file_exists(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv')) {
             $data = file_get_contents(getcwd() . '/data/confirm/' . $post['D03_DEN_NO'] . '.csv');
@@ -85,7 +84,7 @@ class confirm
             }
 
             if (mb_detect_encoding($data, "UTF-8", true) === false) {
-                $encode_ary = array("ASCII", "JIS", "eucjp-win", "sjis-win", "EUC-JP", "UTF-8");
+                $encode_ary = ["ASCII", "JIS", "eucjp-win", "sjis-win", "EUC-JP", "UTF-8"];
                 $data = mb_convert_encoding($data, 'UTF-8', $encode_ary);
             }
 
@@ -95,7 +94,7 @@ class confirm
 
             $title = fgetcsv($fp);
             $data = fgetcsv($fp);
-            $result = array(
+            $result = [
                 'tire_1' => $data['0'],
                 'tire_2' => $data['1'],
                 'tire_3' => $data['2'],
@@ -119,11 +118,11 @@ class confirm
                 'backup' => $data['20'],
                 'startup' => $data['21'],
                 'status' => $data['22'],
-            );
+            ];
             return $result;
         }
 
-        return array(
+        return [
             'tire_1' => '',
             'tire_2' => '',
             'tire_3' => '',
@@ -147,6 +146,6 @@ class confirm
             'backup' => '',
             'startup' => '',
             'status' => '',
-        );
+        ];
     }
 }

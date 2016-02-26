@@ -64,9 +64,9 @@ class Tm50ssuser extends \yii\db\ActiveRecord
     /*
      * Check login
      * */
-    public function checkLogin($dataUser = array())
+    public function checkLogin($dataUser = [])
     {
-        $sql = array();
+        $sql = [];
         $flag = false;
         if (!isset($dataUser['ssid']) || !isset($dataUser['password'])) {
             $flag = false;

@@ -5,6 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 namespace common\widgets;
+
 /**
  * @author Dangbc <dang6591@>
  */
