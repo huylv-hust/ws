@@ -295,12 +295,8 @@
                                     style="min-width: 15%"><?php echo $post['D05_COM_CD' . $k] . $post['D05_NST_CD' . $k]; ?></td>
                                 <td class="tdLeft"><?php echo $post['M05_COM_NAMEN' . $k]; ?></td>
                                 <td style="min-width: 8%"><?php echo $post['D05_SURYO' . $k]; ?></td>
-                                <td style="min-width: 10%"><?php echo $post['D05_TANKA' . $k] != '' ? number_format($post['D05_TANKA' . $k]) : ''; ?>
-                                    円
-                                </td>
-                                <td style="min-width: 15%"><?php echo $post['D05_KINGAKU' . $k] != '' ? number_format($post['D05_KINGAKU' . $k]) : ''; ?>
-                                    円
-                                </td>
+                                <td style="min-width: 10%"><?php echo $post['D05_TANKA' . $k] != '' ? number_format($post['D05_TANKA' . $k]).'円' : ''; ?></td>
+                                <td style="min-width: 15%"><?php echo $post['D05_KINGAKU' . $k] != '' ? number_format($post['D05_KINGAKU' . $k]).'円' : ''; ?></td>
                             </tr>
                         <?php } else { ?>
                             <tr class="mini">
@@ -315,9 +311,7 @@
                     <tr class="mini">
                         <td colspan="3"></td>
                         <th>合計</th>
-                        <td><?php echo $post['D03_SUM_KINGAKU'] != '' ? number_format($post['D03_SUM_KINGAKU']) : ''; ?>
-                            円
-                        </td>
+                        <td><?php echo $post['D03_SUM_KINGAKU'] != '' ? number_format($post['D03_SUM_KINGAKU']).'円' : ''; ?></td>
                     </tr>
                 </table>
             </fieldset>

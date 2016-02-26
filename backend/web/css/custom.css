@@ -28,3 +28,7 @@ label.error {
 .back-ground {
     background: #000!important;
 }
+
+.mini td {
+    height: 60px !important;
+}

@@ -265,8 +265,8 @@
                                 <td class="tdLeft" style="min-width: 15%"><?php echo $detail['product'][$k]['D05_COM_CD'].$detail['product'][$k]['D05_NST_CD']; ?></td>
                                 <td class="tdLeft"><?php echo $detail['product'][$k]['M05_COM_NAMEN']; ?></td>
                                 <td style="min-width: 8%"><?php echo $detail['product'][$k]['D05_SURYO']; ?></td>
-                                <td style="min-width: 10%"><?php echo isset($detail['product'][$k]['D05_TANKA']) && $detail['product'][$k]['D05_TANKA'] != '' ? number_format($detail['product'][$k]['D05_TANKA']) : ''; ?>円</td>
-                                <td style="min-width: 15%"><?php echo isset($detail['product'][$k]['D05_KINGAKU']) && $detail['product'][$k]['D05_KINGAKU'] != '' ? number_format($detail['product'][$k]['D05_KINGAKU']) : ''; ?>円</td>
+                                <td style="min-width: 10%"><?php echo isset($detail['product'][$k]['D05_TANKA']) && $detail['product'][$k]['D05_TANKA'] != '' ? number_format($detail['product'][$k]['D05_TANKA']).'円' : ''; ?></td>
+                                <td style="min-width: 15%"><?php echo isset($detail['product'][$k]['D05_KINGAKU']) && $detail['product'][$k]['D05_KINGAKU'] != '' ? number_format($detail['product'][$k]['D05_KINGAKU']).'円' : ''; ?></td>
                             </tr>
                         <?php } else { ?>
                             <tr class="mini">
@@ -280,7 +280,7 @@
                     <tr class="mini">
                         <td colspan="3"></td>
                         <th>合計</th>
-                        <td><?php echo isset($detail['D03_SUM_KINGAKU']) && $detail['D03_SUM_KINGAKU'] != '' ? number_format($detail['D03_SUM_KINGAKU']) : ''; ?>円</td>
+                        <td><?php echo isset($detail['D03_SUM_KINGAKU']) && $detail['D03_SUM_KINGAKU'] != '' ? number_format($detail['D03_SUM_KINGAKU']).'円' : ''; ?></td>
                     </tr>
                 </table>
             </fieldset>
