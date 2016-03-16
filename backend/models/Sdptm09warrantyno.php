@@ -35,7 +35,6 @@ class Sdptm09warrantyno extends \yii\db\ActiveRecord
             [['M09_SS_CD'], 'required'],
             [['M09_WARRANTY_NO'], 'integer'],
             [['M09_SS_CD'], 'string', 'max' => 6],
-            [['M09_INP_DATE', 'M09_UPD_DATE'], 'string'],
             [['M09_INP_USER_ID', 'M09_UPD_USER_ID'], 'string', 'max' => 20],
             [['M09_SS_CD'], 'unique']
         ];

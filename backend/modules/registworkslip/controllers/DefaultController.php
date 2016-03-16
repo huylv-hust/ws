@@ -160,6 +160,15 @@ class DefaultController extends WsController
         $data['ssUerDenpyo'] = $ssUserDenpyo;
         $data['tm01Sagyo'] = $tm01Sagyo;
         $data['listDenpyoCom'] = $listDenpyoCom;
+		$data['item'] = Yii::$app->params['items'];
+        $data['car_places'] = [];
+        $data['car_regions'] = Yii::$app->params['car_regions'];
+        $data['url_car_api'] = Yii::$app->params['api']['car']['url_car'];
+		foreach (Yii::$app->params['car_regions'] as $region => $prefectures) {
+            foreach ($prefectures as $prefecture => $_places) {
+                $data['car_places'][$prefecture] = $_places;
+            }
+        }
         \Yii::$app->view->title = '作業伝票作成';
         \Yii::$app->params['titlePage'] = '作業伝票作成';
         return $this->render('index', $data);
@@ -233,9 +242,9 @@ class DefaultController extends WsController
                 $dataDenpyoCom[$k]['D05_SURYO'] = $dataTemp['D05_SURYO' . $i];
                 $dataDenpyoCom[$k]['D05_TANKA'] = $dataTemp['D05_TANKA' . $i];
                 $dataDenpyoCom[$k]['D05_KINGAKU'] = $dataTemp['D05_KINGAKU' . $i];
-                $dataDenpyoCom[$k]['D05_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+                $dataDenpyoCom[$k]['D05_INP_DATE'] = new Expression("CURRENT_DATE");
                 $dataDenpyoCom[$k]['D05_INP_USER_ID'] = $login_info['M50_USER_ID'];
-                $dataDenpyoCom[$k]['D05_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+                $dataDenpyoCom[$k]['D05_UPD_DATE'] = new Expression("CURRENT_DATE");
                 $dataDenpyoCom[$k]['D05_UPD_USER_ID'] = $login_info['M50_USER_ID'];
                 ++$k;
             }
@@ -248,9 +257,9 @@ class DefaultController extends WsController
                 $dataDenpySagyo[] = [
                     'D04_DEN_NO' => $dataDenpyo['D03_DEN_NO'],
                     'D04_SAGYO_NO' => $m01SagyoNo[$i],
-                    'D04_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                    'D04_UPD_DATE' => new Expression("CURRENT_DATE"),
                     'D04_UPD_USER_ID' => $login_info['M50_USER_ID'],
-                    'D04_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                    'D04_INP_DATE' => new Expression("CURRENT_DATE"),
                     'D04_INP_USER_ID' => $login_info['M50_USER_ID'],
                 ];
             }
@@ -289,6 +298,8 @@ class DefaultController extends WsController
         }
         $dataCus['D01_SS_CD'] = $dataTemp['D01_SS_CD'];
         $dataCus['D01_UKE_JYUG_CD'] = $dataTemp['M08_NAME_MEI_M08_NAME_SEI'];
+        $tm08Sagyosya = current($uDenpyo->getTm08Sagyosya(['M08_JYUG_CD' => $dataTemp['M08_NAME_MEI_M08_NAME_SEI']]));
+        $dataCus['D01_UKE_TAN_NAMEN'] = $tm08Sagyosya['M08_NAME_SEI'] . $tm08Sagyosya['M08_NAME_MEI'];
         $dataCus['D01_CUST_NO'] = $dataDenpyo['D03_CUST_NO'];
         $res = $uDenpyo->saveDenpyo($dataDenpyo, $dataDenpySagyo, $dataCus, $dataDenpyoCom, $denpyoNo);
 
@@ -303,6 +314,7 @@ class DefaultController extends WsController
     {
         $uDenpyo = new Udenpyo();
         $carObj = new \app\models\Sdptd02car();
+        $login_info = Yii::$app->session->get('login_info');
         $api = new api();
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $request = \Yii::$app->request;
@@ -340,7 +352,6 @@ class DefaultController extends WsController
             if (count($rs)) {
                 return ['result' => 1];
             }
-
             return ['result' => 0];
         } else {
             $denpyoNo = $request->post('D03_DEN_NO');
@@ -350,64 +361,32 @@ class DefaultController extends WsController
             } else {
                 $dataInsert = [];
                 foreach ($data as $index => $tmp) {
-                    foreach ($tmp as $key => $val) {
-                        if (substr($key, 0, 3) == 'D02') {
-                            $dataInsert[$index][$key] = $val;
-                            $dataInsert[$index]['D02_CAR_SEQ'] = ($index + 1);
-                        }
-                        if ($tmp['D02_MAKER_CD'] == '-111' && isset($tmp['MAKER_CD_OTHER'])) {
-                            $dataInsert[$index]['D02_CAR_NAMEN'] = $tmp['MAKER_CD_OTHER'];
-                        }
+                    $dataInsert[$index]['D02_CUST_NO'] = $tmp['D02_CUST_NO'];
+                    $dataInsert[$index]['D02_CAR_SEQ'] = $index + 1;
+                    $dataInsert[$index]['D02_CAR_NAMEN'] = $tmp['D02_CAR_NAMEN'];
+                    $dataInsert[$index]['D02_MODEL_CD'] = $tmp['D02_MODEL_CD'];
+                    if ($tmp['D02_MAKER_CD'] == '-111' && isset($tmp['MAKER_CD_OTHER'])) {
+                        $dataInsert[$index]['D02_CAR_NAMEN'] = $tmp['MAKER_CD_OTHER'];
+                        $dataInsert[$index]['D02_MODEL_CD'] = '00000000';
                     }
+                    $dataInsert[$index]['D02_JIKAI_SHAKEN_YM'] = $tmp['D02_JIKAI_SHAKEN_YM'];
+                    $dataInsert[$index]['D02_METER_KM'] = $tmp['D02_METER_KM'];
+                    $dataInsert[$index]['D02_SYAKEN_CYCLE'] = $tmp['D02_SYAKEN_CYCLE'];
+                    $dataInsert[$index]['D02_RIKUUN_NAMEN'] = $tmp['D02_RIKUUN_NAMEN'];
+                    $dataInsert[$index]['D02_CAR_ID'] = $tmp['D02_CAR_ID'];
+                    $dataInsert[$index]['D02_HIRA'] = $tmp['D02_HIRA'];
+                    $dataInsert[$index]['D02_CAR_NO'] = $tmp['D02_CAR_NO'];
+                    $dataInsert[$index]['D02_MAKER_CD'] = $tmp['D02_MAKER_CD'];
+                    $dataInsert[$index]['D02_SHONENDO_YM'] = $tmp['D02_SHONENDO_YM'];
+                    $dataInsert[$index]['D02_TYPE_CD'] = $tmp['D02_TYPE_CD'];
+                    $dataInsert[$index]['D02_GRADE_CD'] = $tmp['D02_GRADE_CD'];
+                    $dataInsert[$index]['D02_INP_DATE'] = new Expression('CURRENT_DATE');
+                    $dataInsert[$index]['D02_UPD_DATE'] = new Expression('CURRENT_DATE');
+                    $dataInsert[$index]['D02_INP_USER_ID'] = $login_info['M50_USER_ID'];
+                    $dataInsert[$index]['D02_UPD_USER_ID'] = $login_info['M50_USER_ID'];
                 }
                 return ['result' => (int)$uDenpyo->updateCar($custNo, $dataInsert)];
             }
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function actionMaker()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $api = new api();
-        $request = Yii::$app->request;
-        $maker_code = $request->post('car_maker_code', '');
-        $model_code = $request->post('car_model_code', '');
-        $year = $request->post('car_year', '');
-        $year = substr($year, 0, 4);
-        $type_code = $request->post('car_type_code', '');
-        $level = $request->post('level', '');
-        if ($maker_code && $model_code && $year && $type_code && $level == 4) {
-            $list_grade_code = $api::getListGradeCode($maker_code, $model_code, $year, $type_code);
-            $list_grade = [];
-            foreach ($list_grade_code as $gra) {
-                $list_grade[$gra['grade_code']] = $gra['grade'];
-            }
-            return $list_grade;
-        }
-
-        if ($maker_code && $model_code && $year && $level == 3) {
-            $list_type_code = $api::getListTypeCode($maker_code, $model_code, $year);
-            $list_type = [];
-            foreach ($list_type_code as $tp) {
-                $list_type[$tp['type_code']] = $tp['type'];
-            }
-            return $list_type;
-        }
-
-        if ($maker_code && $model_code && $level == 2) {
-            $list_year = $api::getListYearMonth($maker_code, $model_code);
-        }
-
-        if ($maker_code && $level == 1) {
-            $list_model_code = $api::getListModel($maker_code);
-            $list_model = [];
-            foreach ($list_model_code as $mod) {
-                $list_model[$mod['model_code']] = $mod['model'];
-            }
-            return $list_model;
         }
     }
 
@@ -424,8 +403,12 @@ class DefaultController extends WsController
         $cusInfo = $cookie->getValue('cus_info', ['type_redirect' => 3]);
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->post();
-        $cusDd = $cusObj->getData(['D01_KAKE_CARD_NO' => $data['D01_KAKE_CARD_NO']]);
-        $usappyId = $request->post('D01_KAIIN_CD');
+		$cusDd = [];
+        if($data['D01_KAKE_CARD_NO']) {
+			$cusDd = $cusObj->getData(['D01_KAKE_CARD_NO' => $data['D01_KAKE_CARD_NO']]);
+		}
+
+		$usappyId = $request->post('D01_KAIIN_CD');
         $check = count($cusDd);
         if ($data['D01_KAKE_CARD_NO'] != '' && $check > 0) {
             $cusDb = current($cusDd);
@@ -533,9 +516,9 @@ class DefaultController extends WsController
             $dataWarranty = [
                 'M09_SS_CD' => $ssCd,
                 'M09_WARRANTY_NO' => 1,
-                'M09_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                'M09_INP_DATE' => new Expression("CURRENT_DATE"),
                 'M09_INP_USER_ID' => 'SCRADMIN',
-                'M09_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                'M09_UPD_DATE' => new Expression("CURRENT_DATE"),
                 'M09_UPD_USER_ID' => 'SCRADMIN',
             ];
             $tm09Warranty->setData($dataWarranty);
@@ -544,7 +527,7 @@ class DefaultController extends WsController
         } else {
             $dataWarranty = current($tm09WarrantyNo);
             $dataWarranty['M09_WARRANTY_NO'] = $dataWarranty['M09_WARRANTY_NO'] + 1;
-            $dataWarranty['M09_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+            $dataWarranty['M09_UPD_DATE'] = new Expression("CURRENT_DATE");
             $dataWarranty['M09_UPD_USER_ID'] = 'SCRADMIN';
             if ($dataWarranty['M09_WARRANTY_NO'] == 10000) {
                 $dataWarranty['M09_WARRANTY_NO'] = 1;

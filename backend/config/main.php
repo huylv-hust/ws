@@ -72,6 +72,7 @@ return [
                 '/testapi' => 'usappynumberchange/default/testapi',
                 '/preview' => 'listworkslip/detail/preview',
                 '/preview2' => 'registworkslip/preview/index',
+                '/operator/changepass' => 'user/changepass',
             ]
         ],
     ],

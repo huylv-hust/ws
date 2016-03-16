@@ -71,6 +71,12 @@ AppAsset::register($this);
 	?>
 </div>
 <?php $this->endBody() ?>
+
+<div class="please-wait">
+    <img width="50" src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/img/loading7_light_blue.gif">
+    <span class="loading-text">しばらくお待ちください</span>
+</div>
+
 </body>
 </html>
 <?php $this->endPage() ?>

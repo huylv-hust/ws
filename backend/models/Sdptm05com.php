@@ -256,7 +256,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
                             ':M05_LIST_PRICE' => $data[7],
                             ':M05_ORDER' => $data[8],
                             ':M05_MEMO' => $data[9],
-                            ':M05_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                            ':M05_UPD_DATE' => date('y-M-d'),
                             ':M05_UPD_USER_ID' => $login_info['M50_USER_ID'],
                             ':M05_COM_CD' => $data[0],
                             ':M05_NST_CD' => $data[1]
@@ -277,9 +277,9 @@ class Sdptm05com extends \yii\db\ActiveRecord
                             ':M05_LIST_PRICE' => $data[7],
                             ':M05_ORDER' => $data[8],
                             ':M05_MEMO' => $data[9],
-                            ':M05_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                            ':M05_INP_DATE' => date('y-M-d'),
                             ':M05_INP_USER_ID' => $login_info['M50_USER_ID'],
-                            ':M05_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                            ':M05_UPD_DATE' => date('y-M-d'),
                             ':M05_UPD_USER_ID' => $login_info['M50_USER_ID']
                         ]);
                         if (!$result) {
@@ -344,7 +344,7 @@ class Sdptm05com extends \yii\db\ActiveRecord
         }
 
         if (isset($filters['not_in']) && count($filters['not_in'])) {
-            $query->andwhere(['NOT IN', 'M05_KIND_DM_NO', $filters['not_in']]);
+            $query->andwhere('M05_KIND_DM_NO NOT IN (' . implode(',', $filters['not_in']) . ') OR M05_KIND_DM_NO IS NULL');
         }
 
         if (isset($filters['offset']) && $filters['offset']) {
@@ -354,7 +354,6 @@ class Sdptm05com extends \yii\db\ActiveRecord
         if (isset($filters['limit']) && $filters['limit']) {
             $query->limit($filters['limit']);
         }
-
 
         return $query;
     }

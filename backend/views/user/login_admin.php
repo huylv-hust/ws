@@ -1,33 +1,7 @@
 <?php
-
-/* @var $this \yii\web\View */
-/* @var $content string */
-
-use backend\assets\AppAsset;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
-AppAsset::register($this);
 ?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
-<head>
-    <script type="text/javascript">
-        var base_url = '<?php echo \yii\helpers\BaseUrl::base(true); ?>';
-    </script>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?= Html::csrfMetaTags() ?>
-    <title>パンク保証データダウンロード</title>
-    <?php $this->head() ?>
-    <script src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/js/jquery-2.1.4.min.js"></script>
-    <script src="<?php echo \yii\helpers\BaseUrl::base(true) ?>/js/jquery.validate.min.js"></script>
-    <script>
-        var baseUrl = '<?php echo \yii\helpers\BaseUrl::base(true); ?>';
-    </script>
-</head>
-<body>
 <header id="header"><!-- <a href="#side_menu" id="navSideMenu">Side Menu</a> -->
     <h1 class="titlePage">
         パンク保証データダウンロード
@@ -84,11 +58,7 @@ AppAsset::register($this);
         <?php ActiveForm::end(); ?>
     </div>
 </main>
-<script type="text/javascript" src="<?php \yii\helpers\BaseUrl::base(true); ?>/js/module/login.js"></script>
+<script type="text/javascript" src="<?php echo \yii\helpers\BaseUrl::base(true); ?>/js/module/login.js"></script>
 <footer id="footer">
     <p class="copyright">Copyright(C) Usami Koyu Corp. All Rights Reserved.</p>
 </footer>
-<?php $this->endBody() ?>
-</body>
-</html>
-<?php $this->endPage() ?>

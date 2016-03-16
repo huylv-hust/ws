@@ -2,11 +2,17 @@
  * Created by HP400 on 1/11/2016.
  */
 var login = function(){
+
     var validate = function(){
+        jQuery.validator.addMethod("check_all_space", function(value,element) {
+            if(value.trim() != '') return true;
+            return false;
+        },'SSIDを入力してください');
         $('#frmLogin').validate({
             rules: {
                 ssid:{
-                    required: true
+                    required: true,
+                    check_all_space: true
                 },
                 password:{
                     required: true

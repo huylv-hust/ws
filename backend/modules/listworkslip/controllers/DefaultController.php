@@ -10,6 +10,7 @@ use Yii;
 use app\models\Sdptd03denpyo;
 use yii\data\Pagination;
 use yii\helpers\BaseUrl;
+use yii\web\Session;
 
 /**
  * Class DefaultController
@@ -40,6 +41,14 @@ class DefaultController extends WsController
         }
 
         $data['filters'] = $filters;
+        /*
+        * Get login info
+        * */
+        $login_info = Yii::$app->session->get('login_info');
+        if (isset($login_info['M50_SS_CD']) && $login_info['M50_SS_CD'] != '') {
+            $data['filters']['m50_ss_cd'] = $login_info['M50_SS_CD'];
+        }
+
         $count = $obj->countDataSearch($data['filters']);
         $data['pagination'] = new Pagination([
             'totalCount' => $count,
@@ -48,6 +57,7 @@ class DefaultController extends WsController
         $data['page'] = $filters = Yii::$app->request->get('page');
         $data['filters']['limit'] = $data['pagination']->limit;
         $data['filters']['offset'] = $data['pagination']->offset;
+
         $data['list'] = $obj->getDataSearch($data['filters']);
         if (empty($data['list'])) {
             Yii::$app->session->setFlash('empty', '入力条件に該当する作業伝票が存在しません');

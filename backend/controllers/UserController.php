@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use backend\components\utilities;
 use Yii;
 
 use yii\helpers\BaseUrl;
@@ -21,28 +22,57 @@ class UserController extends Controller
      */
     public function actionLoginadmin()
     {
-        $session = \Yii::$app->session;
-        $count = 0;
-        $list_user = Yii::$app->params['admin_user'];
         if ($user_info = Yii::$app->request->post()) {
             $id = $user_info['ssid'];
             $pass = $user_info['password'];
-            foreach ($list_user as $k => $v) {
-                if ($id == $v['ssid'] and $pass == $v['password']) {
-                    $count++;
+
+            if (!file_exists(getcwd() . '/data/adminuser.json')) {
+                $user = Yii::$app->params['admin_user'];
+                utilities::createFolder('data/');
+                $fh = fopen(getcwd() . '/data/adminuser.json', 'w+');
+                $content = json_encode($user);
+                fwrite($fh, $content);
+            } else {
+                $user = json_decode(file_get_contents(getcwd() . '/data/adminuser.json'), true);
+            }
+
+            foreach ($user as $k => $v) {
+                if ($id == $v['ssid'] && $pass == $v['password']) {
+                    Yii::$app->session->set('login_admin_info', ['status' => 'login_success', 'id' => $id, 'pass' => $pass, 'expired' => time() + Yii::$app->params['timeOutLogin']]);
+                    $this->redirect(BaseUrl::base(true) . '/operator/punc');
                 }
             }
-            if ($count > 0) {
-                Yii::$app->session->set('login_admin_info', ['status' => 'login_success', 'expired' => time() + Yii::$app->params['timeOutLogin']]);
-                $this->redirect(BaseUrl::base(true).'/operator/punc');
-            } else {
-                Yii::$app->session->setFlash('error', '入力されたSSＩＤまたはパスワードが正しくありません');
-            }
+            Yii::$app->session->setFlash('error', 'ログインIDが正しくありません');
         }
-
-        $this->layout = '@backend/views/layouts/blank';
+        $this->layout = '@backend/views/layouts/login';
         return $this->render('login_admin');
     }
+
+    public function actionChangepass()
+    {
+        if ($info = Yii::$app->request->post()) {
+            $pass = $info['pass'];
+            $login_info_session = \Yii::$app->session->get('login_admin_info');
+            $content = file_get_contents(getcwd() . '/data/adminuser.json');
+            $login_info = json_decode($content, true);
+            foreach ($login_info as $index => $login) {
+                if ($login['ssid'] == $login_info_session['id']) {
+                    $login_info[$index]['password'] = $pass;
+                }
+            }
+
+            $fh = fopen(getcwd() . '/data/adminuser.json', 'w+');
+            $wf = fwrite($fh, json_encode($login_info));
+            if ($wf) {
+                Yii::$app->session->setFlash('success', 'パスワードを変更しました。');
+                Yii::$app->response->redirect(BaseUrl::base(true) . '/operator/punc');
+            } else {
+                Yii::$app->session->setFlash('error', 'パスワードの変更に失敗しました。');
+                Yii::$app->response->redirect(BaseUrl::base(true) . '/operator/punc');
+            }
+        }
+    }
+
     /**
      *Login
      * @author: Dang Bui
@@ -60,16 +90,17 @@ class UserController extends Controller
                 $login_info = $isLogin['sql']['0'];
                 $login_info['expired'] = time() + Yii::$app->params['timeOutLogin'];
                 Yii::$app->session->set('login_info', $login_info);
-                $this->redirect(BaseUrl::base(true).'/menu');
+                $this->redirect(BaseUrl::base(true) . '/menu');
             } else {
                 Yii::$app->session->setFlash('error', '入力されたSSＩＤまたはパスワードが正しくありません');
             }
         }
         \Yii::$app->params['titlePage'] = 'ログイン';
         \Yii::$app->view->title = 'ログイン';
-        $this->layout = '@backend/views/layouts/blank';
+        $this->layout = '@backend/views/layouts/login';
         return $this->render('login');
     }
+
     /**
      *Logout
      * @author: Dang Bui
@@ -80,7 +111,7 @@ class UserController extends Controller
         $session->remove('login_info');
         unset($session['login_info']);
         Yii::$app->session->setFlash('success_logout', '<span class="noti">ログアウトしました。</span>');
-        $this->redirect(BaseUrl::base(true).'/login');
+        $this->redirect(BaseUrl::base(true) . '/login');
     }
 
     /**

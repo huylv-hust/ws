@@ -41,7 +41,8 @@ var listworkslip = function(){
     };
     var change_status = function(){
         var den_no = $('#den_no').val(),
-            link = window.open(baseUrl + '/data/pdf/'+den_no+'.pdf');
+            link = window.open('');
+            link.document.title = 'View PDF';
         $.ajax({
             url: baseUrl + '/listworkslip/detail/updatestatus',
             type: 'post',
@@ -53,6 +54,7 @@ var listworkslip = function(){
                 $('#pdf').addClass('off');
                 $('#pdf').css('pointer-events', 'none');
                 link.location = data;
+                link.reload();
             }
         });
     };

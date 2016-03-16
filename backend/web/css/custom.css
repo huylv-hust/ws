@@ -1,17 +1,20 @@
 .tooltip-inner {
-    max-width: none!important;
-    background: #F1B7BA none repeat scroll 0% 0%!important;
-    color: #9D0D14!important;
-    display: inline-block!important;
-    border-radius: 0!important;
+    max-width: none !important;
+    background: #F1B7BA none repeat scroll 0% 0% !important;
+    color: #9D0D14 !important;
+    display: inline-block !important;
+    border-radius: 0 !important;
 }
+
 .tooltip-arrow {
     border-top-color: #F1B7BA !important;
 }
+
 label.error {
-    color : red;
+    color: red;
 }
-#contents .breadcrumb{
+
+#contents .breadcrumb {
     padding: 0 0;
 }
 
@@ -22,13 +25,188 @@ label.error {
 .no_event {
     pointer-events: none;
 }
+
 .boder-black tr, .boder-black td, .boder-black th {
-    border: 1px solid black!important;
+    border: 1px solid black !important;
 }
+
 .back-ground {
-    background: #000!important;
+    background: #FFF !important;
+}
+
+ul.pagination {
+    margin: 0
+}
+
+ul.pagination li {
+    isplay: inline-block;
+    float: left;
+}
+
+ul.pagination li a {
+    margin: 0;
+    padding: 0 10px;
+    border: 1px solid #fff;
+    display: block;
+    height: 40px;
+    line-height: 36px;
+    color: #fff !important;
+    background: #aaa;
+    text-align: center;
+    text-decoration: none;
+}
+
+ul.pagination li.active a, ul.pagination li.active a:hover {
+    background: #1d6f9d !important;
+}
+
+ul.pagination li:first-child .btnPaging {
+    border-radius: 7px 0 0 7px;
+}
+
+ul.pagination li:last-child .btnPaging {
+    border-radius: 0 7px 7px 0;
+}
+
+ul.pagination li span {
+    margin: 0;
+    padding: 0 10px;
+    border: 1px solid #fff;
+    display: block;
+    height: 40px;
+    line-height: 36px;
+    color: #fff !important;
+    background: #aaa !important;
+    text-align: center;
+    text-decoration: none;
+}
+
+ul.pagination li span:hover, ul.pagination li a:hover {
+    background: #aaa !important;
+    border: 1px solid #fff;
+}
+
+.ui-datepicker, .ui-menu {
+    z-index: 9999 !important;
 }
 
 .mini td {
     height: 60px !important;
+}
+
+.ulNavMainte {
+    width: auto !important;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+select.D02_GRADE_CD {
+	max-width: 350px;
+}
+
+div.please-wait {
+	position: fixed;
+	top: 40%;
+	z-index: 9999;
+	width: 100%;
+	text-align: center;
+	background-color: #ffeeee;
+	padding: 10px;
+	font-weight: bold;
+	font-size: 120%;
+	display: none;
+}
+
+div.please-wait * {
+	vertical-align: middle;
+}
+
+#modalEditCar .modal-dialog, #modalEditCustomer .modal-dialog, #card_member_usappy .modal-dialog {
+    overflow-y: initial !important
+}
+
+#modalEditCar .modal-body, #modalEditCustomer .modal-body {
+    height: 450px;
+    overflow-y: auto;
+}
+
+#card_member_usappy .modal-body {
+    height: 380px;
+    overflow-y: auto;
+}
+
+#modalEditCustomer section.bgContent, #card_member_usappy div.frmContent {
+	padding-bottom: 200px;
+}
+
+@media print {
+    .mini td {
+        height: 20px !important;
+        padding: 0 !important;
+        vertical-align: middle !important;
+    }
+
+    p.leftside {
+        float: left !important;
+        position: static !important;
+        vertical-align: middle !important;
+        padding-top: 1px!important;
+    }
+
+    .checkPrint {
+        margin-right: 5px !important;
+        display: inline-block;
+    }
+
+    .tablePrint td.pNotesAlll {
+        height: 40px !important;
+    }
+
+    .labelPrintCheck input[type=checkbox] {
+        -webkit-appearance:checkbox;
+        -moz-appearance:checkbox!important;
+        appearance:checkbox!important;
+        margin: 0 !important;
+    }
+
+    .labelPrintCheck input[type=checkbox].checkbox-custom {
+        margin-right: 2px!important;
+        margin-top: 1px!important;
+    }
+
+    .labelPrintCheck input[type=checkbox]:checked::before{
+        content:""!important;
+    }
+
+    p.leftside-custom {
+        text-align: left!important;
+        float: none!important;
+    }
+
+    .itemPrintCheck.RL{
+        bottom:0px;
+    }
+
+    .td-custom-input input[type=text] {
+        width: 30px!important;
+    }
+
+    .td-custom-input .checkPrint {
+
+    }
+
+	body {
+		padding-top: 30px;
+	}
+
+	td.vMiddle {
+		height: 50px;
+	}
 }

@@ -20,9 +20,9 @@ class AppAsset extends AssetBundle
     public $css = [
         'css/jquery.sidr.dark.css',
         'css/jquery-ui.css',
-        'css/style.css',
+        'css/style.css?030501',
         'font-awesome/css/font-awesome.min.css',
-        'css/custom.css'
+        'css/custom.css?030701'
     ];
     public $js = [
         'js/jquery-ui.min.js',
@@ -30,11 +30,13 @@ class AppAsset extends AssetBundle
         'js/bootstrap.min.js',
         'js/jquery.validate.min.js',
         'js/jquery-validate.bootstrap-tooltip.min.js',
+        'js/jquery.ui.ympicker.js',
+        'js/jquery.autoKana.js',
         'js/common.js',
-        'js/utility.js'
+        'js/utility.js?030101'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
+        // 'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
 }

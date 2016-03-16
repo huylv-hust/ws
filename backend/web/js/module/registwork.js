@@ -254,7 +254,7 @@ var regist_work = function () {
         $('.D02_JIKAI_SHAKEN_YM').each(function () {
             var rel = $(this).parents('section').attr('rel');
             $(this).rules("add", {
-                required: true,
+                required: false,
                 digits: true,
                 minlength: 8,
                 date_format: true,
@@ -437,7 +437,7 @@ var regist_work = function () {
         jQuery.validator.addMethod("check_taisa", function (value, element) {
             var rel = $(element).attr('rel'),
                 val = $('#comcd' + rel).val();
-            if ($('#check_pdf').val() == 'disabled' && Number.isInteger(parseInt(val)) && parseInt(val) >= 42000 && parseInt(val) <= 42999) {
+            if (!$(element).hasClass('no_event') && $('#check_pdf').val() == 'disabled' && Number.isInteger(parseInt(val)) && parseInt(val) >= 42000 && parseInt(val) <= 42999) {
                 return false
             }
 
@@ -470,7 +470,7 @@ var regist_work = function () {
                     required: true
                 },
                 D03_SEKOU_YMD: {
-                    required: true,
+                    required: false,
                     digits: true,
                     minlength: 8,
                     date_format: true
@@ -570,7 +570,7 @@ var regist_work = function () {
                 }
             }
         });
-        
+
         jQuery.validator.addMethod("real_1", function (value, element) {
             var value = $(element).val();
             if(value == '') return true;
@@ -580,7 +580,7 @@ var regist_work = function () {
             }
             return false;
         });
-        
+
         $('.noProduct').each(function () {
             var rel = $(this).attr('rel');
             $(this).rules("add", {

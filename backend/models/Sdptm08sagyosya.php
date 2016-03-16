@@ -91,6 +91,10 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
             $query->where('M08_SS_CD=:ss_cd', [':ss_cd' => $filters['M08_SS_CD']]);
         }
 
+		if (isset($filters['M08_JYUG_CD']) && $filters['M08_JYUG_CD']) {
+            $query->where('M08_JYUG_CD=:jy_cd', [':jy_cd' => $filters['M08_JYUG_CD']]);
+        }
+
         if (isset($filters['offset']) && $filters['offset']) {
             $query->offset($filters['offset']);
         }
@@ -138,7 +142,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
         } else {
             $obj = new Sdptm08sagyosya();
             $data['M08_INP_USER_ID'] = $login_info['M50_USER_ID'];
-            $obj->M08_INP_DATE = new Expression("to_date('" . date('d-M-y') . "')");
+            $obj->M08_INP_DATE = new Expression("CURRENT_DATE");
         }
 
         $obj->attributes = $data;
@@ -148,7 +152,7 @@ class Sdptm08sagyosya extends \yii\db\ActiveRecord
             }
         }
 
-        $obj->M08_UPD_DATE = new Expression("to_date('" . date('d-M-y') . "')");
+        $obj->M08_UPD_DATE = new Expression("CURRENT_DATE");
         $this->obj = $obj;
     }
 

@@ -43,11 +43,11 @@
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">受付日</label>
-                        <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
+                        <p class="txtValue"><?php echo isset($detail['CHAR_D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['CHAR_D03_UPD_DATE'], 'yyyy/MM/dd') : ''; ?></p>
                     </div>
                     <div class="formItem">
                       <label class="titleLabel">受付担当者</label>
-                      <p class="txtValue"><?php echo isset($detail['D01_UKE_TAN_NAMEN']) ? $detail['D01_UKE_TAN_NAMEN'] : ''; ?></p>
+                        <p class="txtValue"><?php echo isset($detail['D01_UKE_TAN_NAMEN']) ? $detail['D01_UKE_TAN_NAMEN'] : ''; ?></p>
                     </div>
                     <div class="formItem">
                         <label class="titleLabel">作業日</label>
@@ -405,12 +405,12 @@
                                 <label class="titleLabel">品名</label>
                                 <p class="txtValue"><?php echo $v['M05_COM_NAMEN']; ?></p>
                             </div>
+                        </div>
+                        <div class="formGroup">
                             <div class="formItem">
                                 <label class="titleLabel">数量</label>
                                 <p class="txtValue"><?php echo floatval($v['D05_SURYO']); ?></p>
                             </div>
-                        </div>
-                        <div class="formGroup">
                             <div class="formItem">
                                 <label class="titleLabel">単価</label>
                                 <p class="txtValue"><?php echo isset($v['D05_TANKA']) && $v['D05_TANKA'] != '' ? number_format($v['D05_TANKA']) : ''; ?><span class="txtUnit">円</span></p>
@@ -418,10 +418,6 @@
                             <div class="formItem">
                                 <label class="titleLabel">金額</label>
                                 <p class="txtValue"><?php echo isset($v['D05_KINGAKU']) && $v['D05_KINGAKU'] != '' ? number_format($v['D05_KINGAKU']) : ''; ?><span class="txtUnit">円</span></p>
-                            </div>
-                            <div class="formItem">
-                              <label class="titleLabel">POS伝票番号</label>
-                              <p class="txtValue"><?php echo $detail['D03_POS_DEN_NO']; ?></p>
                             </div>
                         </div>
                     <?php } ?>
@@ -433,6 +429,15 @@
                                 class="totalPrice"><?php echo isset($detail['D03_SUM_KINGAKU']) && $detail['D03_SUM_KINGAKU'] != '' ? number_format($detail['D03_SUM_KINGAKU']) : ''; ?></strong><span
                                 class="txtUnit">円</span></p>
                     </div>
+                </div>
+            </fieldset>
+        </section>
+        <section class="bgContent">
+            <fieldset class="fieldsetRegist">
+                <legend class="titleLegend">その他</legend>
+                <div class="formItem">
+                    <label class="titleLabel">POS伝票番号</label>
+                    <p class="txtValue"><?php echo $detail['D03_POS_DEN_NO']; ?></p>
                 </div>
             </fieldset>
         </section>

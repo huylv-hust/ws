@@ -126,15 +126,16 @@ class Sdptd01customer extends \yii\db\ActiveRecord
     public function setData($data = [], &$id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
-        $data['D01_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
         $data['D01_UPD_USER_ID'] = $login_info['M50_USER_ID'];
         if ($id) {
             $obj = static::findOne($id);
         } else {
             $obj = new Sdptd01customer();
             $data['D01_CUST_NO'] = $obj->getSeq();
+            $data['D01_TAISYO'] = 1;
             $id = $data['D01_CUST_NO'];
-            $data['D01_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+
+            $obj->D01_INP_DATE = new Expression("CURRENT_DATE");
             $data['D01_INP_USER_ID'] = $login_info['M50_USER_ID'];
 
         }
@@ -143,11 +144,10 @@ class Sdptd01customer extends \yii\db\ActiveRecord
         foreach ($obj->attributes as $k => $v) {
             if ($k != 'D01_UPD_DATE' && $k != 'D01_INP_DATE') {
                 $obj->{$k} = trim($v) != '' ? trim($v) : null;
-            } else {
-                $obj->{$k} = $v;
             }
         }
 
+        $obj->D01_UPD_DATE = new Expression("CURRENT_DATE");
         $this->obj = $obj;
     }
 

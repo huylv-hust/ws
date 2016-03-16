@@ -65,14 +65,14 @@ class Sdptw01deldenpyo extends \yii\db\ActiveRecord
         $time_micro = explode('.', $time_list[0]);
         $data['W01_KANRI_ID'] = date('YmdHis') . substr($time_micro[1], 0, 3);
 
-        $data['W01_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+        $data['W01_UPD_DATE'] = new Expression("CURRENT_DATE");
         $data['W01_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 
         if ($id) {
             $obj = static::findOne($id);
         } else {
             $obj = new Sdptw01deldenpyo();
-            $data['W01_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+            $data['W01_INP_DATE'] = new Expression("CURRENT_DATE");
             $data['W01_INP_USER_ID'] = $login_info['M50_USER_ID'];
         }
 

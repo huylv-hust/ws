@@ -27,7 +27,6 @@ class DetailController extends WsController
         $obj = new Sdptd03denpyo();
         $obj_job = new Sdptm01sagyo();
         $cus = new Sdptd01customer();
-        $car = new Sdptd02car();
 
         $job[''] = '';
         $all_job = $obj_job->getData();
@@ -260,7 +259,7 @@ class DetailController extends WsController
         $post['D03_DEN_NO'] = $den_no;
         $post['status'] = Yii::$app->request->post('status');
         confirm::writeconfirm($post);
-        $link = BaseUrl::base(true) . '/data/pdf/' . $den_no . '.pdf';
+        $link = BaseUrl::base(true).'/data/pdf/'.$den_no.'.pdf';
         return $link;
     }
 }

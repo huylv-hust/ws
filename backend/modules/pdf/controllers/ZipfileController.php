@@ -97,7 +97,7 @@ class ZipfileController extends Controller
         if (!is_dir($url_source)) {
             return false;
         }
-        $arr_files = [];
+
         $list_files = scandir($url_source);
         $list_files = array_diff($list_files, ['.', '..']);
         //Check file exits in folder
@@ -105,14 +105,26 @@ class ZipfileController extends Controller
             return false;
         }
 
+        $arr_id = [];
         foreach ($list_files as $k => $v) {
             $filename = explode('.', $v);
+            $extension = $filename[1];
             $create_time_file = date("Ymd", filectime($url_source . $v));
-            if ($this->equal3Time($create_time_file, $start_date, $end_date) and in_array($filename[0], $this->getListDenpyoStatusOn())) {
-                $arr_files[] = $url_source . $v;
+            if ($this->equal3Time($create_time_file, $start_date, $end_date)) {
+                $arr_id[] = $filename[0];
             }
         }
-        return $arr_files;
+
+        $file = [];
+        $sdpt03denpyo = new Sdptd03denpyo();
+        foreach ($arr_id as $k => $v) {
+            $listDenpyoNo = $sdpt03denpyo->getData(['D03_STATUS' => 1, 'D03_DEN_NO' => $v], 'D03_DEN_NO');
+            if (!empty($listDenpyoNo)) {
+                $file[] = $url_source . $listDenpyoNo[0]['D03_DEN_NO'] . '.' . $extension;
+            }
+        }
+
+        return $file;
     }
 
     /**
@@ -163,8 +175,13 @@ class ZipfileController extends Controller
             $file = fopen($value, 'r');
             $csv[0] = fgetcsv($file);
             while (($data = fgetcsv($file)) !== false) {
-                $csv[] = $data;
+                if ($data[0] != '') {
+                    $csv[] = $data;
+                }
             }
+        }
+        if (count($csv) <= 1) {
+            return false;
         }
 
         header('Content-Type: text/csv; charset=shift-jis');

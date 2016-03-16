@@ -59,6 +59,7 @@ class PreviewController extends WsController
         }
         return $this->redirect(BaseUrl::base(true) . '/regist-workslip');
     }
+
     public function getssUser($sscode)
     {
         $uDenpyo = new Udenpyo();

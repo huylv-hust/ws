@@ -146,9 +146,9 @@ class Udenpyo
             'D02_CAR_ID' => '', //
             'D02_HIRA' => '',
             'D02_CAR_NO' => '',
-            'D02_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+            'D02_INP_DATE' => new Expression("CURRENT_DATE"),
             'D02_INP_USER_ID' => '0', //
-            'D02_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+            'D02_UPD_DATE' => new Expression("CURRENT_DATE"),
             'D02_UPD_USER_ID' => '0', //
             'D02_MAKER_CD' => '0',
             'D02_MODEL_CD' => '0',
@@ -204,9 +204,9 @@ class Udenpyo
                 'D02_CAR_ID' => $car['car_syubetu'], //
                 'D02_HIRA' => $car['car_hiragana'],
                 'D02_CAR_NO' => $car['car_carNo'],
-                'D02_INP_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                'D02_INP_DATE' => new Expression("CURRENT_DATE"),
                 'D02_INP_USER_ID' => 0, //
-                'D02_UPD_DATE' => new Expression("to_date('" . date('d-M-y') . "')"),
+                'D02_UPD_DATE' => new Expression("CURRENT_DATE"),
                 'D02_UPD_USER_ID' => 0, //
                 'D02_MAKER_CD' => $car['car_makerCd'],
                 'D02_MODEL_CD' => $car['car_modelCd'],

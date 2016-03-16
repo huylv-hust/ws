@@ -44,7 +44,7 @@
                             </p>
                         </td>
                         <td>
-                            <p class="txtValue"><?php echo isset($detail['D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['D03_UPD_DATE'], 'yyyy/MM/dd') : date('Y/m/d'); ?></p>
+                            <p class="txtValue"><?php echo isset($detail['CHAR_D03_UPD_DATE']) ? Yii::$app->formatter->asDate($detail['CHAR_D03_UPD_DATE'], 'yyyy/MM/dd') : date('Y/m/d'); ?></p>
                         </td>
                         <td>
                             <p class="txtValue"><?php echo isset($detail['D01_UKE_TAN_NAMEN']) ? $detail['D01_UKE_TAN_NAMEN'] : ''; ?></p>
@@ -72,13 +72,13 @@
                 <legend class="titleLegend">お客様情報</legend>
                 <table class="tablePrint boder-black">
                     <tr>
-                        <td>
+                        <td width="25%">
                             <label class="titleLabel">お名前</label>
                         </td>
-                        <td>
+                        <td width="25%">
                             <label class="titleLabel">フリガナ</label>
                         </td>
-                        <td>
+                        <td width="50%">
                             <label class="titleLabel">備考</label>
                         </td>
                     </tr>
@@ -210,7 +210,7 @@
                 <legend class="titleLegend">作業内容</legend>
                 <table class="tablePrint boder-black">
                     <tr>
-                        <td rowspan="2">
+                        <td rowspan="2" width="50%">
                             <p class="txtValue">
                                 <?php
                                 $sagyo = '';
@@ -366,7 +366,7 @@
                                 </div>
                             </div>
                             <p class="centering">点検レ　交換Ｘ　調整Ａ　締付Ｔ　該当／</p></td>
-                        <td colspan="2"><p class="leftside">空気圧</p>
+                        <td colspan="2"><p class="leftside leftside-custom">空気圧</p>
                             <div class="areaAirCheck">
                                 <div class="itemPrintAir">
                                     <p class="txtValue"><span class="txtUnit">前</span><span class="spcValue"><input
@@ -382,28 +382,28 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><p class="leftside">リムバルブ</p>
+                        <td style="width: 25%"><p class="leftside">リムバルブ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
                                     <input type="checkbox" <?php echo $confirm['rim'] ? 'checked' : '' ?> disabled name="rim">
                                     確認</label>
                             </div>
                         </td>
-                        <td><p class="leftside">トルクレンチ</p>
+                        <td style="width: 25%"><p class="leftside">トルクレンチ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
                                     <input type="checkbox" <?php echo $confirm['torque'] ? 'checked' : '' ?> disabled name="torque">
                                     締付</label>
                             </div>
                         </td>
-                        <td><p class="leftside">ホイルキャップ</p>
+                        <td style="width: 25%"><p class="leftside">ホイルキャップ</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
                                     <input type="checkbox" <?php echo $confirm['foil'] ? 'checked' : '' ?> disabled name="foil">
                                     取付</label>
                             </div>
                         </td>
-                        <td><p class="leftside">持帰ナット</p>
+                        <td style="width: 25%"><p class="leftside">持帰ナット</p>
                             <div class="checkPrint">
                                 <label class="labelPrintCheck">
                                     <input type="checkbox" <?php echo $confirm['nut'] ? 'checked' : '' ?> disabled name="nut">
@@ -459,7 +459,7 @@
                                     確認</label>
                             </div>
                         </td>
-                        <td colspan="2"><p class="leftside">次回交換目安</p>
+                        <td colspan="2" class="td-custom-input"><p class="leftside">次回交換目安</p>
                             <div class="checkPrint">
                                 <p class="txtValue">
                                     <input type="text" class="textFormConf" value="<?php echo isset($confirm['date']) && (int)substr($confirm['date'],0,4) ? substr($confirm['date'],0,4) : '' ?>" disabled maxlength="4" style="width:4em;" name="date_1">
@@ -511,7 +511,7 @@
                       <th colspan="4">備考</th>
                     </tr>
                     <tr>
-                      <td colspan="4"><p class="txtValue"></p></td>
+                      <td colspan="4"><p class="txtValue"><?php echo nl2br($detail['D03_NOTE']); ?></p></td>
                     </tr>
                 </table>
             </fieldset>

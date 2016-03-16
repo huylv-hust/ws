@@ -88,13 +88,12 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
     {
         $login_info = Yii::$app->session->get('login_info');
         $obj = new Sdptd04denpyosagyo();
-        $data['D04_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
         $data['D04_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 
         if ($id) {
             $obj = static::findOne($id);
         } else {
-            $data['D04_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+            $obj->D04_INP_DATE = new Expression("CURRENT_DATE");
             $data['D04_INP_USER_ID'] = $login_info['M50_USER_ID'];
         }
 
@@ -102,11 +101,10 @@ class Sdptd04denpyosagyo extends \yii\db\ActiveRecord
         foreach ($obj->attributes as $k => $v) {
             if ($k != 'D04_UPD_DATE' && $k != 'D04_INP_DATE') {
                 $obj->{$k} = trim($v) != '' ? trim($v) : null;
-            } else {
-                $obj->{$k} = $v;
             }
         }
 
+        $obj->D04_UPD_DATE = new Expression("CURRENT_DATE");
         $this->obj = $obj;
     }
 

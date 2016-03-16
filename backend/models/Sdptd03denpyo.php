@@ -155,28 +155,26 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
     public function setData($data = [], $id = null)
     {
         $login_info = Yii::$app->session->get('login_info');
-        $data['D03_UPD_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+        $data['D03_UPD_DATE'] = new Expression("CURRENT_DATE");
         $data['D03_UPD_USER_ID'] = $login_info['M50_USER_ID'];
 
         if ($id) {
             $obj = static::findOne($id);
         } else {
             $obj = new Sdptd03denpyo();
-            $data['D03_INP_DATE'] = new Expression("to_date('" . date('d-M-y') . "')");
+            $obj->D03_INP_DATE = new Expression("CURRENT_DATE");
             $data['D03_STATUS'] = 0;
             $data['D03_INP_USER_ID'] = $login_info['M50_USER_ID'];
         }
 
         $obj->attributes = $data;
-
         foreach ($obj->attributes as $k => $v) {
             if ($k != 'D03_UPD_DATE' && $k != 'D03_INP_DATE') {
                 $obj->{$k} = trim($v) != '' ? trim($v) : null;
-            } else {
-                $obj->{$k} = $v;
             }
         }
 
+        $obj->D03_UPD_DATE = new Expression("CURRENT_DATE");
         $this->obj = $obj;
     }
 
@@ -185,6 +183,10 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
         $query = new Query();
         if (isset($filters['D03_CUST_NO']) && $filters['D03_CUST_NO'] != '') {
             $query->andwhere('SDP_TD03_DENPYO.D03_CUST_NO=:D03_CUST_NO', [':D03_CUST_NO' => $filters['D03_CUST_NO']]);
+        }
+
+        if (isset($filters['D03_DEN_NO']) && $filters['D03_DEN_NO'] != '') {
+            $query->andwhere('SDP_TD03_DENPYO.D03_DEN_NO=:D03_DEN_NO', [':D03_DEN_NO' => $filters['D03_DEN_NO']]);
         }
 
         $query = $this->getWhere($filters, $select);
@@ -197,8 +199,8 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
     private function getWhereSearch($filters)
     {
         $query = new Query();
-        $query->select('SDP_TD03_DENPYO.*,
-            SDP_TD01_CUSTOMER.D01_CUST_NAMEN, SDP_TD01_CUSTOMER.D01_CUST_NAMEK, SDP_TD01_CUSTOMER.D01_NOTE')
+        $query->select(["SDP_TD03_DENPYO.*, TO_CHAR(D03_UPD_DATE, 'YYYY/mm/DD') as CHAR_D03_UPD_DATE,
+            SDP_TD01_CUSTOMER.D01_CUST_NAMEN, SDP_TD01_CUSTOMER.D01_CUST_NAMEK, SDP_TD01_CUSTOMER.D01_NOTE"])
             ->from(static::tableName())
             ->leftJoin('SDP_TD01_CUSTOMER', 'SDP_TD03_DENPYO.D03_CUST_NO = SDP_TD01_CUSTOMER.D01_CUST_NO')
             ->orderBy('D03_DEN_NO');
@@ -245,6 +247,10 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
             $query->andwhere('SDP_TD03_DENPYO.D03_DEN_NO=:den_no', [':den_no' => $filters['detail_no']]);
         }
 
+        if (isset($filters['m50_ss_cd'])) {
+            $query->andwhere('SDP_TD03_DENPYO.D03_SS_CD =:m50_ss_cd', [':m50_ss_cd' => $filters['m50_ss_cd']]);
+        }
+
         if (isset($filters['offset']) && $filters['offset']) {
             $query->offset($filters['offset']);
         }
@@ -259,6 +265,7 @@ class Sdptd03denpyo extends \yii\db\ActiveRecord
     public function getDataSearch($filters)
     {
         $query = $this->getWhereSearch($filters);
+        $query->orderBy('SDP_TD03_DENPYO.D03_DEN_NO DESC');
         return $query->all();
     }
 

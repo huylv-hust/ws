@@ -74,7 +74,6 @@ AppAsset::register($this);
                 <div class="itemRight"><input type="button" id="downloadpdf" class="btnSubmit wide" value="PDFダウンロード"></div>
             </div>
         </form>
-
         <div class="clearfix" style="margin: 20px 0">
             <?php
             if (Yii::$app->session->hasFlash('error')) {
@@ -84,7 +83,7 @@ AppAsset::register($this);
                     echo Yii::$app->session->getFlash('error');
                     ?>
                 </div>
-            <?php
+                <?php
             }
             ?>
             <?php
@@ -95,10 +94,38 @@ AppAsset::register($this);
                     echo Yii::$app->session->getFlash('success');
                     ?>
                 </div>
-            <?php
+                <?php
             }
             ?>
         </div>
+        <form action="<?php echo \yii\helpers\BaseUrl::base(true); ?>/operator/changepass" method="post" id="frm_change_pass">
+            <input type="text" name="username" value="" style="display:none">
+            <div class="frmContent pt100">
+                <div class="row">
+                    <div class="cell bgGray frmLabel">
+                        <label for="ssid">新しいパスワード</label>
+                    </div>
+                    <div class="cell bgGrayTrans"> <span class="toolTipMsg"> <span class="tooltipArrow"></span> <span class="tooltipInner"></span> </span>
+                        <?= Html::input('password', 'pass', '', ['class' => 'borderGreen borderRadius','id' => 'form-pass']) ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell bgGray frmLabel">
+                        <label for="password">新しいパスワード(確認)</label>
+                    </div>
+                    <div class="cell bgGrayTrans"> <span class="toolTipMsg"> <span class="tooltipArrow"></span> <span class="tooltipInner"></span> </span>
+                        <?= Html::input('password', 'passcnf', '', ['class' => 'borderGreen borderRadius', 'id' => 'form-passcnf']) ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell"></div>
+                    <div class="cell">
+                        <?= Html::submitButton('パスワード変更', ['class' => 'btnLogin bgGreen borderRadius changepass', 'name' => 'login-button']) ?>
+                    </div>
+                </div>
+            </div>
+        </form>
+
     </article>
 </main>
 <footer id="footer">
@@ -108,7 +135,7 @@ AppAsset::register($this);
 </body>
 </html>
 <?php $this->endPage() ?>
-
+<script type="text/javascript" src="<?php echo \yii\helpers\BaseUrl::base(true); ?>/js/module/changepass.js"></script>
 <script type="text/javascript">
     //Download csv
     $('#downloadcsv').click(function(){

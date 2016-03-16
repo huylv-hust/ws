@@ -242,5 +242,12 @@ var utility = {
 
         var string = String.fromCharCode.apply(null, a);
         e.value = string;
-    }
+    },
+	showLoading: function(msg)
+	{
+		if (msg != undefined) {
+			$('div.please-wait span.loading-text').html(msg);
+		}
+		$('div.please-wait').show();
+	}
 };
